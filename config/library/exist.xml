@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://exist-db.org/ns/expath-pkg">
+    <jar>exist-coachbase-@VERSION@.jar</jar>
+    <jar>java-client-2.1.0.jar</jar>
+    <java>
+        <namespace>http://exist-db.org/couchbase/db</namespace>
+        <class>org.exist.couchbase.xquery.CouchbaseModule</class>
+    </java>
+</package>
