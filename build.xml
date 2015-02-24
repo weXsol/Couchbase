@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="xar" name="coachbase">
+<project default="xar" name="couchbase">
 
-    <description>Build descriptor for the eXist-db Coachbase extension</description>
+    <description>Build descriptor for the eXist-db Couchbase extension</description>
 
     <property file="local.build.properties"/>
     <property file="build.properties"/>
