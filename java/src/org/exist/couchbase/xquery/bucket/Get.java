@@ -1,6 +1,6 @@
 /*
  *  eXist Open Source Native XML Database
- *  Copyright (C) 2014 The eXist Project
+ *  Copyright (C) 2015 The eXist Project
  *  http://exist-db.org
  *
  *  This program is free software; you can redistribute it and/or
@@ -22,7 +22,6 @@ package org.exist.couchbase.xquery.bucket;
 
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
-import com.couchbase.client.java.document.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;

@@ -1,6 +1,6 @@
 xquery version "3.0";
 
-module namespace query="http://exist-db.org/couchbase/test/upsert";
+module namespace upsert="http://exist-db.org/couchbase/test/upsert";
 
 import module namespace test="http://exist-db.org/xquery/xqsuite" 
                 at "resource:org/exist/xquery/lib/xqsuite/xqsuite.xql";
@@ -19,7 +19,7 @@ import module namespace couchbase = "http://exist-db.org/couchbase/db"
 
 declare 
     %test:assertEquals('{"a":1}')
-function query:upsert_get() {
+function upsert:upsert_get() {
     
     let $clusterId := couchbase:connect("couchdb://localhost")
     let $documentName := "testDocument"
