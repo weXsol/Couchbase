@@ -50,7 +50,7 @@ public class Connect extends BasicFunction {
             new SequenceType[]{
                 new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
             },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "TODO")
+            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
         ),       
     };
 

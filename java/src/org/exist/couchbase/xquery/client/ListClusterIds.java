@@ -53,7 +53,7 @@ public class ListClusterIds extends BasicFunction {
             new SequenceType[]{
                 //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
             },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "TODO")
+            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Sequence of cluster connection identifiers.")
         ),       
     };
 

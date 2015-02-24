@@ -3,6 +3,8 @@ package org.exist.couchbase.xquery;
 
 import java.util.List;
 import java.util.Map;
+import org.exist.couchbase.xquery.bucket.Get;
+import org.exist.couchbase.xquery.bucket.Upsert;
 import org.exist.couchbase.xquery.client.Close;
 import org.exist.couchbase.xquery.client.Connect;
 import org.exist.couchbase.xquery.client.ListClusterIds;
@@ -25,7 +27,9 @@ public class CouchbaseModule extends AbstractInternalModule {
     public final static FunctionDef[] functions = { 
         new FunctionDef(Close.signatures[0], Close.class),
         new FunctionDef(Connect.signatures[0], Connect.class),
-        new FunctionDef(ListClusterIds.signatures[0], ListClusterIds.class),   
+        new FunctionDef(ListClusterIds.signatures[0], ListClusterIds.class), 
+        new FunctionDef(Get.signatures[0], Get.class), 
+        new FunctionDef(Upsert.signatures[0], Upsert.class), 
     };
     
     public final static ErrorCode COBA0001 = new CouchbaseErrorCode("COBA0001", "Forbidden");
