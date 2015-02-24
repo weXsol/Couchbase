@@ -23,7 +23,26 @@ function query:count() {
     
     let $clusterId := couchbase:connect("couchdb://localhost")
 
-    let $result := couchbase:query($clusterId, "beer-sample", "beer", "brewery_beers")
+    let $result := couchbase:query($clusterId, "beer-sample", "beer", "brewery_beers", ())
+
+    let $close := couchbase:close($clusterId)
+
+    return count($result)
+    
+};
+
+declare 
+    %test:assertEquals(10)
+function query:count() {
+    
+    let $clusterId := couchbase:connect("couchdb://localhost")
+
+    let $parameters :=
+        map { 
+            "limit" := 10
+        }
+
+    let $result := couchbase:query($clusterId, "beer-sample", "beer", "brewery_beers", $parameters)
 
     let $close := couchbase:close($clusterId)
 
