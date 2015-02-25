@@ -46,6 +46,7 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(ListClusterIds.signatures[0], ListClusterIds.class), 
         new FunctionDef(Get.signatures[0], Get.class), 
         new FunctionDef(Upsert.signatures[0], Upsert.class), 
+        new FunctionDef(Upsert.signatures[1], Upsert.class), 
         new FunctionDef(Query.signatures[0], Query.class), 
     };
     
@@ -54,6 +55,8 @@ public class CouchbaseModule extends AbstractInternalModule {
 //    public final static ErrorCode MONG0003 = new MongodbErrorCode("COBA0003", "Generic exception");
 //    public final static ErrorCode MONG0004 = new MongodbErrorCode("COBA0004", "JSON Syntax exception");
 //    public final static ErrorCode MONG0005 = new MongodbErrorCode("COBA0005", "Command exception");
+    
+    public final static ErrorCode COBA0010 = new CouchbaseErrorCode("COBA0001", "Document already exists");
 
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);

@@ -182,7 +182,7 @@ public class Query extends BasicFunction {
                     viewQuery.endKeyDocId(value.toString());
                     break;
                 default:
-                    LOG.debug(key + " not recognized as valid kparameter.");
+                    throw new XPathException(key + " is not a valid parameter.");
             }
             
         }
