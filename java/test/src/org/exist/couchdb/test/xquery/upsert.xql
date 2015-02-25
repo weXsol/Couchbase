@@ -35,4 +35,42 @@ function upsert:upsert_get() {
     
 };
 
+(: 
+ : upsert and get
+ :)
 
+declare 
+    %test:assertEquals('{"b":1}')
+function upsert:insert_get() {
+    
+    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $documentName := "testInsertDocument"
+    let $json := '{ "b" : 1 }'
+
+    let $upsert := couchbase:insert($clusterId, (), $documentName, $json)
+
+    let $get := couchbase:get($clusterId, (), $documentName)
+
+    let $close := couchbase:close($clusterId)
+
+    return $get
+    
+};
+
+declare 
+    %test:assertEquals('{"b":1}')
+function upsert:insert_get_conflict() {
+    
+    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $documentName := "testInsertDocument"
+    let $json := '{ "b" : 1 }'
+
+    let $upsert := couchbase:insert($clusterId, (), $documentName, $json)
+
+    let $get := couchbase:get($clusterId, (), $documentName)
+
+    let $close := couchbase:close($clusterId)
+
+    return $get
+    
+};

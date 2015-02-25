@@ -50,3 +50,21 @@ function query:count() {
     
 };
 
+declare 
+    %test:assertEquals(10)
+function query:count_fail() {
+    
+    let $clusterId := couchbase:connect("couchdb://localhost")
+
+    let $parameters :=
+        map { 
+            "fail" := 10
+        }
+
+    let $result := couchbase:query($clusterId, "beer-sample", "beer", "brewery_beers", $parameters)
+
+    let $close := couchbase:close($clusterId)
+
+    return count($result)
+    
+};
