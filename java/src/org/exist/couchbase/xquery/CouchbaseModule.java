@@ -27,6 +27,9 @@ import org.exist.couchbase.xquery.bucket.Upsert;
 import org.exist.couchbase.xquery.client.Close;
 import org.exist.couchbase.xquery.client.Connect;
 import org.exist.couchbase.xquery.client.ListClusterIds;
+import org.exist.couchbase.xquery.clustermanager.InsertBucket;
+import org.exist.couchbase.xquery.clustermanager.ListBuckets;
+import org.exist.couchbase.xquery.clustermanager.RemoveBucket;
 import org.exist.dom.QName;
 import org.exist.xquery.AbstractInternalModule;
 import org.exist.xquery.ErrorCodes.ErrorCode;
@@ -48,6 +51,9 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(Upsert.signatures[0], Upsert.class), 
         new FunctionDef(Upsert.signatures[1], Upsert.class), 
         new FunctionDef(Query.signatures[0], Query.class), 
+        new FunctionDef(InsertBucket.signatures[0], InsertBucket.class), 
+        new FunctionDef(RemoveBucket.signatures[0], RemoveBucket.class), 
+        new FunctionDef(ListBuckets.signatures[0], ListBuckets.class), 
     };
     
     public final static ErrorCode COBA0001 = new CouchbaseErrorCode("COBA0001", "Forbidden");
@@ -63,6 +69,7 @@ public class CouchbaseModule extends AbstractInternalModule {
 
     public final static QName EXCEPTION_MESSAGE_QNAME
             = new QName("exception-message", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
+
 
     public CouchbaseModule(Map<String, List<? extends Object>> parameters) throws XPathException {
         super(functions, parameters);
