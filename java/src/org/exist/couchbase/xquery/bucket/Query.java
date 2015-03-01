@@ -182,7 +182,7 @@ public class Query extends BasicFunction {
                     viewQuery.endKeyDocId(value.toString());
                     break;
                 default:
-                    LOG.debug(key + " not recognized as valid kparameter.");
+                    throw new XPathException(this, String.format("'%s' is not a valid parameter.", key));
             }
             
         }
@@ -198,7 +198,7 @@ public class Query extends BasicFunction {
         }
         
         if (!(obj instanceof Boolean)) {
-            throw new XPathException(String.format("Map item '%s' is not a Boolean value (%s)", key, obj.toString()));
+            throw new XPathException(this, String.format("Map item '%s' is not a Boolean value (%s)", key, obj.toString()));
         }
         
         return (Boolean) obj;
@@ -211,7 +211,7 @@ public class Query extends BasicFunction {
         }
         
         if (!(obj instanceof Integer)) {
-            throw new XPathException(String.format("Map item '%s' is not a Integer value (%s)", key, obj.toString()));
+            throw new XPathException(this, String.format("Map item '%s' is not a Integer value (%s)", key, obj.toString()));
         }
         
         return (Integer) obj;

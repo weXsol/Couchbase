@@ -19,6 +19,7 @@
  */
 package org.exist.couchbase.xquery.bucket;
 
+import com.couchbase.client.core.CouchbaseException;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -27,6 +28,7 @@ import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
+import static org.exist.couchbase.xquery.CouchbaseModule.COBA0010;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
@@ -47,16 +49,32 @@ import org.exist.xquery.value.Type;
  */
 public class Upsert extends BasicFunction {
     
+    private static final String UPSERT = "upsert";
+    private static final String INSERT = "insert";
+    
 
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-            new QName("upsert", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+            new QName(UPSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
             "Upsert document into database",
             new SequenceType[]{
                 new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSOn document content"),
+                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
+                
+            },
+            new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
+        ),
+        
+        new FunctionSignature(
+            new QName(INSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+            "Insert document into database",
+            new SequenceType[]{
+                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
+                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
                 
             },
             new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
@@ -99,18 +117,34 @@ public class Upsert extends BasicFunction {
             JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
             
             // Perform action
-            JsonDocument result = StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().upsert(jsonDocument)
-                    : cluster.openBucket(bucketName).upsert(jsonDocument);
+            JsonDocument result = isCalledAs(UPSERT) 
+                    ? upsert(cluster, bucketName, jsonDocument) 
+                    : insert(cluster, bucketName, jsonDocument);
             
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));
+            
+        } catch(CouchbaseException ex){
+            LOG.error(ex.getMessage(), ex);
+            throw new XPathException(this, COBA0010, ex.getMessage());
         
-        } catch (Exception ex){
+        } catch (Throwable ex){
             // TODO detailed error handling
             LOG.error(ex.getMessage(), ex);
             throw new XPathException(this, ex.getMessage(), ex);
         }
         
+    }
+    
+    private JsonDocument upsert(CouchbaseCluster cluster, String bucketName, JsonDocument jsonDocument){
+        return StringUtils.isBlank(bucketName) 
+                    ? cluster.openBucket().upsert(jsonDocument)
+                    : cluster.openBucket(bucketName).upsert(jsonDocument);
+    }
+    
+     private JsonDocument insert(CouchbaseCluster cluster, String bucketName, JsonDocument jsonDocument){
+        return StringUtils.isBlank(bucketName) 
+                    ? cluster.openBucket().insert(jsonDocument)
+                    : cluster.openBucket(bucketName).insert(jsonDocument);
     }
 }
