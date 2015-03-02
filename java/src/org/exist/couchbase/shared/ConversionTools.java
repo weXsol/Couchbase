@@ -131,4 +131,24 @@ public class ConversionTools {
         return retVal;
     }
 
+    public static int getIntValue(String key, Object obj, int def) throws IllegalArgumentException {
+        if (obj == null) {
+            return def;
+        }
+        if (!(obj instanceof Integer)) {
+            throw new IllegalArgumentException(String.format("Map item '%s' is not a Integer value (%s)", key, obj.toString()));
+        }
+        return (Integer) obj;
+    }
+
+    public static boolean getBooleanValue(String key, Object obj, boolean def) throws IllegalArgumentException {
+        if (obj == null) {
+            return def;
+        }
+        if (!(obj instanceof Boolean)) {
+            throw new IllegalArgumentException(String.format("Map item '%s' is not a Boolean value (%s)", key, obj.toString()));
+        }
+        return (Boolean) obj;
+    }
+
 }

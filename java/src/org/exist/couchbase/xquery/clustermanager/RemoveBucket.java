@@ -20,13 +20,8 @@
 package org.exist.couchbase.xquery.clustermanager;
 
 
-import org.exist.couchbase.xquery.bucket.*;
-import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.cluster.ClusterManager;
-import com.couchbase.client.java.document.JsonDocument;
-import org.apache.commons.lang3.StringUtils;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
@@ -40,7 +35,6 @@ import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
 /**
@@ -72,13 +66,13 @@ public class RemoveBucket extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
-        // User must either be DBA or in the c group
-        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
-                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
-            LOG.error(txt);
-            throw new XPathException(this, txt);
-        }
+//        // User must either be DBA or in the c group
+//        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
+//            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+//                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
+//            LOG.error(txt);
+//            throw new XPathException(this, txt);
+//        }
         
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();

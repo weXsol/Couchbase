@@ -33,6 +33,7 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
+import org.exist.xquery.value.EmptySequence;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
@@ -57,7 +58,7 @@ public class Get extends BasicFunction {
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),               
             },
-            new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
+            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
         ),
     };
 
@@ -68,13 +69,13 @@ public class Get extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
-        // User must either be DBA or in the c group
-        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
-                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
-            LOG.error(txt);
-            throw new XPathException(this, txt);
-        }
+//        // User must either be DBA or in the c group
+//        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
+//            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+//                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
+//            LOG.error(txt);
+//            throw new XPathException(this, txt);
+//        }
         
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
@@ -95,6 +96,11 @@ public class Get extends BasicFunction {
             JsonDocument result = StringUtils.isBlank(bucketName) 
                     ? cluster.openBucket().get(docName)
                     : cluster.openBucket(bucketName).get(docName);
+            
+            
+            if(result == null){
+                return EmptySequence.EMPTY_SEQUENCE;
+            }
             
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));

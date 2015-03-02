@@ -51,7 +51,7 @@ function query:count() {
 };
 
 declare 
-    %test:assertEquals(10)
+   %test:assertError("java.lang.IllegalArgumentException")
 function query:count_fail() {
     
     let $clusterId := couchbase:connect("couchdb://localhost")

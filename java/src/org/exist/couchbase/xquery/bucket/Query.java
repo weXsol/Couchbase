@@ -75,13 +75,13 @@ public class Query extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
-        // User must either be DBA or in the c group
-        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
-                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
-            LOG.error(txt);
-            throw new XPathException(this, txt);
-        }
+//        // User must either be DBA or in the c group
+//        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
+//            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+//                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
+//            LOG.error(txt);
+//            throw new XPathException(this, txt);
+//        }
 
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
@@ -123,7 +123,7 @@ public class Query extends BasicFunction {
             
             return retVal;
             
-        } catch (Exception ex) {
+        } catch (Throwable ex) {
             // TODO detailed error handling
             LOG.error(ex.getMessage(), ex);
             throw new XPathException(this, ex.getMessage(), ex);
@@ -140,31 +140,31 @@ public class Query extends BasicFunction {
             
             switch (key) {
                 case "descending":
-                    viewQuery.descending(getBooleanValue(key, value, false));
+                    viewQuery.descending(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "group":
-                    viewQuery.group(getBooleanValue(key, value, false));
+                    viewQuery.group(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "reduce":
-                    viewQuery.reduce(getBooleanValue(key, value, false));
+                    viewQuery.reduce(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "development":
-                    viewQuery.development(getBooleanValue(key, value, false));
+                    viewQuery.development(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "inclusive_end":
-                    viewQuery.inclusiveEnd(getBooleanValue(key, value, false));
+                    viewQuery.inclusiveEnd(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "debug":
-                    viewQuery.debug(getBooleanValue(key, value, false));
+                    viewQuery.debug(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "limit":
-                    viewQuery.limit(getIntValue(key, value, 0));
+                    viewQuery.limit(ConversionTools.getIntValue(key, value, 0));
                     break;
                 case "group_level":
-                    viewQuery.groupLevel(getIntValue(key, value, 0));
+                    viewQuery.groupLevel(ConversionTools.getIntValue(key, value, 0));
                     break;
                 case "skip":
-                    viewQuery.skip(getIntValue(key, value, 0));
+                    viewQuery.skip(ConversionTools.getIntValue(key, value, 0));
                     break;
                 case "key":
                     viewQuery.key(value.toString());
@@ -182,7 +182,7 @@ public class Query extends BasicFunction {
                     viewQuery.endKeyDocId(value.toString());
                     break;
                 default:
-                    throw new XPathException(this, String.format("'%s' is not a valid parameter.", key));
+                    throw new IllegalArgumentException(String.format("'%s' is not a valid parameter.", key));
             }
             
         }
@@ -191,29 +191,4 @@ public class Query extends BasicFunction {
         
     }
     
-    private boolean getBooleanValue(String key, Object obj, boolean def) throws XPathException {
-        
-        if (obj == null) {
-            return def;
-        }
-        
-        if (!(obj instanceof Boolean)) {
-            throw new XPathException(this, String.format("Map item '%s' is not a Boolean value (%s)", key, obj.toString()));
-        }
-        
-        return (Boolean) obj;
-    }
-    
-    private int getIntValue(String key, Object obj, int def) throws XPathException {
-        
-        if (obj == null) {
-            return def;
-        }
-        
-        if (!(obj instanceof Integer)) {
-            throw new XPathException(this, String.format("Map item '%s' is not a Integer value (%s)", key, obj.toString()));
-        }
-        
-        return (Integer) obj;
-    }
 }

@@ -8,6 +8,7 @@ import module namespace test="http://exist-db.org/xquery/xqsuite"
 import module namespace couchbase = "http://exist-db.org/couchbase/db" 
                 at "java:org.exist.couchbase.xquery.CouchbaseModule";
 
+declare variable $upsert:testBucket := "testBucket";
 
 (: ----------------------------
  : Actual tests below this line  
@@ -22,12 +23,12 @@ declare
 function upsert:upsert_get() {
     
     let $clusterId := couchbase:connect("couchdb://localhost")
-    let $documentName := "testDocument"
+    let $documentName := "testUpsertDocument"
     let $json := '{ "a" : 1 }'
 
-    let $upsert := couchbase:upsert($clusterId, (), $documentName, $json)
+    let $upsert := couchbase:upsert($clusterId, $upsert:testBucket, $documentName, $json)
 
-    let $get := couchbase:get($clusterId, (), $documentName)
+    let $get := couchbase:get($clusterId, $upsert:testBucket, $documentName)
 
     let $close := couchbase:close($clusterId)
 
@@ -47,9 +48,9 @@ function upsert:insert_get() {
     let $documentName := "testInsertDocument"
     let $json := '{ "b" : 1 }'
 
-    let $upsert := couchbase:insert($clusterId, (), $documentName, $json)
+    let $upsert := couchbase:insert($clusterId, $upsert:testBucket, $documentName, $json)
 
-    let $get := couchbase:get($clusterId, (), $documentName)
+    let $get := couchbase:get($clusterId, $upsert:testBucket, $documentName)
 
     let $close := couchbase:close($clusterId)
 
@@ -58,19 +59,58 @@ function upsert:insert_get() {
 };
 
 declare 
-    %test:assertEquals('{"b":1}')
+       %test:assertError("Document already exists")
 function upsert:insert_get_conflict() {
     
     let $clusterId := couchbase:connect("couchdb://localhost")
-    let $documentName := "testInsertDocument"
+    let $documentName := "testInsertDocumentFail"
     let $json := '{ "b" : 1 }'
 
-    let $upsert := couchbase:insert($clusterId, (), $documentName, $json)
+    let $upsert1 := couchbase:insert($clusterId, $upsert:testBucket, $documentName, $json)
+    let $upsert2 := couchbase:insert($clusterId, $upsert:testBucket, $documentName, $json)
 
-    let $get := couchbase:get($clusterId, (), $documentName)
+    let $get := couchbase:get($clusterId, $upsert:testBucket, $documentName)
 
     let $close := couchbase:close($clusterId)
 
     return $get
+    
+};
+
+
+declare %test:setUp function upsert:setup()
+{
+    let $username := "Administrator"
+    let $password := "passwd!"
+    let $params := map { 
+        "quota" := 100
+    }
+        
+    let $clusterId := couchbase:connect("couchdb://localhost")
+    
+    let $tmp := couchbase:remove-bucket($clusterId, $upsert:testBucket, $username, $password) 
+    let $tmp := couchbase:insert-bucket($clusterId, $upsert:testBucket, $username, $password, $params)
+
+    return couchbase:close($clusterId)
+
+    
+    
+};
+
+declare %test:tearDown function upsert:teardown()
+{
+    let $username := "Administrator"
+    let $password := "passwd!"
+    let $params := map { 
+        "quota" := 100
+    }
+        
+    let $clusterId := couchbase:connect("couchdb://localhost")
+    
+    let $tmp := couchbase:remove-bucket($clusterId, $upsert:testBucket, $username, $password) 
+
+    return couchbase:close($clusterId)
+
+    
     
 };
