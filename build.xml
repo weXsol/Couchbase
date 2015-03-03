@@ -19,7 +19,6 @@
     <property name="java.test.classes" value="${build.dir}/test/classes"/>
     
     <property name="junit.results.dir" value="${build.dir}/test/junit"/>
-    <property name="jacoco.results.dir" value="${build.dir}/test/jacoco"/>
     
     <property name="web.dir" value="web"/>
     <property name="config.dir" value="config"/>
@@ -31,14 +30,20 @@
         <fileset dir="${exist.dir}">
             <include name="*.jar"/>
         </fileset>
-        <fileset dir="${exist.dir}/lib/core">
-            <include name="*.jar"/>
-        </fileset>
-        <fileset dir="${exist.dir}/lib/optional">
-            <include name="*.jar"/>
+        <fileset dir="${exist.dir}/lib">
+            <include name="**/*.jar"/>
         </fileset>
         <fileset dir="${exist.dir}/tools/jetty/lib">
             <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/extensions">
+            <include name="**/*.jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/tools/aspectj">
+            <include name="**/*jar"/>
+        </fileset>
+        <fileset dir="${exist.dir}/tools/ant/lib">
+            <include name="*unit*jar"/>
         </fileset>
         <fileset dir="${java.libs}">
             <include name="*.jar"/>
@@ -48,13 +53,12 @@
     <path id="classpath.test">
         <path refid="classpath"/>
         <fileset dir="${exist.dir}/lib/test">
-            <include name="junit*jar"/>
+            <include name="*.jar"/>
         </fileset>
         <fileset dir="${exist.dir}/tools/ant/lib">
             <include name="*junit4*jar"/>
         </fileset>
         <pathelement path="${exist.dir}/test/classes"/>
-        <pathelement  location="${exist.dir}/test/classes"/>
     </path>
 
 
@@ -65,14 +69,8 @@
 
         <mkdir dir="${build.libs}"/>
 
-        <echo>Ivy</echo>
+        <echo>Downloading Ivy</echo>
         <get src="${ivy_url}" dest="${build.libs}"/>
-
-        <echo>Jacoco</echo>
-        <get src="${jacoco_ant}" dest="${build.libs}"/>
-        <get src="${jacoco_core}" dest="${build.libs}"/>
-        <get src="${jacoco_report}" dest="${build.libs}"/>
-        <get src="${jacoco_agent}" dest="${build.libs}"/>
 
     </target>
 
@@ -95,53 +93,26 @@
     <!-- 
         Test suite 
     -->
-    <target name="test" description="Run tests" xmlns:jacoco="antlib:org.jacoco.ant">
+    <target name="test" description="Run tests">
         
         <mkdir dir="${junit.results.dir}"/>
-        <mkdir dir="${jacoco.results.dir}"/>
-        
-        
-        <taskdef resource="org/jacoco/ant/antlib.xml" uri="antlib:org.jacoco.ant">
-            <classpath>
-                <fileset dir="${build.libs}">
-                    <include name="org.jacoco.**.jar"/>
-                </fileset>
-            </classpath>
-        </taskdef>
 
         <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
             <classpath refid="classpath.test"/>
         </taskdef>
         
-        <jacoco:coverage destfile="${jacoco.results.dir}/jacoco.exec">
         <junit fork="true" showoutput="true" printsummary="yes">
             
             <sysproperty key="exist.home" value="${exist.dir}"/>
             
             <formatter type="plain"/>
+            
             <classpath>    
                 <pathelement  location="${java.test.classes}"/> 
                 <path refid="classpath.test"></path>
                 <path refid="classpath"></path>
-                <fileset dir="${exist.dir}/lib">
-                    <include name="**/*jar"/>
-                </fileset>
-                <fileset dir="${exist.dir}/lib">
-                    <include name="**/*jar"/>
-                </fileset>
-                <fileset dir="${exist.dir}/extensions/">
-                    <include name="**/*jar"/>
-                </fileset>
-                <fileset dir="${exist.dir}/tools/aspectj">
-                    <include name="**/*jar"/>
-                </fileset>
-                <fileset dir="${exist.dir}/tools/ant/lib">
-                    <include name="*unit*jar"/>
-                </fileset>
-                <!-- <fileset dir="${exist.dir}/tools/jetty/lib">
-                    <include name="*jar"/>
-                </fileset> -->
             </classpath>
+            
             <batchtest fork="yes" todir="${junit.results.dir}">
               <fileset dir="${java.test.src}">
                 <include name="**/*Tests.java"/>
@@ -149,28 +120,7 @@
             </batchtest>
             
         </junit>
-        </jacoco:coverage>
-        
-        <!-- <jacoco:report>
-
-            <executiondata>
-                <file file="${jacoco.results.dir}/jacoco.exec"/>
-            </executiondata>
-
-            <structure name="Example Project">
-                <classfiles>
-                    <fileset dir="${java.classes}"/>
-                </classfiles>
-                <sourcefiles encoding="UTF-8">
-                    <fileset dir="${java.src}"/>
-                </sourcefiles>
-            </structure>
-
-            <html destdir="${jacoco.results.dir}/html"/>
-
-        </jacoco:report> -->
-        
-
+ 
     </target>
 
     <!-- 
@@ -220,6 +170,11 @@
 				<compilerarg value="-Xlint"/> 
 			-->
         </javac>
+        
+        <copy todir="${java.classes}">
+            <fileset dir="${java.src}" excludes="**/*.java" />
+        </copy>
+        
 
         <javac srcdir="${java.test.src}" destdir="${java.test.classes}" optimize="true" debug="true"
             target="${javac.target}" source="${javac.source}" includeantruntime="false">
@@ -232,6 +187,12 @@
 				<compilerarg value="-Xlint"/> 
 			-->
         </javac>
+        
+        <copy todir="${java.test.classes}">
+            <fileset dir="${java.test.src}" excludes="**/*.java,**/*.class" />
+        </copy>
+        
+        
     </target>
 
     <target name="rebuild" depends="clean,xar" description="Clean and build XAR files"/>
