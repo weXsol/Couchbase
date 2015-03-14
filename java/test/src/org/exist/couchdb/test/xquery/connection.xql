@@ -21,7 +21,7 @@ declare
 function connection:count() {
     
     let $connectIds := for $i in (1 to 10)
-                        return couchbase:connect("couchdb://localhost")
+                        return couchbase:connect("couchbase://localhost")
                         
     let $countBefore :=  count( couchbase:list-cluster-ids() )
     let $countDistinct :=  count( distinct-values(couchbase:list-cluster-ids()) )

@@ -98,7 +98,7 @@ public class CouchbaseClusterManager {
     public String create(String connectionString) {
 
         // Create new cb cluster with the connection string.
-        CouchbaseCluster cluster = CouchbaseCluster.create(cbEnvironment, connectionString);
+        CouchbaseCluster cluster = CouchbaseCluster.fromConnectionString(cbEnvironment, connectionString);
 
         // Register the cluster
         String clusterId = UUID.randomUUID().toString();

@@ -21,7 +21,7 @@ declare
     %test:assertEquals(7303)
 function query:count() {
     
-    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $clusterId := couchbase:connect("couchbase://localhost")
 
     let $result := couchbase:query($clusterId, "beer-sample", "beer", "brewery_beers", ())
 
@@ -35,7 +35,7 @@ declare
     %test:assertEquals(10)
 function query:count() {
     
-    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $clusterId := couchbase:connect("couchbase://localhost")
 
     let $parameters :=
         map { 
@@ -54,7 +54,7 @@ declare
    %test:assertError("java.lang.IllegalArgumentException")
 function query:count_fail() {
     
-    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $clusterId := couchbase:connect("couchbase://localhost")
 
     let $parameters :=
         map { 

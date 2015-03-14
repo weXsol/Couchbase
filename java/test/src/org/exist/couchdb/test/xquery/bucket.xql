@@ -28,7 +28,7 @@ function bucket:count() {
         "quota" := 100
     }
     
-    let $clusterId := couchbase:connect("couchdb://localhost")
+    let $clusterId := couchbase:connect("couchbase://localhost")
                         
     let $start := count( couchbase:list-buckets($clusterId, $username, $password) )
     
