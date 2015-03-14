@@ -7,7 +7,7 @@ This is the Couchbase extension for the [eXist Native XML database](http://www.e
 
 # Documentation 
 
-Documentation of the driver is found on the [Wiki](wiki)
+Documentation of the driver is found on the [Wiki](../../wiki)
 
 # Thanks
 [![KwantuIT](http://www.kwantu.net/dbdata/10004/workspace/10004-10002/app/resources/images/kwantu_logo.png)](http://kwantu.net)
