@@ -1,4 +1,4 @@
-package org.exist.couchdb.test.xquery;
+package org.exist.couchbase.test.xquery;
 
 import org.apache.commons.lang3.StringUtils;
 import xquery.TestRunner;
