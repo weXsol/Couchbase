@@ -21,7 +21,6 @@ package org.exist.couchbase.xquery.clustermanager;
 
 
 import com.couchbase.client.java.cluster.ClusterManager;
-import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;

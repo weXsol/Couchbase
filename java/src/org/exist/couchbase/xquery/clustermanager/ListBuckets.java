@@ -23,7 +23,6 @@ package org.exist.couchbase.xquery.clustermanager;
 import com.couchbase.client.java.cluster.BucketSettings;
 import com.couchbase.client.java.cluster.ClusterManager;
 import java.util.List;
-import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
@@ -67,14 +66,6 @@ public class ListBuckets extends BasicFunction {
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-
-//        // User must either be DBA or in the c group
-//        if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-//            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
-//                    context.getSubject().getName(), Constants.COUCHBASE_GROUP);
-//            LOG.error(txt);
-//            throw new XPathException(this, txt);
-//        }
         
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
