@@ -1,6 +1,9 @@
 # eXist-db extension for Couchbase
 
-This is the Couchbase extension for the [eXist Native XML database](http://www.exist-db.org). 
+![Couchbase](https://www.nimic.net/wp-content/uploads/2014/04/couchbase_logo.png)
+![eXist-db](http://exist-db.org/exist/apps/homepage/resources/img/existdb.gif)
+
+This is the Couchbase extension for the [eXist Native XML database](http://www.exist-db.org). This driver provides access to functions and features of [Couchbase](http://www.couchbase.com) using the offical [Couchbase Java Driver](https://github.com/couchbase/couchbase-java-client).
 
 
 
