@@ -1,4 +1,4 @@
-package org.exist.couchdb.test.java;
+package org.exist.couchbase.test.java;
 
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
