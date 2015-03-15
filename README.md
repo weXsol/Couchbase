@@ -11,7 +11,7 @@ Documentation of the driver is found on the [Wiki](../../wiki)
 
 # Releases
 
-The extension can be downloaded from the [Releases](../../release)
+The extension can be downloaded from the [Releases](../../releases) page.
 
 
 # Thanks
