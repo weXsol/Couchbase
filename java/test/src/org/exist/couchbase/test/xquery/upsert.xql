@@ -59,7 +59,7 @@ function upsert:insert_get() {
 };
 
 declare 
-       %test:assertError("couchbase:COBA0010")
+       %test:assertError("couchbase:COBA0017")
 function upsert:insert_get_conflict() {
     
     let $clusterId := couchbase:connect("couchbase://localhost")

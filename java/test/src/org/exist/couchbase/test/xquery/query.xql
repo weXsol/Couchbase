@@ -51,7 +51,7 @@ function query:count() {
 };
 
 declare 
-   %test:assertError("couchbase:COBA0013")
+   %test:assertError("couchbase:COBA0002")
 function query:count_fail() {
     
     let $clusterId := couchbase:connect("couchbase://localhost")

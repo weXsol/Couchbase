@@ -61,58 +61,62 @@ public class CouchbaseModule extends AbstractInternalModule {
     /** Generic error */
     public final static ErrorCode COBA0000 
             = new CouchbaseErrorCode("COBA0000", "Generic exception.");  
-    
+     
     /** Forbidden: The provided Couchbase clusterId is not valid */
     public final static ErrorCode COBA0001 
-            = new CouchbaseErrorCode("COBA0001", "Forbidden: the clusterId is not valid");    
+            = new CouchbaseErrorCode("COBA0001", "Forbidden: the clusterId is not valid.");    
     
-    /** TimeoutException: the timeout is exceeded */
+    /** IllegalArgumentException: invalid value */
     public final static ErrorCode COBA0002 
-            = new CouchbaseErrorCode("COBA0002", "TimeoutException: the timeout is exceeded");
+            = new CouchbaseErrorCode("COBA0002", "IllegalArgumentException: invalid value.");
+    
+    /*
+     *  Below are the Couchbase specific errors/exceptions
+     */
     
     /** CouchbaseException: the underlying resources could not be enabled properly */
-    public final static ErrorCode COBA0003 
-            = new CouchbaseErrorCode("COBA0003", "CouchbaseException: the underlying resources could not be enabled properly");
+    public final static ErrorCode COBA0010 
+            = new CouchbaseErrorCode("COBA0010", "CouchbaseException: generic Couchbase exception.");
     
-    /** TranscodingException: the server response could not be decoded */
-    public final static ErrorCode COBA0004
-            = new CouchbaseErrorCode("COBA0004", "TranscodingException: the server response could not be decoded");
+    /** TimeoutException: the timeout is exceeded */
+    public final static ErrorCode COBA0011 
+            = new CouchbaseErrorCode("COBA0011", "TimeoutException: the timeout is exceeded");
     
     /** BackpressureException: the incoming request rate is too high to be processed */
-    public final static ErrorCode COBA0005 
-            = new CouchbaseErrorCode("COBA0005", "BackpressureException: the incoming request rate is too high to be processed");
+    public final static ErrorCode COBA0012 
+            = new CouchbaseErrorCode("COBA0012", "BackpressureException: the incoming request rate is too high to be processed");
   
     /** RequestCancelledException: The operation had to be cancelled while on the wire or the retry strategy cancelled it instead of retrying */
-    public final static ErrorCode COBA0006 
-            = new CouchbaseErrorCode("COBA0006", "RequestCancelledException: The operation had to be cancelled while on the wire or the retry strategy cancelled it instead of retrying");
+    public final static ErrorCode COBA0013 
+            = new CouchbaseErrorCode("COBA0013", "RequestCancelledException: The operation had to be cancelled while on the wire or the retry strategy cancelled it instead of retrying");
 
     /** TemporaryFailureException: The server is currently not able to process the request, retrying may help */
-    public final static ErrorCode COBA0007 
-            = new CouchbaseErrorCode("COBA0007", "TemporaryFailureException: The server is currently not able to process the request, retrying may help");
+    public final static ErrorCode COBA0014 
+            = new CouchbaseErrorCode("COBA0014", "TemporaryFailureException: The server is currently not able to process the request, retrying may help");
     
     /** CouchbaseOutOfMemoryException: The server is out of memory */
-    public final static ErrorCode COBA0008 
-            = new CouchbaseErrorCode("COBA0008", "CouchbaseOutOfMemoryException: The server is out of memory");
+    public final static ErrorCode COBA0015 
+            = new CouchbaseErrorCode("COBA0015", "CouchbaseOutOfMemoryException: The server is out of memory");
     
      /** ViewDoesNotExistException: the design document or view is not found */
-    public final static ErrorCode COBA0009 
-            = new CouchbaseErrorCode("COBA0009", "ViewDoesNotExistException: the design document or view is not found");
+    public final static ErrorCode COBA0016 
+            = new CouchbaseErrorCode("COBA0016", "ViewDoesNotExistException: the design document or view is not found");
  
     /** DocumentAlreadyExistsException: the document already exists */
-    public final static ErrorCode COBA0010
-            = new CouchbaseErrorCode("COBA0010", "DocumentAlreadyExistsException: the document already exists");
+    public final static ErrorCode COBA0017
+            = new CouchbaseErrorCode("COBA0017", "DocumentAlreadyExistsException: the document already exists");
      
     /** DocumentDoesNotExistException: the document does not exist */
-    public final static ErrorCode COBA0011 
-            = new CouchbaseErrorCode("COBA0011", "DocumentDoesNotExistException: the document does not exist");
+    public final static ErrorCode COBA0018 
+            = new CouchbaseErrorCode("COBA0018", "DocumentDoesNotExistException: the document does not exist");
     
     /** RequestTooBigException: the request content is too big */
-    public final static ErrorCode COBA0012 
-            = new CouchbaseErrorCode("COBA0012", "RequestTooBigException: the request content is too big");
+    public final static ErrorCode COBA0019 
+            = new CouchbaseErrorCode("COBA0019", "RequestTooBigException: the request content is too big");
     
-   /** Invalid key/value pair in map */
-   public final static ErrorCode COBA0013 
-            = new CouchbaseErrorCode("COBA0013", "Invalid key/value pair in map");
+    /** TranscodingException: the server response could not be decoded */
+    public final static ErrorCode COBA0020
+            = new CouchbaseErrorCode("COBA0020", "TranscodingException: the server response could not be decoded");
     
 
     public final static QName EXCEPTION_QNAME
