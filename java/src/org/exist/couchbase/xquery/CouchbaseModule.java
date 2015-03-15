@@ -58,13 +58,62 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(ListBuckets.signatures[0], ListBuckets.class), 
     };
     
-    public final static ErrorCode COBA0001 = new CouchbaseErrorCode("COBA0001", "Forbidden");
-//    public final static ErrorCode MONG0002 = new MongodbErrorCode("COBA0002", "Mongodb exception");
-//    public final static ErrorCode MONG0003 = new MongodbErrorCode("COBA0003", "Generic exception");
-//    public final static ErrorCode MONG0004 = new MongodbErrorCode("COBA0004", "JSON Syntax exception");
-//    public final static ErrorCode MONG0005 = new MongodbErrorCode("COBA0005", "Command exception");
+    /** Generic error */
+    public final static ErrorCode COBA0000 
+            = new CouchbaseErrorCode("COBA0000", "Generic exception.");  
     
-    public final static ErrorCode COBA0010 = new CouchbaseErrorCode("COBA0001", "Document already exists");
+    /** Forbidden: The provided Couchbase clusterId is not valid */
+    public final static ErrorCode COBA0001 
+            = new CouchbaseErrorCode("COBA0001", "Forbidden: the clusterId is not valid");    
+    
+    /** TimeoutException: the timeout is exceeded */
+    public final static ErrorCode COBA0002 
+            = new CouchbaseErrorCode("COBA0002", "TimeoutException: the timeout is exceeded");
+    
+    /** CouchbaseException: the underlying resources could not be enabled properly */
+    public final static ErrorCode COBA0003 
+            = new CouchbaseErrorCode("COBA0003", "CouchbaseException: the underlying resources could not be enabled properly");
+    
+    /** TranscodingException: the server response could not be decoded */
+    public final static ErrorCode COBA0004
+            = new CouchbaseErrorCode("COBA0004", "TranscodingException: the server response could not be decoded");
+    
+    /** BackpressureException: the incoming request rate is too high to be processed */
+    public final static ErrorCode COBA0005 
+            = new CouchbaseErrorCode("COBA0005", "BackpressureException: the incoming request rate is too high to be processed");
+  
+    /** RequestCancelledException: The operation had to be cancelled while on the wire or the retry strategy cancelled it instead of retrying */
+    public final static ErrorCode COBA0006 
+            = new CouchbaseErrorCode("COBA0006", "RequestCancelledException: The operation had to be cancelled while on the wire or the retry strategy cancelled it instead of retrying");
+
+    /** TemporaryFailureException: The server is currently not able to process the request, retrying may help */
+    public final static ErrorCode COBA0007 
+            = new CouchbaseErrorCode("COBA0007", "TemporaryFailureException: The server is currently not able to process the request, retrying may help");
+    
+    /** CouchbaseOutOfMemoryException: The server is out of memory */
+    public final static ErrorCode COBA0008 
+            = new CouchbaseErrorCode("COBA0008", "CouchbaseOutOfMemoryException: The server is out of memory");
+    
+     /** ViewDoesNotExistException: the design document or view is not found */
+    public final static ErrorCode COBA0009 
+            = new CouchbaseErrorCode("COBA0009", "ViewDoesNotExistException: the design document or view is not found");
+ 
+    /** DocumentAlreadyExistsException: the document already exists */
+    public final static ErrorCode COBA0010
+            = new CouchbaseErrorCode("COBA0010", "DocumentAlreadyExistsException: the document already exists");
+     
+    /** DocumentDoesNotExistException: the document does not exist */
+    public final static ErrorCode COBA0011 
+            = new CouchbaseErrorCode("COBA0011", "DocumentDoesNotExistException: the document does not exist");
+    
+    /** RequestTooBigException: the request content is too big */
+    public final static ErrorCode COBA0012 
+            = new CouchbaseErrorCode("COBA0012", "RequestTooBigException: the request content is too big");
+    
+   /** Invalid key/value pair in map */
+   public final static ErrorCode COBA0013 
+            = new CouchbaseErrorCode("COBA0013", "Invalid key/value pair in map");
+    
 
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);

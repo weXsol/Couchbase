@@ -24,6 +24,7 @@ import com.couchbase.client.java.cluster.BucketSettings;
 import com.couchbase.client.java.cluster.ClusterManager;
 import java.util.List;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -91,10 +92,8 @@ public class ListBuckets extends BasicFunction {
             // Return results
             return retVal;
         
-        } catch (Exception ex){
-            // TODO detailed error handling
-            LOG.error(ex.getMessage(), ex);
-            throw new XPathException(this, ex.getMessage(), ex);
+        } catch (Throwable ex){
+            return GenericExceptionHandler.handleException(this, ex);           
         }
         
     }

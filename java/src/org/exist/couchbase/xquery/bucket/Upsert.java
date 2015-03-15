@@ -19,15 +19,14 @@
  */
 package org.exist.couchbase.xquery.bucket;
 
-import com.couchbase.client.core.CouchbaseException;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
-import static org.exist.couchbase.xquery.CouchbaseModule.COBA0010;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
@@ -115,14 +114,8 @@ public class Upsert extends BasicFunction {
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));
             
-        } catch(CouchbaseException ex){
-            LOG.error(ex.getMessage(), ex);
-            throw new XPathException(this, COBA0010, ex.getMessage());
-        
         } catch (Throwable ex){
-            // TODO detailed error handling
-            LOG.error(ex.getMessage(), ex);
-            throw new XPathException(this, ex.getMessage(), ex);
+            return GenericExceptionHandler.handleException(this, ex);           
         }
         
     }

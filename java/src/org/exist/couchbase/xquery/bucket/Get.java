@@ -25,6 +25,7 @@ import com.couchbase.client.java.document.JsonDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -96,10 +97,8 @@ public class Get extends BasicFunction {
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));
         
-        } catch (Exception ex){
-            // TODO detailed error handling
-            LOG.error(ex.getMessage(), ex);
-            throw new XPathException(this, ex.getMessage(), ex);
+        } catch (Throwable ex){
+            return GenericExceptionHandler.handleException(this, ex);           
         }
         
     }

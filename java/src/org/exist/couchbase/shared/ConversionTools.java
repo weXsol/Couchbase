@@ -120,10 +120,10 @@ public class ConversionTools {
                 retVal.put(keyValue, singleValue.toJavaObject(Float.class));
 
             } else if (values instanceof ValueSequence) {
-                LOG.info(String.format("Cannot convert a sequence of values for key '%s' into JMS message properties", keyValue));
+                LOG.error(String.format("Cannot convert a sequence of values for key '%s'", keyValue));
 
             } else {
-                LOG.info(String.format("Cannot convert map entry '%s'/'%s' into a JMS message property", keyValue, values.getStringValue()));
+                LOG.error(String.format("Cannot convert map entry '%s'/'%s'", keyValue, values.getStringValue()));
             }
 
         }

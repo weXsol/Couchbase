@@ -59,7 +59,7 @@ function upsert:insert_get() {
 };
 
 declare 
-       %test:assertError("Document already exists")
+       %test:assertError("couchbase:COBA0010")
 function upsert:insert_get_conflict() {
     
     let $clusterId := couchbase:connect("couchbase://localhost")
