@@ -127,13 +127,13 @@ public class InsertBucket extends BasicFunction {
                     builder.password(value.toString());
                     break;
                 case "port":
-                    builder.port(ConversionTools.getIntValue(key, value, 0));
+                    builder.port(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "quota":
-                    builder.quota(ConversionTools.getIntValue(key, value, 0));
+                    builder.quota(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "replicas":
-                    builder.replicas(ConversionTools.getIntValue(key, value, 0));
+                    builder.replicas(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "type":
                     builder.type(BucketType.valueOf(value.toString().toUpperCase()));

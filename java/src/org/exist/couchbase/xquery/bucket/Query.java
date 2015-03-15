@@ -148,13 +148,13 @@ public class Query extends BasicFunction {
                     viewQuery.debug(ConversionTools.getBooleanValue(key, value, false));
                     break;
                 case "limit":
-                    viewQuery.limit(ConversionTools.getIntValue(key, value, 0));
+                    viewQuery.limit(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "group_level":
-                    viewQuery.groupLevel(ConversionTools.getIntValue(key, value, 0));
+                    viewQuery.groupLevel(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "skip":
-                    viewQuery.skip(ConversionTools.getIntValue(key, value, 0));
+                    viewQuery.skip(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "key":
                     viewQuery.key(value.toString());

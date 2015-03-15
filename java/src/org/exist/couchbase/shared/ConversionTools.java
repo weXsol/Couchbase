@@ -29,6 +29,7 @@ import org.exist.xquery.functions.map.AbstractMapType;
 import org.exist.xquery.value.AtomicValue;
 import org.exist.xquery.value.BooleanValue;
 import org.exist.xquery.value.DoubleValue;
+import org.exist.xquery.value.EmptySequence;
 import org.exist.xquery.value.FloatValue;
 import org.exist.xquery.value.IntegerValue;
 import org.exist.xquery.value.Item;
@@ -131,9 +132,9 @@ public class ConversionTools {
         return retVal;
     }
 
-    public static int getIntValue(String key, Object obj, int def) throws IllegalArgumentException {
+    public static int getIntegerValue(String key, Object obj, int defaultValue) throws IllegalArgumentException {
         if (obj == null) {
-            return def;
+            return defaultValue;
         }
         if (!(obj instanceof Integer)) {
             throw new IllegalArgumentException(String.format("Map item '%s' is not a Integer value (%s)", key, obj.toString()));
@@ -141,14 +142,27 @@ public class ConversionTools {
         return (Integer) obj;
     }
 
-    public static boolean getBooleanValue(String key, Object obj, boolean def) throws IllegalArgumentException {
+    public static boolean getBooleanValue(String key, Object obj, boolean defaultValue) throws IllegalArgumentException {
         if (obj == null) {
-            return def;
+            return defaultValue;
         }
         if (!(obj instanceof Boolean)) {
             throw new IllegalArgumentException(String.format("Map item '%s' is not a Boolean value (%s)", key, obj.toString()));
         }
         return (Boolean) obj;
+    }
+    
+    public static long getLongValue(String key, Object obj) throws IllegalArgumentException {
+        if (obj == null) {
+            throw new IllegalArgumentException(String.format("Map item '%s' is value null.", key));
+        }
+        if (obj instanceof EmptySequence) {
+            throw new IllegalArgumentException(String.format("Map item '%s' is empty sequence.", key));
+        }
+        if (!(obj instanceof Long)) {
+            throw new IllegalArgumentException(String.format("Map item '%s' is not a Long value (%s).", key, obj.toString()));
+        }
+        return (Long) obj;
     }
 
 }
