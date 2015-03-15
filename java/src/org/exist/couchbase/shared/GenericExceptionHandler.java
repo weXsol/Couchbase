@@ -42,51 +42,51 @@ public class GenericExceptionHandler {
             throw (XPathException) throwable;
             
         } else if(throwable instanceof IllegalArgumentException){
-            throw new XPathException(expression, CouchbaseModule.COBA0013, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0002, throwable);
+            
+        } else if (throwable instanceof TimeoutException) {
+
+            throw new XPathException(expression, CouchbaseModule.COBA0011, throwable);
             
         } else if (throwable instanceof BackpressureException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0005, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0012, throwable);
 
         } else if (throwable instanceof RequestCancelledException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0006, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0013, throwable);
 
         } else if (throwable instanceof TemporaryFailureException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0007, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0014, throwable);
 
         } else if (throwable instanceof CouchbaseOutOfMemoryException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0008, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0015, throwable);
 
         } else if (throwable instanceof ViewDoesNotExistException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0009, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0016, throwable);
 
         } else if (throwable instanceof DocumentAlreadyExistsException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0010, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0017, throwable);
 
         } else if (throwable instanceof DocumentDoesNotExistException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0011, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0018, throwable);
 
         } else if (throwable instanceof RequestTooBigException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0012, throwable);
-
-        } else if (throwable instanceof TimeoutException) {
-
-            throw new XPathException(expression, CouchbaseModule.COBA0002, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0019, throwable);
 
         } else if (throwable instanceof TranscodingException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0003, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0020, throwable);
 
         } else if (throwable instanceof CouchbaseException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0004, throwable);
+            throw new XPathException(expression, CouchbaseModule.COBA0010, throwable);
 
         } else {
 
