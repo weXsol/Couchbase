@@ -9,6 +9,11 @@ This is the Couchbase extension for the [eXist Native XML database](http://www.e
 
 Documentation of the driver is found on the [Wiki](../../wiki)
 
+# Releases
+
+The extension can be downloaded from the [Releases](../../release)
+
+
 # Thanks
 [![KwantuIT](http://www.kwantu.net/dbdata/10004/workspace/10004-10002/app/resources/images/kwantu_logo.png)](http://kwantu.net)
 
