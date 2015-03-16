@@ -15,6 +15,5 @@ The extension can be downloaded from the [Releases](../../releases) page.
 
 
 # Thanks
-[![KwantuIT](http://www.kwantu.net/dbdata/10004/workspace/10004-10002/app/resources/images/kwantu_logo.png)](http://kwantu.net)
 
-[![eXist Solutions](http://www.betterform.de/images/existsolutions-logo.png)](http://www.existsolutions.com)
+[![KwantuIT](http://www.kwantu.net/dbdata/10004/workspace/10004-10002/app/resources/images/kwantu_logo.png)](http://kwantu.net)
