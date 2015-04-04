@@ -8,6 +8,7 @@ import module namespace test="http://exist-db.org/xquery/xqsuite"
 import module namespace couchbase = "http://exist-db.org/couchbase/db" 
                 at "java:org.exist.couchbase.xquery.CouchbaseModule";
 
+declare variable $bucket:testBucket := "testBucket";
 
 (: ----------------------------
  : Actual tests below this line  
@@ -46,4 +47,26 @@ function bucket:count() {
     
 };
 
+declare %test:assertError("couchbase:COBA0021") function bucket:passwords()
+{
+    let $username := "Administrator"
+    let $password := "passwd!"
+    let $params := map { 
+        "quota" := 100,
+        "password" := "foobar"
+    }
+        
+    let $clusterId := couchbase:connect("couchbase://localhost")
+    
+    let $tmp := couchbase:remove-bucket($clusterId, $bucket:testBucket, $username, $password) 
+    let $tmp := couchbase:insert-bucket($clusterId, $bucket:testBucket, $username, $password, $params)
 
+    let $close := couchbase:close($clusterId)
+
+    let $clusterId := couchbase:connect("couchbase://localhost", "wrongpassword")
+
+    let $json := '{ "b" : 1 }'
+
+    return couchbase:insert($clusterId, $bucket:testBucket, "documentName", $json)
+  
+};

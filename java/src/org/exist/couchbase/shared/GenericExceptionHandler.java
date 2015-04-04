@@ -6,6 +6,7 @@ import com.couchbase.client.core.RequestCancelledException;
 import com.couchbase.client.java.error.CouchbaseOutOfMemoryException;
 import com.couchbase.client.java.error.DocumentAlreadyExistsException;
 import com.couchbase.client.java.error.DocumentDoesNotExistException;
+import com.couchbase.client.java.error.InvalidPasswordException;
 import com.couchbase.client.java.error.RequestTooBigException;
 import com.couchbase.client.java.error.TemporaryFailureException;
 import com.couchbase.client.java.error.TranscodingException;
@@ -19,6 +20,7 @@ import org.exist.xquery.value.Sequence;
 
 /**
  *  Handle couchbase exceptions in a generic way by translating them into an existdb XpathExeption
+ * 
  * @author Dannes Wessels
  */
 
@@ -30,67 +32,77 @@ public class GenericExceptionHandler {
     /**
      *  Process the exception thrown by the Couchbase driver.
      * 
-     * @param expression The current xpath expression
+     * @param expr The current xpath expression
      * @param throwable The Exception
      * @throws XPathException The translated eXistdb exception
+     * 
+     * @return Nothing, there will always be an exception thrown.
      */
-    public static Sequence handleException(Expression expression, Throwable throwable) throws XPathException {
+    public static Sequence handleException(Expression expr, Throwable throwable) throws XPathException {
 
-        LOG.error(throwable.getMessage(), throwable);
+        if(LOG.isDebugEnabled()){
+            LOG.error(throwable.getMessage(), throwable);
+        } else {
+            LOG.error(throwable.getMessage(), throwable);
+        }
 
         if(throwable instanceof XPathException){
             throw (XPathException) throwable;
             
         } else if(throwable instanceof IllegalArgumentException){
-            throw new XPathException(expression, CouchbaseModule.COBA0002, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0002, throwable.getMessage());
             
         } else if (throwable instanceof TimeoutException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0011, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0011, throwable);
             
         } else if (throwable instanceof BackpressureException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0012, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0012, throwable);
 
         } else if (throwable instanceof RequestCancelledException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0013, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0013, throwable);
 
         } else if (throwable instanceof TemporaryFailureException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0014, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0014, throwable);
 
         } else if (throwable instanceof CouchbaseOutOfMemoryException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0015, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0015, throwable);
 
         } else if (throwable instanceof ViewDoesNotExistException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0016, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0016, throwable);
 
         } else if (throwable instanceof DocumentAlreadyExistsException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0017, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0017, throwable);
 
         } else if (throwable instanceof DocumentDoesNotExistException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0018, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0018, throwable);
 
         } else if (throwable instanceof RequestTooBigException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0019, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0019, throwable);
 
         } else if (throwable instanceof TranscodingException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0020, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0020, throwable);
+            
+        } else if (throwable instanceof InvalidPasswordException) {
 
+            throw new XPathException(expr, CouchbaseModule.COBA0021, throwable.getMessage());
+            
         } else if (throwable instanceof CouchbaseException) {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0010, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0010, throwable);
 
         } else {
 
-            throw new XPathException(expression, CouchbaseModule.COBA0000, throwable);
+            throw new XPathException(expr, CouchbaseModule.COBA0000, throwable);
         }
         
     }

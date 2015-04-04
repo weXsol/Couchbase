@@ -19,10 +19,8 @@
  */
 package org.exist.couchbase.xquery.bucket;
 
-
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
@@ -46,36 +44,33 @@ import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
 /**
- *  Retrieve document
+ * Retrieve document
  *
  * @author Dannes Wessels
  */
 public class Get extends BasicFunction {
-    
 
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-            new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Retrieve document from bucket",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),               
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
+        new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Retrieve document from bucket",
+        new SequenceType[]{
+            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),},
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
         ),
         new FunctionSignature(
-            new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Retrieve document from bucket",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),  
-                new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Query parameters")
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
-        ),
-    };
+        new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Retrieve document from bucket",
+        new SequenceType[]{
+            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
+            new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Query parameters")
+        },
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
+        ),};
 
     public Get(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
@@ -84,57 +79,55 @@ public class Get extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
         
+        final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
+
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
-        CouchbaseClusterManager.getInstance().validate(clusterId);
-        
+
+        // Get reference to cluster
+        CouchbaseCluster cluster = cmm.validate(clusterId);
+
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? null : args[1].itemAt(0).getStringValue();
-//        String password = (args[2].isEmpty()) ? null : args[2].itemAt(0).getStringValue();
-        
+        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+
         String docName = args[2].itemAt(0).getStringValue();
-        
+
         Map<String, Object> parameters = (getArgumentCount() > 3)
                 ? ConversionTools.convert((AbstractMapType) args[3].itemAt(0))
                 : null;
-            
-        // Retrieve access to cluster
-        CouchbaseCluster cluster = CouchbaseClusterManager.getInstance().get(clusterId);
-           
-        try {           
+
+        String bucketPassword = cmm.getBucketPassword(clusterId);
+
+        try {
             // Perform action
             JsonDocument result = (parameters == null)
-                    ? get(cluster, bucketName, docName)
-                    : get(cluster, bucketName, docName, parameters);
-            
-            
-            if(result == null){
+                    ? get(cluster, bucketName, bucketPassword, docName)
+                    : get(cluster, bucketName, bucketPassword, docName, parameters);
+
+            if (result == null) {
                 return EmptySequence.EMPTY_SEQUENCE;
             }
-            
+
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));
-        
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
     
-    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName){
-        return StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().get(docName)
-                    : cluster.openBucket(bucketName).get(docName);
+    /* Retrieve document */
+    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String bucketPassword, String docName) {
+        return cluster.openBucket(bucketName, bucketPassword).get(docName);
     }
-    
-     private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, Map<String, Object> parameters){
-         
+
+    /** Retrieve documents with additional parameters */
+    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, String bucketPassword, Map<String, Object> parameters) {
         long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
-        TimeUnit timeUnit = TimeUnit.valueOf( parameters.get("timeUnit").toString().toUpperCase());
-         
-        return StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().get(docName, timeout, timeUnit)
-                    : cluster.openBucket(bucketName).get(docName,  timeout, timeUnit);
+        TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase());
+
+        return cluster.openBucket(bucketName, bucketPassword).get(docName, timeout, timeUnit);
     }
-     
+    
 }

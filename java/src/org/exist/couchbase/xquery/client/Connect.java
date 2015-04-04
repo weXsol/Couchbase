@@ -78,10 +78,11 @@ public class Connect extends BasicFunction {
             throw new XPathException(this, txt);
         }
 
-        // Get connection details
+        // Get connection string URL
         String connectionString = args[0].itemAt(0).getStringValue();
-        
-        String password = ( getArgumentCount()>1 ) ? args[0].itemAt(0).getStringValue() : null;
+
+        // Get password for bucket, when available
+        String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
 
         // Register connection
         String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, password);

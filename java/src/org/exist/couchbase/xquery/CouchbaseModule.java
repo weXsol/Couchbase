@@ -119,6 +119,10 @@ public class CouchbaseModule extends AbstractInternalModule {
     public final static ErrorCode COBA0020
             = new CouchbaseErrorCode("COBA0020", "TranscodingException: the server response could not be decoded.");
     
+    /** InvalidPasswordException: the password for the bucket does not match */
+    public final static ErrorCode COBA0021
+            = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match");
+    
 
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);

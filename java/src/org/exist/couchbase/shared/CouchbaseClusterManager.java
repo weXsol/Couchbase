@@ -22,14 +22,12 @@ package org.exist.couchbase.shared;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.apache.log4j.Logger;
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
-
 import org.exist.xquery.XPathException;
 
 /**
@@ -89,6 +87,15 @@ public class CouchbaseClusterManager {
 
     public CouchbaseCluster get(String clusterId) {
         return clusters.get(clusterId).getCluster();
+    }
+    
+    public String getBucketPassword(String clusterId){
+        CouchbaseClusterConnection ccc = clusters.get(clusterId);
+        if(ccc == null){
+            LOG.debug(String.format("No bucket password for '%s'", clusterId));
+            return null;
+        }
+        return ccc.getBucketPassword();
     }
 
     public boolean isValid(String clusterId) {
