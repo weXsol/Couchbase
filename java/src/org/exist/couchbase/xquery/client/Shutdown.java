@@ -30,8 +30,6 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.EmptySequence;
-import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
@@ -79,6 +77,7 @@ public class Shutdown extends BasicFunction {
         // Bundle results
         Sequence retVal = new ValueSequence();
         for(String id : ids){
+            
             retVal.add(new StringValue(id));
         }
 

@@ -4,6 +4,9 @@ import com.couchbase.client.java.CouchbaseCluster;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.exist.memtree.MemTreeBuilder;
+import org.exist.memtree.NodeImpl;
 
 /**
  *
@@ -24,7 +27,7 @@ public class CouchbaseClusterConnection {
     private final CouchbaseCluster cluster;
 
     private long invokes = 0l;
-    
+
     private final UUID connectionId;
 
     public CouchbaseClusterConnection(CouchbaseCluster cluster, String username, String bucketPassword, String connectionString, UUID connectionId) {
@@ -75,5 +78,31 @@ public class CouchbaseClusterConnection {
         }
     }
 
+    public void getReport(MemTreeBuilder builder) {
+
+        builder.startElement("", "connection", "connection", null);
+
+        builder.startElement("", "id", "id", null);
+        builder.characters(getConnectionId().toString());
+        builder.endElement();
+
+        builder.startElement("", "username", "username", null);
+        builder.characters(getUsername());
+        builder.endElement();
+
+        builder.startElement("", "has-bucket-password", "has-bucket-password", null);
+        builder.characters((getBucketPassword() == null) ? "false" : "true");
+        builder.endElement();
+
+        builder.startElement("", "url", "url", null);
+        builder.characters(getConnectionString());
+        builder.endElement();
+
+        builder.startElement("", "created", "created", null);
+        builder.characters(DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(creation));
+        builder.endElement();
+
+        builder.endElement();
+    }
 
 }

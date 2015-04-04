@@ -23,6 +23,7 @@ import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,16 +100,20 @@ public class CouchbaseClusterManager {
         }
         return ccc.getBucketPassword();
     }
+    
+    public Collection<CouchbaseClusterConnection> getClusterConnections(){
+        return clusters.values();
+    }
 
     public boolean isValid(String clusterId) {
         return get(clusterId) != null;
     }
 
     public String create(String connectionString) {
-        return create(connectionString, null);
+        return create(connectionString, null, null);
     }
 
-    public String create(String connectionString, String defaultBucketPassword) {
+    public String create(String connectionString, String username, String defaultBucketPassword) {
 
         // Create new cb cluster with the connection string.
         CouchbaseCluster cluster = CouchbaseCluster.fromConnectionString(cbEnvironment, connectionString);
@@ -117,7 +122,7 @@ public class CouchbaseClusterManager {
         UUID clusterId = UUID.randomUUID();
 
         // Register the cluster
-        CouchbaseClusterConnection ccc = new CouchbaseClusterConnection(cluster, null, defaultBucketPassword, connectionString, clusterId);
+        CouchbaseClusterConnection ccc = new CouchbaseClusterConnection(cluster, username, defaultBucketPassword, connectionString, clusterId);
         add(clusterId.toString(), ccc);
 
         LOG.info(String.format("%s - %s", clusterId, cluster.toString()));
@@ -155,7 +160,7 @@ public class CouchbaseClusterManager {
             
             try {         
                 String id = c.getConnectionId().toString();
-                c.getCluster().disconnect();
+                remove(id);
                 ids.add(id);
                 
             } catch (Throwable ex) {

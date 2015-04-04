@@ -19,51 +19,47 @@
  */
 package org.exist.couchbase.xquery.client;
 
+import java.util.Set;
 import org.exist.couchbase.shared.Constants;
+import org.exist.couchbase.shared.CouchbaseClusterConnection;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
+import org.exist.memtree.DocumentImpl;
+import org.exist.memtree.MemTreeBuilder;
+import org.exist.memtree.NodeImpl;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
+import org.exist.xquery.value.ValueSequence;
 
 /**
- *  Connect to couchbase cluster
+ *  List all Cluster Ids
  * 
  * @author Dannes Wessels
  */
 
-public class Connect extends BasicFunction {
+public class ConnectionReport extends BasicFunction {
     
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-            new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Connect to Couchbase server",
+            new QName("connection-report", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+            "Get all Couchbase clusterIds.",
             new SequenceType[]{
-                new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
+                //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
             },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
-        ), 
-        new FunctionSignature(
-            new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Connect to Couchbase server",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string"),
-                new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Bucket passsword")
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
-        ),
+            new FunctionReturnSequenceType(Type.NODE, Cardinality.ONE, "Report of all connections")
+        ),       
     };
 
-    public Connect(XQueryContext context, FunctionSignature signature) {
+    public ConnectionReport(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
 
@@ -78,16 +74,21 @@ public class Connect extends BasicFunction {
             throw new XPathException(this, txt);
         }
 
-        // Get connection string URL
-        String connectionString = args[0].itemAt(0).getStringValue();
+        CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
-        // Get password for bucket, when available
-        String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
+        final MemTreeBuilder builder = context.getDocumentBuilder();
 
-        // Register connection
-        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, context.getRealUser().getUsername(), password);
+        // start root element
+        final int nodeNr = builder.startElement("", "couchbase", "couchbase", null);
 
-        // Return id
-        return new StringValue(clusterId);
-    }   
+        for (CouchbaseClusterConnection con : cmm.getClusterConnections()) {
+            con.getReport(builder);
+        }
+
+        builder.endElement();
+
+        NodeImpl doc = ((DocumentImpl) builder.getDocument()).getNode(nodeNr);
+
+        return doc;
+    }
 }
