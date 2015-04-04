@@ -26,6 +26,7 @@ import com.couchbase.client.java.cluster.ClusterManager;
 import com.couchbase.client.java.cluster.DefaultBucketSettings;
 import com.couchbase.client.java.cluster.DefaultBucketSettings.Builder;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.exist.couchbase.shared.ConversionTools;
@@ -136,7 +137,7 @@ public class InsertBucket extends BasicFunction {
                     builder.replicas(ConversionTools.getIntegerValue(key, value, 0));
                     break;
                 case "type":
-                    builder.type(BucketType.valueOf(value.toString().toUpperCase()));
+                    builder.type(BucketType.valueOf(value.toString().toUpperCase(Locale.US)));
                     break;
                 default:
                     throw new IllegalArgumentException(String.format("'%s' is not a valid parameter.", key));

@@ -19,13 +19,11 @@
  */
 package org.exist.couchbase.xquery.client;
 
-import java.util.Set;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterConnection;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.memtree.DocumentImpl;
 import org.exist.memtree.MemTreeBuilder;
 import org.exist.memtree.NodeImpl;
 import org.exist.xquery.BasicFunction;
@@ -36,9 +34,7 @@ import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
 
 /**
  *  List all Cluster Ids
@@ -87,7 +83,7 @@ public class ConnectionReport extends BasicFunction {
 
         builder.endElement();
 
-        NodeImpl doc = ((DocumentImpl) builder.getDocument()).getNode(nodeNr);
+        NodeImpl doc = builder.getDocument().getNode(nodeNr);
 
         return doc;
     }

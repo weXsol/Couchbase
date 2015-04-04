@@ -22,7 +22,7 @@ package org.exist.couchbase.xquery.bucket;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
-import org.apache.commons.lang3.StringUtils;
+import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -95,7 +95,7 @@ public class Upsert extends BasicFunction {
         CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String docName = args[2].itemAt(0).getStringValue();

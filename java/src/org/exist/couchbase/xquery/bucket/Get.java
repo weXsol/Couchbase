@@ -21,9 +21,10 @@ package org.exist.couchbase.xquery.bucket;
 
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.StringUtils;
+import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -88,7 +89,7 @@ public class Get extends BasicFunction {
         CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
 
         String docName = args[2].itemAt(0).getStringValue();
@@ -124,7 +125,7 @@ public class Get extends BasicFunction {
     /** Retrieve documents with additional parameters */
     private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, String bucketPassword, Map<String, Object> parameters) {
         long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
-        TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase());
+        TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase(Locale.US));
 
         return cluster.openBucket(bucketName, bucketPassword).get(docName, timeout, timeUnit);
     }

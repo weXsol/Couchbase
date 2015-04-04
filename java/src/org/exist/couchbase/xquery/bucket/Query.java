@@ -24,9 +24,10 @@ import com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.lang3.StringUtils;
+import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -84,7 +85,7 @@ public class Query extends BasicFunction {
         CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String design = args[2].itemAt(0).getStringValue();
@@ -123,7 +124,7 @@ public class Query extends BasicFunction {
         
         for (Entry<String, Object> entry : parameters.entrySet()) {
             
-            String key = entry.getKey().toLowerCase();
+            String key = entry.getKey().toLowerCase(Locale.US);
             Object value = entry.getValue();
             
             switch (key) {
