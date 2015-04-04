@@ -28,6 +28,7 @@ import org.exist.couchbase.xquery.bucket.Upsert;
 import org.exist.couchbase.xquery.client.Close;
 import org.exist.couchbase.xquery.client.Connect;
 import org.exist.couchbase.xquery.client.ListClusterIds;
+import org.exist.couchbase.xquery.client.Shutdown;
 import org.exist.couchbase.xquery.clustermanager.InsertBucket;
 import org.exist.couchbase.xquery.clustermanager.ListBuckets;
 import org.exist.couchbase.xquery.clustermanager.RemoveBucket;
@@ -57,6 +58,7 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(InsertBucket.signatures[0], InsertBucket.class), 
         new FunctionDef(RemoveBucket.signatures[0], RemoveBucket.class), 
         new FunctionDef(ListBuckets.signatures[0], ListBuckets.class), 
+        new FunctionDef(Shutdown.signatures[0], Shutdown.class), 
     };
     
     /** Generic error */
@@ -121,7 +123,7 @@ public class CouchbaseModule extends AbstractInternalModule {
     
     /** InvalidPasswordException: the password for the bucket does not match */
     public final static ErrorCode COBA0021
-            = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match");
+            = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match.");
     
 
     public final static QName EXCEPTION_QNAME
