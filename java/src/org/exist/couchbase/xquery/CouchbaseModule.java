@@ -27,6 +27,7 @@ import org.exist.couchbase.xquery.bucket.Remove;
 import org.exist.couchbase.xquery.bucket.Upsert;
 import org.exist.couchbase.xquery.client.Close;
 import org.exist.couchbase.xquery.client.Connect;
+import org.exist.couchbase.xquery.client.ConnectionReport;
 import org.exist.couchbase.xquery.client.ListClusterIds;
 import org.exist.couchbase.xquery.client.Shutdown;
 import org.exist.couchbase.xquery.clustermanager.InsertBucket;
@@ -50,6 +51,7 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(Connect.signatures[0], Connect.class),
         new FunctionDef(Connect.signatures[1], Connect.class),
         new FunctionDef(ListClusterIds.signatures[0], ListClusterIds.class), 
+        new FunctionDef(ConnectionReport.signatures[0], ConnectionReport.class),
         new FunctionDef(Get.signatures[0], Get.class), 
         new FunctionDef(Remove.signatures[0], Remove.class), 
         new FunctionDef(Upsert.signatures[0], Upsert.class), 
