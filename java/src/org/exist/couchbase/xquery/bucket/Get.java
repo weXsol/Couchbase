@@ -89,14 +89,13 @@ public class Get extends BasicFunction {
 
         // Retrieve other parameters             
         String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketPassword = cmm.getBucketPassword(clusterId);
 
         String docName = args[2].itemAt(0).getStringValue();
 
         Map<String, Object> parameters = (getArgumentCount() > 3)
                 ? ConversionTools.convert((AbstractMapType) args[3].itemAt(0))
                 : null;
-
-        String bucketPassword = cmm.getBucketPassword(clusterId);
 
         try {
             // Perform action

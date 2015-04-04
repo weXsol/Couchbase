@@ -75,14 +75,17 @@ public class Query extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
+        final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
+
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
-        CouchbaseClusterManager.getInstance().validate(clusterId);
+
+        // Get reference to cluster
+        CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty())
-                ? null
-                : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String design = args[2].itemAt(0).getStringValue();
         String view = args[3].itemAt(0).getStringValue();
@@ -90,9 +93,6 @@ public class Query extends BasicFunction {
         Map<String, Object> parameters = (args[4].isEmpty())
                 ? new HashMap<String, Object>()
                 : ConversionTools.convert((AbstractMapType) args[4].itemAt(0));
-
-        // Retrieve access to cluster
-        CouchbaseCluster cluster = CouchbaseClusterManager.getInstance().get(clusterId);
         
         try {
             // Prepare query
@@ -102,9 +102,7 @@ public class Query extends BasicFunction {
             viewQuery = parseParameters(viewQuery, parameters);
 
             // Perform action
-            ViewResult result = StringUtils.isBlank(bucketName)
-                    ? cluster.openBucket().query(viewQuery)
-                    : cluster.openBucket(bucketName).query(viewQuery);
+            ViewResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
 
             // Return results
             ValueSequence retVal = new ValueSequence();

@@ -86,20 +86,20 @@ public class Upsert extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
+        final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
+
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
-        CouchbaseClusterManager.getInstance().validate(clusterId);
-        
-        // Retrieve other parameters
-        String bucketName = (args[1].isEmpty()) 
-                ? null 
-                : args[1].itemAt(0).getStringValue();
+
+        // Get reference to cluster
+        CouchbaseCluster cluster = cmm.validate(clusterId);
+
+        // Retrieve other parameters             
+        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String docName = args[2].itemAt(0).getStringValue();
         String payload = args[3].itemAt(0).getStringValue();
-            
-        // Retrieve access to cluster
-        CouchbaseCluster cluster = CouchbaseClusterManager.getInstance().get(clusterId);
            
         try {
             // Prepare input
@@ -108,8 +108,8 @@ public class Upsert extends BasicFunction {
             
             // Perform action
             JsonDocument result = isCalledAs(UPSERT) 
-                    ? upsert(cluster, bucketName, jsonDocument) 
-                    : insert(cluster, bucketName, jsonDocument);
+                    ? cluster.openBucket(bucketName, bucketPassword).upsert(jsonDocument) 
+                    : cluster.openBucket(bucketName, bucketPassword).insert(jsonDocument);
             
             // Return results
             return new StringValue(ConversionTools.convert(result.content()));
@@ -120,15 +120,4 @@ public class Upsert extends BasicFunction {
         
     }
     
-    private JsonDocument upsert(CouchbaseCluster cluster, String bucketName, JsonDocument jsonDocument){
-        return StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().upsert(jsonDocument)
-                    : cluster.openBucket(bucketName).upsert(jsonDocument);
-    }
-    
-     private JsonDocument insert(CouchbaseCluster cluster, String bucketName, JsonDocument jsonDocument){
-        return StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().insert(jsonDocument)
-                    : cluster.openBucket(bucketName).insert(jsonDocument);
-    }
 }

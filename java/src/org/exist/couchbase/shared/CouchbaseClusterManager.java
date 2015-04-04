@@ -22,7 +22,9 @@ package org.exist.couchbase.shared;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -55,8 +57,8 @@ public class CouchbaseClusterManager {
     private final Map<String, CouchbaseClusterConnection> clusters = new HashMap<>();
 
     /**
-     *   Get instance of object, initialize when needed.
-     * 
+     * Get instance of object, initialize when needed.
+     *
      * @return Instance of class.
      */
     public static synchronized CouchbaseClusterManager getInstance() {
@@ -72,11 +74,11 @@ public class CouchbaseClusterManager {
     }
 
     public void remove(String clusterId) {
-        
+
         // Close connection
         CouchbaseCluster c = get(clusterId);
         c.disconnect();
-        
+
         // Remove
         clusters.remove(clusterId);
     }
@@ -88,10 +90,10 @@ public class CouchbaseClusterManager {
     public CouchbaseCluster get(String clusterId) {
         return clusters.get(clusterId).getCluster();
     }
-    
-    public String getBucketPassword(String clusterId){
+
+    public String getBucketPassword(String clusterId) {
         CouchbaseClusterConnection ccc = clusters.get(clusterId);
-        if(ccc == null){
+        if (ccc == null) {
             LOG.debug(String.format("No bucket password for '%s'", clusterId));
             return null;
         }
@@ -105,17 +107,17 @@ public class CouchbaseClusterManager {
     public String create(String connectionString) {
         return create(connectionString, null);
     }
-    
+
     public String create(String connectionString, String defaultBucketPassword) {
-        
+
         // Create new cb cluster with the connection string.
         CouchbaseCluster cluster = CouchbaseCluster.fromConnectionString(cbEnvironment, connectionString);
 
-        // Register the cluster
+        // Create random identifier
         UUID clusterId = UUID.randomUUID();
-        
+
+        // Register the cluster
         CouchbaseClusterConnection ccc = new CouchbaseClusterConnection(cluster, null, defaultBucketPassword, connectionString, clusterId);
-        
         add(clusterId.toString(), ccc);
 
         LOG.info(String.format("%s - %s", clusterId, cluster.toString()));
@@ -138,20 +140,33 @@ public class CouchbaseClusterManager {
         return clusters.get(clusterId).getCluster();
 
     }
-    
+
     /**
      * Disconnect all cluster connections and shutdown the environment.
+     * 
+     * @return 
      */
-    public void shutdownAll(){
-            // Stopping clusters
-            for(CouchbaseClusterConnection c : clusters.values()){
-                c.getCluster().disconnect();
-            }
+    public List<String> shutdownAll() {
+        
+        List<String> ids = new ArrayList();
+
+        // Stopping clusters
+        for (CouchbaseClusterConnection c : clusters.values()) {
             
-            // Shut it down, all
-            cbEnvironment.shutdown();
+            try {         
+                String id = c.getConnectionId().toString();
+                c.getCluster().disconnect();
+                ids.add(id);
+                
+            } catch (Throwable ex) {
+                LOG.error(ex.getMessage());
+            }
+        }
+
+        // Shut it down, all
+        cbEnvironment.shutdown();
+        
+        return ids;
     }
-
-
 
 }

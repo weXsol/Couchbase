@@ -69,27 +69,25 @@ public class Remove extends BasicFunction {
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
         
+        final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
+
         // Get connection details
         String clusterId = args[0].itemAt(0).getStringValue();
-        CouchbaseClusterManager.getInstance().validate(clusterId);
-        
+
+        // Get reference to cluster
+        CouchbaseCluster cluster = cmm.validate(clusterId);
+
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) 
-                ? null 
-                : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? "default" : args[1].itemAt(0).getStringValue();
+        String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String docName = args[2].itemAt(0).getStringValue();
             
-        // Retrieve access to cluster
-        CouchbaseCluster cluster = CouchbaseClusterManager.getInstance().get(clusterId);
            
         try {           
             // Perform action
-            JsonDocument result = StringUtils.isBlank(bucketName) 
-                    ? cluster.openBucket().remove(docName)
-                    : cluster.openBucket(bucketName).remove(docName);
-            
-            
+            JsonDocument result = cluster.openBucket(bucketName, bucketPassword).remove(docName);
+                     
             if(result == null){
                 return EmptySequence.EMPTY_SEQUENCE;
             }
