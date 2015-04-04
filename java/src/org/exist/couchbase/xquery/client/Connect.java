@@ -51,7 +51,16 @@ public class Connect extends BasicFunction {
                 new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
             },
             new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
-        ),       
+        ), 
+        new FunctionSignature(
+            new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+            "Connect to Couchbase server",
+            new SequenceType[]{
+                new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string"),
+                new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Bucket passsword")
+            },
+            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
+        ),
     };
 
     public Connect(XQueryContext context, FunctionSignature signature) {
@@ -71,9 +80,11 @@ public class Connect extends BasicFunction {
 
         // Get connection details
         String connectionString = args[0].itemAt(0).getStringValue();
+        
+        String password = ( getArgumentCount()>1 ) ? args[0].itemAt(0).getStringValue() : null;
 
         // Register connection
-        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString);
+        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, password);
 
         // Return id
         return new StringValue(clusterId);

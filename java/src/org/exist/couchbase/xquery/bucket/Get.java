@@ -89,14 +89,13 @@ public class Get extends BasicFunction {
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) 
-                ? null 
-                : args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? null : args[1].itemAt(0).getStringValue();
+//        String password = (args[2].isEmpty()) ? null : args[2].itemAt(0).getStringValue();
         
         String docName = args[2].itemAt(0).getStringValue();
         
         Map<String, Object> parameters = (getArgumentCount() > 3)
-                ? ConversionTools.convert((AbstractMapType) args[4].itemAt(0))
+                ? ConversionTools.convert((AbstractMapType) args[3].itemAt(0))
                 : null;
             
         // Retrieve access to cluster

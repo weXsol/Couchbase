@@ -47,6 +47,7 @@ public class CouchbaseModule extends AbstractInternalModule {
     public final static FunctionDef[] functions = { 
         new FunctionDef(Close.signatures[0], Close.class),
         new FunctionDef(Connect.signatures[0], Connect.class),
+        new FunctionDef(Connect.signatures[1], Connect.class),
         new FunctionDef(ListClusterIds.signatures[0], ListClusterIds.class), 
         new FunctionDef(Get.signatures[0], Get.class), 
         new FunctionDef(Remove.signatures[0], Remove.class), 
