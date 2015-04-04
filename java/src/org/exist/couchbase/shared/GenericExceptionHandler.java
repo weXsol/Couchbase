@@ -60,7 +60,7 @@ public class GenericExceptionHandler {
     public static Sequence handleException(Expression expr, Throwable throwable) throws XPathException {
 
         if(LOG.isDebugEnabled()){
-            LOG.error(throwable.getMessage());
+            LOG.error(throwable.getMessage(), throwable);
         } else {
             LOG.error(throwable.getMessage(), throwable);
         }
