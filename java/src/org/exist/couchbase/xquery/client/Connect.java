@@ -23,6 +23,7 @@ import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
+import org.exist.security.Subject;
 import org.exist.xquery.BasicFunction;
 import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
@@ -85,7 +86,7 @@ public class Connect extends BasicFunction {
         String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
 
         // Register connection
-        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, context.getRealUser().getUsername(), password);
+        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, context.getEffectiveUser().getUsername(), password);
 
         // Return id
         return new StringValue(clusterId);
