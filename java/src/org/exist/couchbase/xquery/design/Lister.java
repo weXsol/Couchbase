@@ -17,11 +17,15 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.exist.couchbase.xquery.bucket;
-
+package org.exist.couchbase.xquery.design;
 
 import com.couchbase.client.java.CouchbaseCluster;
+import com.couchbase.client.java.bucket.BucketManager;
 import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.view.DesignDocument;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
@@ -33,6 +37,7 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
+import org.exist.xquery.functions.map.AbstractMapType;
 import org.exist.xquery.value.EmptySequence;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
@@ -40,29 +45,27 @@ import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
+import org.exist.xquery.value.ValueSequence;
 
 /**
- *  Remove document
+ * Retrieve document
  *
  * @author Dannes Wessels
  */
-public class Remove extends BasicFunction {
-    
+public class Lister extends BasicFunction {
 
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-            new QName("remove", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Remove document from bucket",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),               
+        new QName("list-design-documents", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "List all design documents.",
+        new SequenceType[]{
+            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
             },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
-        ),
-    };
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The names of design documents, or Empty sequence when not found.")
+        )};
 
-    public Remove(XQueryContext context, FunctionSignature signature) {
+    public Lister(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
 
@@ -80,24 +83,37 @@ public class Remove extends BasicFunction {
         // Retrieve other parameters             
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
-        
-        String docName = args[2].itemAt(0).getStringValue();
+
+       
+        try {
+            // Get access to bucketmanager
+            BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
             
-           
-        try {           
-            // Perform action
-            JsonDocument result = cluster.openBucket(bucketName, bucketPassword).remove(docName);
-                     
-            if(result == null){
-                return EmptySequence.EMPTY_SEQUENCE;
+            // Retrieve all design documents
+            java.util.List<DesignDocument> designDocuments = bucketManager.getDesignDocuments();
+            
+            if (designDocuments.isEmpty()) {
+                // No values ....
+                return Sequence.EMPTY_SEQUENCE;
+                
+            } else {
+                
+                // Report all documents names
+                Sequence retVal = new ValueSequence();
+                for (DesignDocument doc : designDocuments) {
+                    retVal.add(new StringValue(doc.name()));
+                }
+                return retVal;
             }
+  
             
-            // Return results
-            return new StringValue(ConversionTools.convert(result.content()));
-        
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
+    
+
+    
 }

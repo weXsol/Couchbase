@@ -59,11 +59,11 @@ public class GenericExceptionHandler {
      */
     public static Sequence handleException(Expression expr, Throwable throwable) throws XPathException {
 
-        if(LOG.isDebugEnabled()){
+//        if(LOG.isDebugEnabled()){
             LOG.error(throwable.getMessage(), throwable);
-        } else {
-            LOG.error(throwable.getMessage(), throwable);
-        }
+//        } else {
+//            LOG.error(throwable.getMessage(), throwable);
+//        }
 
         if(throwable instanceof XPathException){
             throw (XPathException) throwable;
