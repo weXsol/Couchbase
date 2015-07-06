@@ -17,10 +17,10 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.exist.couchbase.xquery.bucket;
+package org.exist.couchbase.xquery.query;
 
 import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.view.ViewQuery;
+//mport com.couchbase.client.java.view.ViewQuery;
 import com.couchbase.client.java.view.ViewResult;
 import com.couchbase.client.java.view.ViewRow;
 import java.util.HashMap;
@@ -48,11 +48,11 @@ import org.exist.xquery.value.Type;
 import org.exist.xquery.value.ValueSequence;
 
 /**
- * Retrieve document
+ * Implementation of Couchbase View Query.
  *
  * @author Dannes Wessels
  */
-public class Query extends BasicFunction {
+public class ViewQuery extends BasicFunction {
     
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
@@ -69,7 +69,7 @@ public class Query extends BasicFunction {
         new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
         ),};
     
-    public Query(XQueryContext context, FunctionSignature signature) {
+    public ViewQuery(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
     
@@ -84,7 +84,7 @@ public class Query extends BasicFunction {
         // Get reference to cluster
         CouchbaseCluster cluster = cmm.validate(clusterId);
 
-        // Retrieve other parameters             
+        // Retrieve other parameters        
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
         
@@ -97,7 +97,7 @@ public class Query extends BasicFunction {
         
         try {
             // Prepare query
-            ViewQuery viewQuery = ViewQuery.from(design, view);
+            com.couchbase.client.java.view.ViewQuery viewQuery = com.couchbase.client.java.view.ViewQuery.from(design, view);
             
             // Set additional parameters
             viewQuery = parseParameters(viewQuery, parameters);
@@ -120,7 +120,7 @@ public class Query extends BasicFunction {
         
     }
     
-    private ViewQuery parseParameters(ViewQuery viewQuery, Map<String, Object> parameters) throws XPathException {
+    private com.couchbase.client.java.view.ViewQuery parseParameters(com.couchbase.client.java.view.ViewQuery viewQuery, Map<String, Object> parameters) throws XPathException {
         
         for (Entry<String, Object> entry : parameters.entrySet()) {
             

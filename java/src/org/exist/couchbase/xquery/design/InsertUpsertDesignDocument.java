@@ -17,15 +17,16 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.exist.couchbase.xquery.bucket;
+package org.exist.couchbase.xquery.design;
 
 import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.document.JsonDocument;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import com.couchbase.client.java.bucket.BucketManager;
+import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.view.DesignDocument;
+import com.couchbase.client.java.view.View;
+import java.util.ArrayList;
+import java.util.List;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
@@ -35,8 +36,7 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.functions.map.AbstractMapType;
-import org.exist.xquery.value.EmptySequence;
+import org.exist.xquery.value.BooleanValue;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
@@ -45,41 +45,42 @@ import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
 /**
- * Retrieve document
+ * Insert or upsert design document
  *
  * @author Dannes Wessels
  */
-public class Get extends BasicFunction {
+public class InsertUpsertDesignDocument extends BasicFunction {
 
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-        new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-        "Retrieve document from bucket",
+        new QName("upsert-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Upsert design document with views.",
         new SequenceType[]{
             new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),},
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
+            new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
+            new FunctionParameterSequenceType("view-data", Type.STRING, Cardinality.ONE, "Raw JSON formatted view data.")},
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The upserted document.")
         ),
         new FunctionSignature(
-        new QName("get", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-        "Retrieve document from bucket",
+        new QName("insert-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Insert design document with views.",
         new SequenceType[]{
             new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-            new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Query parameters")
-        },
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
-        ),};
+            new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
+            new FunctionParameterSequenceType("view-data", Type.STRING, Cardinality.ONE, "Raw JSON formatted view data.")},
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The inserted document")
+        )
+    };
 
-    public Get(XQueryContext context, FunctionSignature signature) {
+    public InsertUpsertDesignDocument(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-        
+
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
@@ -90,44 +91,36 @@ public class Get extends BasicFunction {
 
         // Retrieve other parameters             
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        String designName = args[2].itemAt(0).getStringValue();
+        String json = args[3].itemAt(0).getStringValue();
+
         String bucketPassword = cmm.getBucketPassword(clusterId);
 
-        String docName = args[2].itemAt(0).getStringValue();
-
-        Map<String, Object> parameters = (getArgumentCount() > 3)
-                ? ConversionTools.convert((AbstractMapType) args[3].itemAt(0))
-                : null;
-
         try {
-            // Perform action
-            JsonDocument result = (parameters == null)
-                    ? get(cluster, bucketName, bucketPassword, docName)
-                    : get(cluster, bucketName, bucketPassword, docName, parameters);
+            // Get access to bucketmanager
+            BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
 
-            if (result == null) {
-                return EmptySequence.EMPTY_SEQUENCE;
+            // Convert to JSonObject
+            JsonObject rawJson = JsonObject.fromJson(json);
+
+            // Convert JSON to design document
+            DesignDocument input = DesignDocument.from(designName, rawJson);
+
+            // Retrieve all design documents
+            DesignDocument retVal = (isCalledAs("upsert-design-document"))
+                    ? bucketManager.upsertDesignDocument(input)
+                    : bucketManager.insertDesignDocument(input);
+
+            if (retVal == null) {
+                return Sequence.EMPTY_SEQUENCE;
+            } else {
+                return new StringValue(retVal.toJsonObject().toString());
             }
-
-            // Return results
-            return new StringValue(ConversionTools.convert(result.content()));
 
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 
     }
-    
-    /* Retrieve document */
-    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String bucketPassword, String docName) {
-        return cluster.openBucket(bucketName, bucketPassword).get(docName);
-    }
 
-    /** Retrieve documents with additional parameters */
-    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, String bucketPassword, Map<String, Object> parameters) {
-        long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
-        TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase(Locale.US));
-
-        return cluster.openBucket(bucketName, bucketPassword).get(docName, timeout, timeUnit);
-    }
-    
 }

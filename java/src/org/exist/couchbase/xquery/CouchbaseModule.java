@@ -21,18 +21,22 @@ package org.exist.couchbase.xquery;
 
 import java.util.List;
 import java.util.Map;
-import org.exist.couchbase.xquery.bucket.Get;
-import org.exist.couchbase.xquery.bucket.Query;
-import org.exist.couchbase.xquery.bucket.Remove;
-import org.exist.couchbase.xquery.bucket.Upsert;
+import org.exist.couchbase.xquery.bucket.InsertBucket;
+import org.exist.couchbase.xquery.bucket.ListBuckets;
+import org.exist.couchbase.xquery.bucket.RemoveBucket;
 import org.exist.couchbase.xquery.client.Close;
 import org.exist.couchbase.xquery.client.Connect;
 import org.exist.couchbase.xquery.client.ConnectionReport;
 import org.exist.couchbase.xquery.client.ListClusterIds;
 import org.exist.couchbase.xquery.client.Shutdown;
-import org.exist.couchbase.xquery.clustermanager.InsertBucket;
-import org.exist.couchbase.xquery.clustermanager.ListBuckets;
-import org.exist.couchbase.xquery.clustermanager.RemoveBucket;
+import org.exist.couchbase.xquery.design.GetRemoveDesignDocument;
+import org.exist.couchbase.xquery.design.InsertUpsertDesignDocument;
+import org.exist.couchbase.xquery.design.ListDesignDocuments;
+import org.exist.couchbase.xquery.document.Get;
+import org.exist.couchbase.xquery.document.Remove;
+import org.exist.couchbase.xquery.document.Upsert;
+import org.exist.couchbase.xquery.query.N1qlQuery;
+import org.exist.couchbase.xquery.query.ViewQuery;
 import org.exist.dom.QName;
 import org.exist.xquery.AbstractInternalModule;
 import org.exist.xquery.ErrorCodes.ErrorCode;
@@ -56,7 +60,13 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(Remove.signatures[0], Remove.class), 
         new FunctionDef(Upsert.signatures[0], Upsert.class), 
         new FunctionDef(Upsert.signatures[1], Upsert.class), 
-        new FunctionDef(Query.signatures[0], Query.class), 
+        new FunctionDef(ListDesignDocuments.signatures[0], ListDesignDocuments.class), 
+        new FunctionDef(InsertUpsertDesignDocument.signatures[0], InsertUpsertDesignDocument.class), 
+        new FunctionDef(InsertUpsertDesignDocument.signatures[1], InsertUpsertDesignDocument.class), 
+        new FunctionDef(GetRemoveDesignDocument.signatures[0], GetRemoveDesignDocument.class), 
+        new FunctionDef(GetRemoveDesignDocument.signatures[1], GetRemoveDesignDocument.class), 
+        new FunctionDef(ViewQuery.signatures[0], ViewQuery.class), 
+        new FunctionDef(N1qlQuery.signatures[0], N1qlQuery.class), 
         new FunctionDef(InsertBucket.signatures[0], InsertBucket.class), 
         new FunctionDef(RemoveBucket.signatures[0], RemoveBucket.class), 
         new FunctionDef(ListBuckets.signatures[0], ListBuckets.class), 
