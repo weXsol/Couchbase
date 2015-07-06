@@ -21,13 +21,12 @@ package org.exist.couchbase.xquery.design;
 
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.bucket.BucketManager;
-import com.couchbase.client.java.document.JsonDocument;
+import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.view.DesignDocument;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import com.couchbase.client.java.view.View;
+import java.util.ArrayList;
+import java.util.List;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
@@ -37,41 +36,51 @@ import org.exist.xquery.Cardinality;
 import org.exist.xquery.FunctionSignature;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
-import org.exist.xquery.functions.map.AbstractMapType;
-import org.exist.xquery.value.EmptySequence;
+import org.exist.xquery.value.BooleanValue;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
 
 /**
- * Retrieve document
+ * Insert or upsert design document
  *
  * @author Dannes Wessels
  */
-public class Lister extends BasicFunction {
+public class InsertUpsertDesignDocument extends BasicFunction {
 
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
-        new QName("list-design-documents", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-        "List all design documents.",
+        new QName("upsert-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Upsert design document with views.",
         new SequenceType[]{
             new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-            },
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The names of design documents, or Empty sequence when not found.")
-        )};
+            new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
+            new FunctionParameterSequenceType("view-data", Type.STRING, Cardinality.ONE, "Raw JSON formatted view data.")},
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The upserted document.")
+        ),
+        new FunctionSignature(
+        new QName("insert-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+        "Insert design document with views.",
+        new SequenceType[]{
+            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+            new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
+            new FunctionParameterSequenceType("view-data", Type.STRING, Cardinality.ONE, "Raw JSON formatted view data.")},
+        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The inserted document")
+        )
+    };
 
-    public Lister(XQueryContext context, FunctionSignature signature) {
+    public InsertUpsertDesignDocument(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-        
+
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
@@ -82,38 +91,36 @@ public class Lister extends BasicFunction {
 
         // Retrieve other parameters             
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        String designName = args[2].itemAt(0).getStringValue();
+        String json = args[3].itemAt(0).getStringValue();
+
         String bucketPassword = cmm.getBucketPassword(clusterId);
 
-       
         try {
             // Get access to bucketmanager
             BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
-            
+
+            // Convert to JSonObject
+            JsonObject rawJson = JsonObject.fromJson(json);
+
+            // Convert JSON to design document
+            DesignDocument input = DesignDocument.from(designName, rawJson);
+
             // Retrieve all design documents
-            java.util.List<DesignDocument> designDocuments = bucketManager.getDesignDocuments();
-            
-            if (designDocuments.isEmpty()) {
-                // No values ....
+            DesignDocument retVal = (isCalledAs("upsert-design-document"))
+                    ? bucketManager.upsertDesignDocument(input)
+                    : bucketManager.insertDesignDocument(input);
+
+            if (retVal == null) {
                 return Sequence.EMPTY_SEQUENCE;
-                
             } else {
-                
-                // Report all documents names
-                Sequence retVal = new ValueSequence();
-                for (DesignDocument doc : designDocuments) {
-                    retVal.add(new StringValue(doc.name()));
-                }
-                return retVal;
+                return new StringValue(retVal.toJsonObject().toString());
             }
-  
-            
 
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 
     }
-    
 
-    
 }

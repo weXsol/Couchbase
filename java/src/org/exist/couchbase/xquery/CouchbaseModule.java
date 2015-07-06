@@ -29,8 +29,9 @@ import org.exist.couchbase.xquery.client.Connect;
 import org.exist.couchbase.xquery.client.ConnectionReport;
 import org.exist.couchbase.xquery.client.ListClusterIds;
 import org.exist.couchbase.xquery.client.Shutdown;
-import org.exist.couchbase.xquery.design.Getter;
-import org.exist.couchbase.xquery.design.Lister;
+import org.exist.couchbase.xquery.design.GetRemoveDesignDocument;
+import org.exist.couchbase.xquery.design.InsertUpsertDesignDocument;
+import org.exist.couchbase.xquery.design.ListDesignDocuments;
 import org.exist.couchbase.xquery.document.Get;
 import org.exist.couchbase.xquery.document.Remove;
 import org.exist.couchbase.xquery.document.Upsert;
@@ -59,8 +60,11 @@ public class CouchbaseModule extends AbstractInternalModule {
         new FunctionDef(Remove.signatures[0], Remove.class), 
         new FunctionDef(Upsert.signatures[0], Upsert.class), 
         new FunctionDef(Upsert.signatures[1], Upsert.class), 
-        new FunctionDef(Lister.signatures[0], Lister.class), 
-        new FunctionDef(Getter.signatures[0], Getter.class), 
+        new FunctionDef(ListDesignDocuments.signatures[0], ListDesignDocuments.class), 
+        new FunctionDef(InsertUpsertDesignDocument.signatures[0], InsertUpsertDesignDocument.class), 
+        new FunctionDef(InsertUpsertDesignDocument.signatures[1], InsertUpsertDesignDocument.class), 
+        new FunctionDef(GetRemoveDesignDocument.signatures[0], GetRemoveDesignDocument.class), 
+        new FunctionDef(GetRemoveDesignDocument.signatures[1], GetRemoveDesignDocument.class), 
         new FunctionDef(ViewQuery.signatures[0], ViewQuery.class), 
         new FunctionDef(N1qlQuery.signatures[0], N1qlQuery.class), 
         new FunctionDef(InsertBucket.signatures[0], InsertBucket.class), 
