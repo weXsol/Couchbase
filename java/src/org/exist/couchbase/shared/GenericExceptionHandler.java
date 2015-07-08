@@ -23,6 +23,8 @@ import com.couchbase.client.core.BackpressureException;
 import com.couchbase.client.core.CouchbaseException;
 import com.couchbase.client.core.RequestCancelledException;
 import com.couchbase.client.java.error.CouchbaseOutOfMemoryException;
+import com.couchbase.client.java.error.DesignDocumentAlreadyExistsException;
+import com.couchbase.client.java.error.DesignDocumentException;
 import com.couchbase.client.java.error.DocumentAlreadyExistsException;
 import com.couchbase.client.java.error.DocumentDoesNotExistException;
 import com.couchbase.client.java.error.InvalidPasswordException;
@@ -114,6 +116,14 @@ public class GenericExceptionHandler {
         } else if (throwable instanceof InvalidPasswordException) {
 
             throw new XPathException(expr, CouchbaseModule.COBA0021, throwable.getMessage());
+            
+        } else if (throwable instanceof DesignDocumentAlreadyExistsException) {
+
+            throw new XPathException(expr, CouchbaseModule.COBA0030, throwable.getMessage());    
+            
+         } else if (throwable instanceof DesignDocumentException) {
+
+            throw new XPathException(expr, CouchbaseModule.COBA0031, throwable);               
             
         } else if (throwable instanceof CouchbaseException) {
 
