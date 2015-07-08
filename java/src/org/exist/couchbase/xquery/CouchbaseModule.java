@@ -137,6 +137,14 @@ public class CouchbaseModule extends AbstractInternalModule {
     public final static ErrorCode COBA0021
             = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match.");
     
+    /** InvalidPasswordException: the password for the bucket does not match */
+    public final static ErrorCode COBA0030
+            = new CouchbaseErrorCode("COBA0030", "DesignDocumentAlreadyExistsException: the design document already exists.");
+    
+    /** InvalidPasswordException: the password for the bucket does not match */
+    public final static ErrorCode COBA0031
+            = new CouchbaseErrorCode("COBA0031", "DesignDocumentException: generic design document error.");
+    
 
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);

@@ -7,5 +7,6 @@ test:suite((
     inspect:module-functions(xs:anyURI("connection.xql")),
     inspect:module-functions(xs:anyURI("query.xql")),
     inspect:module-functions(xs:anyURI("upsert.xql")),
-    inspect:module-functions(xs:anyURI("bucket.xql"))
+    inspect:module-functions(xs:anyURI("bucket.xql")),
+    inspect:module-functions(xs:anyURI("designdocuments.xql"))
 ))
