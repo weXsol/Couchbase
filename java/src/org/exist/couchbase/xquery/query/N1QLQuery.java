@@ -19,10 +19,10 @@
  */
 package org.exist.couchbase.xquery.query;
 
-import com.couchbase.client.java.CouchbaseCluster;
-import com.couchbase.client.java.query.Query;
-import com.couchbase.client.java.query.QueryResult;
-import com.couchbase.client.java.query.QueryRow;
+import com.couchbase.client.java.CouchbaseCluster; 
+import com.couchbase.client.java.query.N1qlQuery;
+import com.couchbase.client.java.query.N1qlQueryResult;
+import com.couchbase.client.java.query.N1qlQueryRow;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -41,12 +41,13 @@ import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 import org.exist.xquery.value.ValueSequence;
 
+
 /**
  * Implementation of the Couchbase N1QL query (experimental!)
  *
  * @author Dannes Wessels
  */
-public class N1qlQuery extends BasicFunction {
+public class N1QLQuery extends BasicFunction {
     
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
@@ -60,7 +61,7 @@ public class N1qlQuery extends BasicFunction {
         new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
         ),};
     
-    public N1qlQuery(XQueryContext context, FunctionSignature signature) {
+    public N1QLQuery(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
     
@@ -83,17 +84,17 @@ public class N1qlQuery extends BasicFunction {
         
         try {
             // Prepare query
-            Query viewQuery = Query.simple(query);
+            N1qlQuery viewQuery = N1qlQuery.simple(query);
             
             // Perform action
-            QueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
+            N1qlQueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
             
             LOG.info(result.info().asJsonObject().toString());
 
             // Return results
             ValueSequence retVal = new ValueSequence();
             
-            for(QueryRow row : result.allRows()){
+            for(N1qlQueryRow row : result.allRows()){
                 retVal.add(new StringValue(row.value().toString()));               
             }
             
