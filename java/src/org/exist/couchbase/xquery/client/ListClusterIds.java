@@ -74,9 +74,9 @@ public class ListClusterIds extends BasicFunction {
 
         ValueSequence valueSequence = new ValueSequence();
 
-        for (String clusterId : clientIds) {
+        clientIds.stream().forEach((clusterId) -> {
             valueSequence.add(new StringValue(clusterId));
-        }
+        });
 
         return valueSequence;
     }   

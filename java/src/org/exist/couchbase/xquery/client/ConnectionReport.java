@@ -20,7 +20,6 @@
 package org.exist.couchbase.xquery.client;
 
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.CouchbaseClusterConnection;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
@@ -77,9 +76,9 @@ public class ConnectionReport extends BasicFunction {
         // start root element
         final int nodeNr = builder.startElement("", "couchbase", "couchbase", null);
 
-        for (CouchbaseClusterConnection con : cmm.getClusterConnections()) {
-            con.getReport(builder);
-        }
+        cmm.getClusterConnections().stream().forEach((connection) -> {
+            connection.getReport(builder);
+        });
 
         builder.endElement();
 

@@ -87,7 +87,7 @@ public class InsertBucket extends BasicFunction {
         String username = args[2].itemAt(0).getStringValue();
         String password = args[3].itemAt(0).getStringValue();
         Map<String, Object> parameters = (args[4].isEmpty())
-                ? new HashMap<String, Object>()
+                ? new HashMap<>()
                 : ConversionTools.convert((AbstractMapType) args[4].itemAt(0));
            
         try {

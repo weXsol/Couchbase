@@ -153,20 +153,19 @@ public class CouchbaseClusterManager {
      */
     public List<String> shutdownAll() {
         
-        List<String> ids = new ArrayList<String>();
+        List<String> ids = new ArrayList<>();
 
         // Stopping clusters
-        for (CouchbaseClusterConnection c : clusters.values()) {
-            
+        clusters.values().stream().forEach((connection) -> {
             try {         
-                String id = c.getConnectionId().toString();
+                String id = connection.getConnectionId().toString();
                 remove(id);
                 ids.add(id);
                 
             } catch (Throwable ex) {
                 LOG.error(ex.getMessage());
             }
-        }
+        });
 
         // Shut it down, all
         cbEnvironment.shutdown();

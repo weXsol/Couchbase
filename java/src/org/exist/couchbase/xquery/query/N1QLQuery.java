@@ -22,7 +22,6 @@ package org.exist.couchbase.xquery.query;
 import com.couchbase.client.java.CouchbaseCluster; 
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryResult;
-import com.couchbase.client.java.query.N1qlQueryRow;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -94,9 +93,9 @@ public class N1QLQuery extends BasicFunction {
             // Return results
             ValueSequence retVal = new ValueSequence();
             
-            for(N1qlQueryRow row : result.allRows()){
-                retVal.add(new StringValue(row.value().toString()));               
-            }
+            result.allRows().stream().forEach((row) -> {
+                retVal.add(new StringValue(row.value().toString()));
+            });
             
             return retVal;
             
