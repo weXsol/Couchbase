@@ -24,7 +24,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.exist.memtree.MemTreeBuilder;
+import org.exist.dom.memtree.MemTreeBuilder;
 
 /**
  * Container for a Couchbase cluster connection.
