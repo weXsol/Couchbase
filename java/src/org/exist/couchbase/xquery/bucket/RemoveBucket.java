@@ -21,6 +21,7 @@ package org.exist.couchbase.xquery.bucket;
 
 
 import com.couchbase.client.java.cluster.ClusterManager;
+import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
@@ -71,7 +72,7 @@ public class RemoveBucket extends BasicFunction {
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Get additional parameters
-        String bucketId = args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String username = args[2].itemAt(0).getStringValue();
         String password = args[3].itemAt(0).getStringValue();
            
@@ -80,7 +81,7 @@ public class RemoveBucket extends BasicFunction {
             ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
             
             // Execute
-            Boolean retVal = clusterManager.removeBucket(bucketId);
+            Boolean retVal = clusterManager.removeBucket(bucketName);
             
             // Return results
             return new BooleanValue(retVal);

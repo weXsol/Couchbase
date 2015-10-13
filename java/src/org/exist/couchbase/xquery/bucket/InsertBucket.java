@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
@@ -82,7 +83,7 @@ public class InsertBucket extends BasicFunction {
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Get additional parameters
-        String bucketId = args[1].itemAt(0).getStringValue();
+        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String username = args[2].itemAt(0).getStringValue();
         String password = args[3].itemAt(0).getStringValue();
         Map<String, Object> parameters = (args[4].isEmpty())
@@ -94,7 +95,7 @@ public class InsertBucket extends BasicFunction {
             ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
             
             // Get configuaration
-            BucketSettings bucketSettings = parseParameters(bucketId, parameters);
+            BucketSettings bucketSettings = parseParameters(bucketName, parameters);
             
             // Execute
             BucketSettings insertBucket = clusterManager.insertBucket(bucketSettings);
