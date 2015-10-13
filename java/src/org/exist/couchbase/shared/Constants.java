@@ -19,6 +19,8 @@
  */
 package org.exist.couchbase.shared;
 
+import com.couchbase.client.java.CouchbaseAsyncCluster;
+
 /**
  * Misc constants
  * 
@@ -28,6 +30,6 @@ package org.exist.couchbase.shared;
 
 public class Constants {
     public final static String COUCHBASE_GROUP="couchbase";
-    public static final String DEFAULT_BUCKET = "default";
-    
+    public static final String DEFAULT_BUCKET = CouchbaseAsyncCluster.DEFAULT_BUCKET;
+    public static final String DEFAULT_HOST = CouchbaseAsyncCluster.DEFAULT_HOST;
 }
