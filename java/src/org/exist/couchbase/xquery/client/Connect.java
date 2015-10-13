@@ -83,9 +83,12 @@ public class Connect extends BasicFunction {
 
         // Get password for bucket, when available
         String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
+        
+        // Username is only used for reporting.
+        String username = context.getEffectiveUser().getUsername();
 
         // Register connection
-        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, context.getEffectiveUser().getUsername(), password);
+        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, username, password);
 
         // Return id
         return new StringValue(clusterId);
