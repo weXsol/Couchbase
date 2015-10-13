@@ -153,7 +153,7 @@ public class CouchbaseClusterManager {
      */
     public List<String> shutdownAll() {
         
-        List<String> ids = new ArrayList();
+        List<String> ids = new ArrayList<String>();
 
         // Stopping clusters
         for (CouchbaseClusterConnection c : clusters.values()) {
