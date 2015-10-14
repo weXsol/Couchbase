@@ -67,7 +67,7 @@ public class ConnectionReport extends BasicFunction {
             String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
-            throw new XPathException(this, txt);
+            throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
 
         CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();

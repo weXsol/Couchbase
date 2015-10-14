@@ -22,6 +22,7 @@ package org.exist.couchbase.xquery.client;
 
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -67,17 +68,22 @@ public class Close extends BasicFunction {
             String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
-            throw new XPathException(this, txt);
+            throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
         
-        // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        try {
+            // Get connection details
+            String clusterId = args[0].itemAt(0).getStringValue();
 
-        // Remove connection
-        CouchbaseClusterManager.getInstance().remove(clusterId);
+            // Remove connection
+            CouchbaseClusterManager.getInstance().remove(clusterId);
 
-        // Return nothing
-        return EmptySequence.EMPTY_SEQUENCE;
+            // Return nothing
+            return EmptySequence.EMPTY_SEQUENCE;
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
+        }
 
     }
 }

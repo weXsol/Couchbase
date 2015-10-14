@@ -23,6 +23,7 @@ package org.exist.couchbase.xquery.client;
 import java.util.List;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -68,21 +69,27 @@ public class Shutdown extends BasicFunction {
             String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
-            throw new XPathException(this, txt);
+            throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
         
-        // Perform action
-        List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
         
-        // Bundle results
-        Sequence retVal = new ValueSequence();
-        for(String id : ids){
-            
-            retVal.add(new StringValue(id));
-        }
+        try {
+            // Perform action
+            List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
 
-        // Return IDs
-        return retVal;
+            // Bundle results
+            Sequence retVal = new ValueSequence();
+            for (String id : ids) {
+
+                retVal.add(new StringValue(id));
+            }
+
+            // Return IDs
+            return retVal;
+            
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
+        }
 
     }
 }
