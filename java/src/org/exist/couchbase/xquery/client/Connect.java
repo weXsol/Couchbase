@@ -21,6 +21,7 @@ package org.exist.couchbase.xquery.client;
 
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
+import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -75,22 +76,27 @@ public class Connect extends BasicFunction {
             String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
-            throw new XPathException(this, txt);
+            throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
 
-        // Get connection string URL
-        String connectionString = args[0].itemAt(0).getStringValue();
+        try {
+            // Get connection string URL
+            String connectionString = args[0].itemAt(0).getStringValue();
 
-        // Get password for bucket, when available
-        String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
-        
-        // Username is only used for reporting.
-        String username = context.getEffectiveUser().getUsername();
+            // Get password for bucket, when available
+            String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
 
-        // Register connection
-        String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, username, password);
+            // Username is only used for reporting.
+            String username = context.getEffectiveUser().getUsername();
 
-        // Return id
-        return new StringValue(clusterId);
+            // Register connection
+            String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, username, password);
+
+            // Return id
+            return new StringValue(clusterId);
+            
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
+        }
     }   
 }

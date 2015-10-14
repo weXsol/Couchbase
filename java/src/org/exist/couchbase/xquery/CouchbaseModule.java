@@ -85,6 +85,10 @@ public class CouchbaseModule extends AbstractInternalModule {
     public final static ErrorCode COBA0002 
             = new CouchbaseErrorCode("COBA0002", "IllegalArgumentException: invalid value.");
     
+    /** Not authorized */
+    public final static ErrorCode COBA0003 
+            = new CouchbaseErrorCode("COBA0003", "User is not authorized: Wrong group or does not have the DBA role.");
+    
     /*
      *  Below are the Couchbase specific errors/exceptions
      */
