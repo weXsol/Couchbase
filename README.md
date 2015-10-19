@@ -11,7 +11,7 @@ Documentation of the driver is found on the [Wiki](../../wiki)
 
 # Releases
 
-The extension can be downloaded from the [Releases](../../releases) page.
+The extension can be downloaded from the [Releases](../../releases) page. Please download the correct version (eXist-db v2.2 or v3.x)
 
 
 # Thanks
