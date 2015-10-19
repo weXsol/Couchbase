@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
 import org.exist.xquery.XPathException;
 
@@ -40,7 +41,7 @@ import org.exist.xquery.XPathException;
  */
 public class CouchbaseClusterManager {
 
-    protected final static Logger LOG = Logger.getLogger(CouchbaseClusterManager.class);
+    protected final static Logger LOG = LogManager.getLogger(CouchbaseClusterManager.class);
 
     /**
      * Singleton

@@ -33,7 +33,8 @@ import com.couchbase.client.java.error.TemporaryFailureException;
 import com.couchbase.client.java.error.TranscodingException;
 import com.couchbase.client.java.error.ViewDoesNotExistException;
 import java.util.concurrent.TimeoutException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.xquery.Expression;
 import org.exist.xquery.XPathException;
@@ -48,7 +49,7 @@ import org.exist.xquery.value.Sequence;
 
 public class GenericExceptionHandler {
     
-    protected final static Logger LOG = Logger.getLogger(GenericExceptionHandler.class);
+    protected final static Logger LOG = LogManager.getLogger(GenericExceptionHandler.class);
     
     /**
      *  Process the exception thrown by the Couchbase driver.

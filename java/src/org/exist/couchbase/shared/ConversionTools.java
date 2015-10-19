@@ -23,7 +23,8 @@ import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.transcoder.JsonTranscoder;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.functions.map.AbstractMapType;
 import org.exist.xquery.value.AtomicValue;
@@ -45,7 +46,7 @@ import org.exist.xquery.value.ValueSequence;
  */
 public class ConversionTools {
     
-    protected final static Logger LOG = Logger.getLogger(ConversionTools.class);
+    protected final static Logger LOG = LogManager.getLogger(ConversionTools.class);
 
     private static final JsonTranscoder transcoder = new JsonTranscoder();
 
