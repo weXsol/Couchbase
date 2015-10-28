@@ -26,6 +26,7 @@ import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.MapToJson;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -35,6 +36,7 @@ import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
+import org.exist.xquery.value.Item;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.StringValue;
@@ -59,7 +61,7 @@ public class Upsert extends BasicFunction {
                 new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
+                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "JSon document content"),
                 
             },
             new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
@@ -72,7 +74,7 @@ public class Upsert extends BasicFunction {
                 new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
+                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "JSon document content"),
                 
             },
             new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
@@ -99,11 +101,11 @@ public class Upsert extends BasicFunction {
         String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String docName = args[2].itemAt(0).getStringValue();
-        String payload = args[3].itemAt(0).getStringValue();
+        
            
         try {
             // Prepare input
-            JsonObject jsonObject = ConversionTools.convert(payload);
+            JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
             JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
             
             // Perform action
