@@ -26,6 +26,7 @@ import com.couchbase.client.java.view.DesignDocument;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.shared.MapToJson;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
@@ -57,7 +58,7 @@ public class InsertUpsertDesignDocument extends BasicFunction {
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
             new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
             new FunctionParameterSequenceType("view-data", Type.ITEM, Cardinality.ONE, "JSON formatted view data.")},
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The upserted document.")
+        new FunctionReturnSequenceType(Type.MAP, Cardinality.ONE, "The upserted document.")
         ),
         new FunctionSignature(
         new QName("insert-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
@@ -67,7 +68,7 @@ public class InsertUpsertDesignDocument extends BasicFunction {
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
             new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of design document"),
             new FunctionParameterSequenceType("view-data", Type.ITEM, Cardinality.ONE, "JSON formatted view data.")},
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The inserted document")
+        new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_ONE, "The inserted document")
         )
     };
 
@@ -89,7 +90,6 @@ public class InsertUpsertDesignDocument extends BasicFunction {
         // Retrieve other parameters             
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String designName = args[2].itemAt(0).getStringValue();
-//        String json = .itemAt(0).getStringValue();
 
         String bucketPassword = cmm.getBucketPassword(clusterId);
 
@@ -104,14 +104,14 @@ public class InsertUpsertDesignDocument extends BasicFunction {
             DesignDocument input = DesignDocument.from(designName, jsonObject);
 
             // Retrieve all design documents
-            DesignDocument retVal = (isCalledAs("upsert-design-document"))
+            DesignDocument designDocument = (isCalledAs("upsert-design-document"))
                     ? bucketManager.upsertDesignDocument(input)
                     : bucketManager.insertDesignDocument(input);
 
-            if (retVal == null) {
+            if (designDocument == null) {
                 return Sequence.EMPTY_SEQUENCE;
             } else {
-                return new StringValue(retVal.toJsonObject().toString());
+                return JsonToMap.convert(designDocument.toJsonObject(), context);
             }
 
         } catch (Throwable ex) {

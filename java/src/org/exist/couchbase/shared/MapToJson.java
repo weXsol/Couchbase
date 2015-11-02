@@ -25,7 +25,6 @@ import com.couchbase.client.java.document.json.JsonValue;
 import com.couchbase.client.java.transcoder.JsonTranscoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.exist.util.serializer.json.JSONObject;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
@@ -95,24 +94,18 @@ public class MapToJson {
     }
 
     private static JsonArray convertArray(Sequence sequence) throws XPathException {
-        
+
         ArrayType xqueryArray = (ArrayType) sequence;
         JsonArray jsonArray = JsonValue.ja();
-        
+
         for (Sequence subSeq : xqueryArray.toArray()) {
-            
+
             switch (subSeq.getItemType()) {
                 case Type.STRING:
-                    jsonArray.add(((StringValue) subSeq).getStringValue());
-                    break;
                 case Type.INTEGER:
-                    jsonArray.add(((IntegerValue) subSeq).toJavaObject(Integer.class));
-                    break;
                 case Type.DOUBLE:
-                    jsonArray.add(((DoubleValue) subSeq).toJavaObject(Double.class));
-                    break;
                 case Type.BOOLEAN:
-                    jsonArray.add(((BooleanValue) subSeq).toJavaObject(Boolean.class));
+                    jsonArray.add(convertSequenceToJavaObject(sequence));
                     break;
                 case Type.MAP:
                     JsonObject newObject = JsonValue.jo();
@@ -127,19 +120,19 @@ public class MapToJson {
                 default:
                     LOG.error(String.format("Unable to convert '%s'", subSeq.getStringValue()));
             }
-            
+
         }
         return jsonArray;
     }
 
     private static JsonObject convertMap(JsonValue in, Sequence seq) throws XPathException {
-        
+
         JsonObject jo = (JsonObject) in;
         MapType map = (MapType) seq;
-        
+
         // Get all keys
         Sequence keys = map.keys();
-        
+
         // Iterate over all keys
         for (final SequenceIterator i = keys.iterate(); i.hasNext();) {
 
@@ -154,16 +147,10 @@ public class MapToJson {
 
             switch (sequence.getItemType()) {
                 case Type.STRING:
-                    jo.put(keyValue, ((StringValue) sequence).getStringValue());
-                    break;
                 case Type.INTEGER:
-                    jo.put(keyValue, ((IntegerValue) sequence).toJavaObject(Integer.class));
-                    break;
                 case Type.DOUBLE:
-                    jo.put(keyValue, ((DoubleValue) sequence).toJavaObject(Double.class));
-                    break;
                 case Type.BOOLEAN:
-                    jo.put(keyValue, ((BooleanValue) sequence).toJavaObject(Boolean.class));
+                    jo.put(keyValue, convertSequenceToJavaObject(sequence));
                     break;
                 case Type.MAP:
                     JsonObject newObject = JsonValue.jo();
@@ -180,6 +167,31 @@ public class MapToJson {
             }
         }
         return jo;
+    }
+
+    static Object convertSequenceToJavaObject(Sequence sequence) throws XPathException {
+
+        Object retVal = null;
+
+        switch (sequence.getItemType()) {
+            case Type.STRING:
+                retVal = ((StringValue) sequence).getStringValue();
+                break;
+            case Type.INTEGER:
+                retVal = ((IntegerValue) sequence).toJavaObject(Integer.class);
+                break;
+            case Type.DOUBLE:
+                retVal = ((DoubleValue) sequence).toJavaObject(Double.class);
+                break;
+            case Type.BOOLEAN:
+                retVal = ((BooleanValue) sequence).toJavaObject(Boolean.class);
+                break;
+            default:
+                String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
+                LOG.error(msg);
+                throw new XPathException(msg );
+        }
+        return retVal;
     }
 
 }
