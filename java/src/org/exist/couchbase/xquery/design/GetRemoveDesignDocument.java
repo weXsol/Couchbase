@@ -25,6 +25,7 @@ import com.couchbase.client.java.view.DesignDocument;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -55,7 +56,7 @@ public class GetRemoveDesignDocument extends BasicFunction {
             new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
             new FunctionParameterSequenceType("design-document-name", Type.STRING, Cardinality.ONE, "Name of bucket, empty sequence for default bucket"),},
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The design document containg named views, or Empty sequence when not found.")
+        new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_ONE, "The design document containg named views, or Empty sequence when not found.")
         ), new FunctionSignature(
         new QName("delete-design-document", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
         "Get one design document.",
@@ -99,7 +100,8 @@ public class GetRemoveDesignDocument extends BasicFunction {
                 if (designDocument == null) {
                     return Sequence.EMPTY_SEQUENCE;
                 } else {
-                    return new StringValue(designDocument.toJsonObject().toString());
+                    return JsonToMap.convert(designDocument.toJsonObject(), context);
+                    
                 }
                 
             } else {

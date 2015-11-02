@@ -19,14 +19,18 @@
  */
 package org.exist.couchbase.shared;
 
+import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+import com.couchbase.client.java.document.json.JsonValue;
 import com.couchbase.client.java.transcoder.JsonTranscoder;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
+import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.AbstractMapType;
+import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.AtomicValue;
 import org.exist.xquery.value.BooleanValue;
 import org.exist.xquery.value.DoubleValue;
@@ -37,6 +41,7 @@ import org.exist.xquery.value.Item;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceIterator;
 import org.exist.xquery.value.StringValue;
+import org.exist.xquery.value.Type;
 import org.exist.xquery.value.ValueSequence;
 
 /**
@@ -45,7 +50,7 @@ import org.exist.xquery.value.ValueSequence;
  * @author Dannes Wessels
  */
 public class ConversionTools {
-    
+
     protected final static Logger LOG = LogManager.getLogger(ConversionTools.class);
 
     private static final JsonTranscoder transcoder = new JsonTranscoder();
@@ -61,6 +66,8 @@ public class ConversionTools {
         return transcoder.stringToJsonObject(document);
     }
 
+    
+
     /**
      * Convert JSON string to object
      *
@@ -72,16 +79,16 @@ public class ConversionTools {
         return transcoder.jsonObjectToString(document);
     }
 
-   /**
-    *  Convert an MAPtype into a easy to use HashMap
-    * 
-    * @param map The xquery map
-    * @return Java hashmap containing the map values
-    * 
-    * @throws XPathException Something happened during the value conversion
-    */
+    /**
+     * Convert an MAPtype into a easy to use HashMap
+     *
+     * @param map The xquery map
+     * @return Java hashmap containing the map values
+     *
+     * @throws XPathException Something happened during the value conversion
+     */
     public static Map<String, Object> convert(AbstractMapType map) throws XPathException {
-        
+
         // Results are stored here
         Map<String, Object> retVal = new HashMap<>();
 
@@ -129,7 +136,7 @@ public class ConversionTools {
             }
 
         }
-        
+
         return retVal;
     }
 
@@ -152,7 +159,7 @@ public class ConversionTools {
         }
         return (Boolean) obj;
     }
-    
+
     public static long getLongValue(String key, Object obj) throws IllegalArgumentException {
         if (obj == null) {
             throw new IllegalArgumentException(String.format("Map item '%s' is value null.", key));
@@ -165,5 +172,7 @@ public class ConversionTools {
         }
         return (Long) obj;
     }
+
+  
 
 }

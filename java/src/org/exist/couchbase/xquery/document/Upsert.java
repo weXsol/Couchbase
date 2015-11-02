@@ -23,9 +23,10 @@ import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
+import org.exist.couchbase.shared.MapToJson;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -37,7 +38,6 @@ import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
 /**
@@ -59,10 +59,10 @@ public class Upsert extends BasicFunction {
                 new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
+                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
                 
             },
-            new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
+            new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
         ),
         
         new FunctionSignature(
@@ -72,10 +72,10 @@ public class Upsert extends BasicFunction {
                 new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
                 new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
                 new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.STRING, Cardinality.ONE, "JSon document content"),
+                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
                 
             },
-            new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
+            new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
         ),
     };
 
@@ -99,11 +99,11 @@ public class Upsert extends BasicFunction {
         String bucketPassword = cmm.getBucketPassword(clusterId);
         
         String docName = args[2].itemAt(0).getStringValue();
-        String payload = args[3].itemAt(0).getStringValue();
+        
            
         try {
             // Prepare input
-            JsonObject jsonObject = ConversionTools.convert(payload);
+            JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
             JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
             
             // Perform action
@@ -112,7 +112,7 @@ public class Upsert extends BasicFunction {
                     : cluster.openBucket(bucketName, bucketPassword).insert(jsonDocument);
             
             // Return results
-            return new StringValue(ConversionTools.convert(result.content()));
+            return JsonToMap.convert(result.content(), context);
             
         } catch (Throwable ex){
             return GenericExceptionHandler.handleException(this, ex);           

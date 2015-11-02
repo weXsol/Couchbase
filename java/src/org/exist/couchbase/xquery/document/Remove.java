@@ -23,9 +23,9 @@ package org.exist.couchbase.xquery.document;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -38,7 +38,6 @@ import org.exist.xquery.value.FunctionParameterSequenceType;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 
 /**
@@ -93,7 +92,7 @@ public class Remove extends BasicFunction {
             }
             
             // Return results
-            return new StringValue(ConversionTools.convert(result.content()));
+            return JsonToMap.convert(result.content(), context);
         
         } catch (Throwable ex){
             return GenericExceptionHandler.handleException(this, ex);           

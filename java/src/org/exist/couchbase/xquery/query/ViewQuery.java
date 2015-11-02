@@ -31,6 +31,7 @@ import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -66,7 +67,7 @@ public class ViewQuery extends BasicFunction {
             new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Query parameters")
         
         },
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
+        new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
         ),};
     
     public ViewQuery(XQueryContext context, FunctionSignature signature) {
@@ -104,12 +105,12 @@ public class ViewQuery extends BasicFunction {
 
             // Perform action
             ViewResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
-
+            
             // Return results
             ValueSequence retVal = new ValueSequence();
             
             for (ViewRow row : result) {
-                retVal.add(new StringValue(ConversionTools.convert(row.document().content())));
+                retVal.add(JsonToMap.convert(row.document().content(), context));                
             }
             
             return retVal;
