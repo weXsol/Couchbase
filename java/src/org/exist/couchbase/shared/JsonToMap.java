@@ -43,13 +43,12 @@ public class JsonToMap {
 
     public static MapType convert(JsonObject json, XQueryContext context) throws Exception {
 
-        if (json instanceof JsonObject) {
-            return convertJsonObject((JsonObject) json, context);
+//        if (json instanceof JsonObject) {
+        return convertJsonObject((JsonObject) json, context);
 
-        } else {
-            throw new IllegalArgumentException(String.format("Unable to convert " + json));
-        }
-
+//        } else {
+//            throw new IllegalArgumentException(String.format("Unable to convert " + json));
+//        }
     }
 
     static MapType convertJsonObject(JsonObject jsonObject, XQueryContext context) throws XPathException {

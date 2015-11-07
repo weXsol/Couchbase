@@ -19,18 +19,14 @@
  */
 package org.exist.couchbase.shared;
 
-import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
-import com.couchbase.client.java.document.json.JsonValue;
 import com.couchbase.client.java.transcoder.JsonTranscoder;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
-import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.AbstractMapType;
-import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.AtomicValue;
 import org.exist.xquery.value.BooleanValue;
 import org.exist.xquery.value.DoubleValue;
@@ -41,7 +37,6 @@ import org.exist.xquery.value.Item;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceIterator;
 import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
 import org.exist.xquery.value.ValueSequence;
 
 /**
