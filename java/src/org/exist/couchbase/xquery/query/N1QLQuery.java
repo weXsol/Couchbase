@@ -19,12 +19,14 @@
  */
 package org.exist.couchbase.xquery.query;
 
-import com.couchbase.client.java.CouchbaseCluster; 
+import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.query.N1qlQuery;
 import com.couchbase.client.java.query.N1qlQueryResult;
+import com.couchbase.client.java.query.N1qlQueryRow;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
+import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.xquery.BasicFunction;
@@ -40,14 +42,13 @@ import org.exist.xquery.value.StringValue;
 import org.exist.xquery.value.Type;
 import org.exist.xquery.value.ValueSequence;
 
-
 /**
  * Implementation of the Couchbase N1QL query (experimental!)
  *
  * @author Dannes Wessels
  */
 public class N1QLQuery extends BasicFunction {
-    
+
     public final static FunctionSignature signatures[] = {
         new FunctionSignature(
         new QName("n1ql", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
@@ -55,15 +56,15 @@ public class N1QLQuery extends BasicFunction {
         new SequenceType[]{
             new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
             new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-            new FunctionParameterSequenceType("query", Type.STRING, Cardinality.ONE, "N1QL query")        
+            new FunctionParameterSequenceType("query", Type.STRING, Cardinality.ONE, "N1QL query")
         },
-        new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
+        new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
         ),};
-    
+
     public N1QLQuery(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
     }
-    
+
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
 
@@ -78,33 +79,33 @@ public class N1QLQuery extends BasicFunction {
         // Retrieve other parameters        
         String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         String bucketPassword = cmm.getBucketPassword(clusterId);
-        
+
         String query = args[2].itemAt(0).getStringValue();
-        
+
         try {
             // Prepare query
             N1qlQuery viewQuery = N1qlQuery.simple(query);
-            
+
             // Perform action
             N1qlQueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
-            
-            LOG.info(result.info().asJsonObject().toString());
+
+            if(LOG.isDebugEnabled()){
+                LOG.debug(result.info().asJsonObject().toString());
+            }
 
             // Return results
             ValueSequence retVal = new ValueSequence();
-            
-            result.allRows().stream().forEach((row) -> {
-                retVal.add(new StringValue(row.value().toString()));
-            });
-            
+
+            for (N1qlQueryRow row : result.allRows()) {
+                retVal.add(JsonToMap.convert(row.value(), context));
+            }
+
             return retVal;
-            
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
-    
- 
-    
+
 }

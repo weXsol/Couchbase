@@ -59,7 +59,9 @@ public class JsonToMap {
         for (String name : jsonObject.getNames()) {
             Object obj = jsonObject.get(name);
 
-            if (obj instanceof JsonObject) {
+            if (obj == null) {
+                result.add(new StringValue(name), Sequence.EMPTY_SEQUENCE);
+            } else if (obj instanceof JsonObject) {
                 JsonObject jo = (JsonObject) obj;
                 result.add(new StringValue(name), convertJsonObject(jo, context));
 
