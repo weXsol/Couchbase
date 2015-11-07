@@ -117,6 +117,9 @@ public class MapToJson {
                     JsonValue newMap1 = convertItem((ArrayType) subSeq, newObject1);
                     jsonArray.add(newMap1);
                     break;
+                case Type.EMPTY:
+                    jsonArray.addNull();
+                    break;
                 default:
                     LOG.error(String.format("Unable to convert '%s'", subSeq.getStringValue()));
             }
@@ -162,6 +165,9 @@ public class MapToJson {
                     JsonValue newMap1 = convertItem((ArrayType) sequence, newObject1);
                     jo.put(keyValue, newMap1);
                     break;
+                case Type.EMPTY:
+                    jo.putNull(keyValue);
+                    break;
                 default:
                     LOG.error(String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue()));
             }
@@ -189,7 +195,7 @@ public class MapToJson {
             default:
                 String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
                 LOG.error(msg);
-                throw new XPathException(msg );
+                throw new XPathException(msg);
         }
         return retVal;
     }
