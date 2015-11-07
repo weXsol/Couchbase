@@ -169,7 +169,9 @@ public class MapToJson {
                     jo.putNull(keyValue);
                     break;
                 default:
-                    LOG.error(String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue()));
+                    String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
+                    LOG.error(msg);
+                    throw new XPathException(msg);
             }
         }
         return jo;
