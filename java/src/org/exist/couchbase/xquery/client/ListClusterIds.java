@@ -19,41 +19,33 @@
  */
 package org.exist.couchbase.xquery.client;
 
-import java.util.Set;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
+
+import java.util.Set;
 
 /**
- *  List all Cluster Ids
- * 
+ * List all Cluster Ids
+ *
  * @author Dannes Wessels
  */
 
 public class ListClusterIds extends BasicFunction {
-    
+
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("list-cluster-ids", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Get all Couchbase clusterIds.",
-            new SequenceType[]{
-                //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Sequence of cluster connection identifiers.")
-        ),       
+            new FunctionSignature(
+                    new QName("list-cluster-ids", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Get all Couchbase clusterIds.",
+                    new SequenceType[]{
+                            //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Sequence of cluster connection identifiers.")
+            ),
     };
 
     public ListClusterIds(XQueryContext context, FunctionSignature signature) {
@@ -79,9 +71,9 @@ public class ListClusterIds extends BasicFunction {
             clientIds.forEach((clusterId) -> valueSequence.add(new StringValue(clusterId)));
 
             return valueSequence;
-            
+
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
-    }   
+    }
 }

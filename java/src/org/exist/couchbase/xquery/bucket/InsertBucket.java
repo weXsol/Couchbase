@@ -25,50 +25,42 @@ import com.couchbase.client.java.cluster.BucketSettings;
 import com.couchbase.client.java.cluster.ClusterManager;
 import com.couchbase.client.java.cluster.DefaultBucketSettings;
 import com.couchbase.client.java.cluster.DefaultBucketSettings.Builder;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.ConversionTools;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
+import org.exist.xquery.*;
 import org.exist.xquery.functions.map.AbstractMapType;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- *  Insert bucket
+ * Insert bucket
  *
  * @author Dannes Wessels
  */
 public class InsertBucket extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("insert-bucket", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Remove bucket",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("username", Type.STRING, Cardinality.ONE, "Clustermanager username"),    
-                new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Clusermanager password"),  
-                new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Bucket parameters: enableFlush indexReplicas password port quota replicas type.")
-            },
-            new FunctionReturnSequenceType(Type.BOOLEAN, Cardinality.ONE, "true() if the removal was successful, false() otherwise")
-        ),
+            new FunctionSignature(
+                    new QName("insert-bucket", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Remove bucket",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                            new FunctionParameterSequenceType("username", Type.STRING, Cardinality.ONE, "Clustermanager username"),
+                            new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Clusermanager password"),
+                            new FunctionParameterSequenceType("parameters", Type.MAP, Cardinality.ZERO_OR_ONE, "Bucket parameters: enableFlush indexReplicas password port quota replicas type.")
+                    },
+                    new FunctionReturnSequenceType(Type.BOOLEAN, Cardinality.ONE, "true() if the removal was successful, false() otherwise")
+            ),
     };
 
     public InsertBucket(XQueryContext context, FunctionSignature signature) {
@@ -77,11 +69,11 @@ public class InsertBucket extends BasicFunction {
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-        
+
         // Get connection details
         final String clusterId = args[0].itemAt(0).getStringValue();
         CouchbaseClusterManager.getInstance().validate(clusterId);
-        
+
         // Get additional parameters
         final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         final String username = args[2].itemAt(0).getStringValue();
@@ -89,35 +81,35 @@ public class InsertBucket extends BasicFunction {
         final Map<String, Object> parameters = (args[4].isEmpty())
                 ? new HashMap<>()
                 : ConversionTools.convert((AbstractMapType) args[4].itemAt(0));
-           
+
         try {
             // Get reference to cluster manager
             final ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
-            
+
             // Get configuaration
             final BucketSettings bucketSettings = parseParameters(bucketName, parameters);
-            
+
             // Execute
             final BucketSettings insertBucket = clusterManager.insertBucket(bucketSettings);
-            
+
             // Return results
             return new StringValue(insertBucket.toString());
-            
-     
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
     }
-        
+
     private BucketSettings parseParameters(String bucketName, Map<String, Object> parameters) throws XPathException {
-        
+
         final Builder builder = DefaultBucketSettings.builder().name(bucketName);
-        
+
         for (final Entry<String, Object> entry : parameters.entrySet()) {
-            
+
             final String key = entry.getKey();
             final Object value = entry.getValue(); // check for empty sequence?
-            
+
             switch (key) {
                 case "enableFlush":
                     builder.enableFlush(ConversionTools.getBooleanValue(key, value, false));
@@ -143,11 +135,11 @@ public class InsertBucket extends BasicFunction {
                 default:
                     throw new IllegalArgumentException(String.format("'%s' is not a valid parameter.", key));
             }
-            
-        } 
-        
+
+        }
+
         return builder;
-        
-    
+
+
     }
 }

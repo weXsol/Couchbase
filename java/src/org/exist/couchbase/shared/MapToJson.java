@@ -28,18 +28,9 @@ import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
-import org.exist.xquery.value.AtomicValue;
-import org.exist.xquery.value.BooleanValue;
-import org.exist.xquery.value.DoubleValue;
-import org.exist.xquery.value.IntegerValue;
-import org.exist.xquery.value.Item;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceIterator;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
 
 /**
- *
  * @author wessels
  */
 public class MapToJson {
@@ -137,7 +128,7 @@ public class MapToJson {
         final Sequence keys = map.keys();
 
         // Iterate over all keys
-        for (final SequenceIterator i = keys.iterate(); i.hasNext();) {
+        for (final SequenceIterator i = keys.iterate(); i.hasNext(); ) {
 
             // Get next item
             final Item key = i.nextItem();

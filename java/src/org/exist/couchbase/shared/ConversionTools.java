@@ -21,23 +21,14 @@ package org.exist.couchbase.shared;
 
 import com.couchbase.client.java.document.json.JsonObject;
 import com.couchbase.client.java.transcoder.JsonTranscoder;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.functions.map.AbstractMapType;
-import org.exist.xquery.value.AtomicValue;
-import org.exist.xquery.value.BooleanValue;
-import org.exist.xquery.value.DoubleValue;
-import org.exist.xquery.value.EmptySequence;
-import org.exist.xquery.value.FloatValue;
-import org.exist.xquery.value.IntegerValue;
-import org.exist.xquery.value.Item;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceIterator;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.value.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Helper class for converting JSON documents
@@ -61,7 +52,6 @@ public class ConversionTools {
         return transcoder.stringToJsonObject(document);
     }
 
-    
 
     /**
      * Convert JSON string to object
@@ -79,7 +69,6 @@ public class ConversionTools {
      *
      * @param map The xquery map
      * @return Java hashmap containing the map values
-     *
      * @throws XPathException Something happened during the value conversion
      */
     public static Map<String, Object> convert(AbstractMapType map) throws XPathException {
@@ -91,7 +80,7 @@ public class ConversionTools {
         final Sequence keys = map.keys();
 
         // Iterate over all keys
-        for (final SequenceIterator i = keys.unorderedIterator(); i.hasNext();) {
+        for (final SequenceIterator i = keys.unorderedIterator(); i.hasNext(); ) {
 
             // Get next item
             final Item key = i.nextItem();
@@ -168,6 +157,5 @@ public class ConversionTools {
         return (Long) obj;
     }
 
-  
 
 }

@@ -29,17 +29,8 @@ import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
 
 /**
  * Implementation of the Couchbase N1QL query (experimental!)
@@ -49,16 +40,16 @@ import org.exist.xquery.value.ValueSequence;
 public class N1QLQuery extends BasicFunction {
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-        new QName("n1ql", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-        "Execute a N1QL query (experimental).",
-        new SequenceType[]{
-            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-            new FunctionParameterSequenceType("query", Type.STRING, Cardinality.ONE, "N1QL query")
-        },
-        new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
-        ),};
+            new FunctionSignature(
+                    new QName("n1ql", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Execute a N1QL query (experimental).",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                            new FunctionParameterSequenceType("query", Type.STRING, Cardinality.ONE, "N1QL query")
+                    },
+                    new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
+            ),};
 
     public N1QLQuery(XQueryContext context, FunctionSignature signature) {
         super(context, signature);
@@ -88,7 +79,7 @@ public class N1QLQuery extends BasicFunction {
             // Perform action
             final N1qlQueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
 
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug(result.info().asJsonObject().toString());
             }
 

@@ -22,17 +22,13 @@ package org.exist.couchbase.shared;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
 import com.couchbase.client.java.env.DefaultCouchbaseEnvironment;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
 import org.exist.xquery.XPathException;
+
+import java.util.*;
+
+import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
 
 /**
  * Class for managing CouchbaseCluster objects
@@ -101,8 +97,8 @@ public class CouchbaseClusterManager {
         }
         return ccc.getBucketPassword();
     }
-    
-    public Collection<CouchbaseClusterConnection> getClusterConnections(){
+
+    public Collection<CouchbaseClusterConnection> getClusterConnections() {
         return clusters.values();
     }
 
@@ -149,11 +145,11 @@ public class CouchbaseClusterManager {
 
     /**
      * Disconnect all cluster connections and shutdown the environment.
-     * 
+     *
      * @return List of connections that have been shutdown.
      */
     public List<String> shutdownAll() {
-        
+
         final List<String> ids = new ArrayList<>();
 
         // Stopping clusters
@@ -170,7 +166,7 @@ public class CouchbaseClusterManager {
 
         // Shut it down, all
         cbEnvironment.shutdown();
-        
+
         return ids;
     }
 

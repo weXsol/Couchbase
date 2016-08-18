@@ -22,43 +22,34 @@ package org.exist.couchbase.xquery.bucket;
 
 import com.couchbase.client.java.cluster.BucketSettings;
 import com.couchbase.client.java.cluster.ClusterManager;
-import java.util.List;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
+
+import java.util.List;
 
 /**
- *  Remove bucket
+ * Remove bucket
  *
  * @author Dannes Wessels
  */
 public class ListBuckets extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("list-buckets", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "List buckets",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("username", Type.STRING, Cardinality.ONE, "Username"),    
-                new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Password"),   
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Sequence of bucketnames")
-        ),
+            new FunctionSignature(
+                    new QName("list-buckets", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "List buckets",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("username", Type.STRING, Cardinality.ONE, "Username"),
+                            new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Password"),
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "Sequence of bucketnames")
+            ),
     };
 
     public ListBuckets(XQueryContext context, FunctionSignature signature) {
@@ -67,34 +58,34 @@ public class ListBuckets extends BasicFunction {
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-        
+
         // Get connection details
         final String clusterId = args[0].itemAt(0).getStringValue();
         CouchbaseClusterManager.getInstance().validate(clusterId);
-        
+
         // Get additional parameters
         final String username = args[1].itemAt(0).getStringValue();
         final String password = args[2].itemAt(0).getStringValue();
-           
+
         try {
             // Get reference to cluster manager
             final ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
-            
+
             // Execute
             final List<BucketSettings> buckets = clusterManager.getBuckets();
-            
+
             final Sequence retVal = new ValueSequence();
-            
-            for(final BucketSettings settings : buckets){
+
+            for (final BucketSettings settings : buckets) {
                 retVal.add(new StringValue(settings.name()));
             }
-            
+
             // Return results
             return retVal;
-        
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
 }

@@ -24,44 +24,35 @@ import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
 
 /**
- *  Connect to couchbase cluster
- * 
+ * Connect to couchbase cluster
+ *
  * @author Dannes Wessels
  */
 
 public class Connect extends BasicFunction {
-    
+
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Connect to Couchbase server",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
-        ), 
-        new FunctionSignature(
-            new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Connect to Couchbase server",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string"),
-                new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Bucket passsword")
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
-        ),
+            new FunctionSignature(
+                    new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Connect to Couchbase server",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
+            ),
+            new FunctionSignature(
+                    new QName("connect", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Connect to Couchbase server",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string"),
+                            new FunctionParameterSequenceType("password", Type.STRING, Cardinality.ONE, "Bucket passsword")
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ONE, "The identifier for the cluster connection")
+            ),
     };
 
     public Connect(XQueryContext context, FunctionSignature signature) {
@@ -94,9 +85,9 @@ public class Connect extends BasicFunction {
 
             // Return id
             return new StringValue(clusterId);
-            
+
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
-    }   
+    }
 }

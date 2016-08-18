@@ -20,41 +20,33 @@
 package org.exist.couchbase.xquery.client;
 
 
-import java.util.List;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
+
+import java.util.List;
 
 /**
- *  Shutdown all connections
+ * Shutdown all connections
  *
  * @author Dannes Wessels
  */
 public class Shutdown extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("shutdown", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Close and shutdown all Couchbase connections.",
-            new SequenceType[]{
-               
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "IDs of closed down connections")
-        ),
+            new FunctionSignature(
+                    new QName("shutdown", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Close and shutdown all Couchbase connections.",
+                    new SequenceType[]{
+
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "IDs of closed down connections")
+            ),
     };
 
     public Shutdown(XQueryContext context, FunctionSignature signature) {
@@ -71,8 +63,8 @@ public class Shutdown extends BasicFunction {
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
-        
-        
+
+
         try {
             // Perform action
             final List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
@@ -86,7 +78,7 @@ public class Shutdown extends BasicFunction {
 
             // Return IDs
             return retVal;
-            
+
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }

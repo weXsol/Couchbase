@@ -24,34 +24,29 @@ import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
 import org.exist.dom.memtree.MemTreeBuilder;
-import org.exist.dom.memtree.NodeImpl;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
+import org.exist.xquery.*;
 import org.exist.xquery.value.FunctionReturnSequenceType;
 import org.exist.xquery.value.Sequence;
 import org.exist.xquery.value.SequenceType;
 import org.exist.xquery.value.Type;
 
 /**
- *  List all Cluster Ids
- * 
+ * List all Cluster Ids
+ *
  * @author Dannes Wessels
  */
 
 public class ConnectionReport extends BasicFunction {
-    
+
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("connection-report", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Get all Couchbase clusterIds.",
-            new SequenceType[]{
-                //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
-            },
-            new FunctionReturnSequenceType(Type.NODE, Cardinality.ONE, "Report of all connections")
-        ),       
+            new FunctionSignature(
+                    new QName("connection-report", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Get all Couchbase clusterIds.",
+                    new SequenceType[]{
+                            //new FunctionParameterSequenceType("connection", Type.STRING, Cardinality.ONE, "Server connection string")
+                    },
+                    new FunctionReturnSequenceType(Type.NODE, Cardinality.ONE, "Report of all connections")
+            ),
     };
 
     public ConnectionReport(XQueryContext context, FunctionSignature signature) {

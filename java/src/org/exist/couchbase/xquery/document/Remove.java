@@ -28,37 +28,28 @@ import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.shared.JsonToMap;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.EmptySequence;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
 
 /**
- *  Remove document
+ * Remove document
  *
  * @author Dannes Wessels
  */
 public class Remove extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("remove", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Remove document from bucket",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),               
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
-        ),
+            new FunctionSignature(
+                    new QName("remove", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Remove document from bucket",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The document, or Empty sequence when not found.")
+            ),
     };
 
     public Remove(XQueryContext context, FunctionSignature signature) {
@@ -67,7 +58,7 @@ public class Remove extends BasicFunction {
 
     @Override
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
-        
+
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
@@ -79,24 +70,24 @@ public class Remove extends BasicFunction {
         // Retrieve other parameters             
         final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         final String bucketPassword = cmm.getBucketPassword(clusterId);
-        
+
         final String docName = args[2].itemAt(0).getStringValue();
-            
-           
-        try {           
+
+
+        try {
             // Perform action
             final JsonDocument result = cluster.openBucket(bucketName, bucketPassword).remove(docName);
-                     
-            if(result == null){
+
+            if (result == null) {
                 return EmptySequence.EMPTY_SEQUENCE;
             }
-            
+
             // Return results
             return JsonToMap.convert(result.content(), context);
-        
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
 }

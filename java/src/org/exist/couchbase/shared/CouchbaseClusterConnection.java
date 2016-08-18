@@ -20,15 +20,16 @@
 package org.exist.couchbase.shared;
 
 import com.couchbase.client.java.CouchbaseCluster;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.UUID;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.exist.dom.memtree.MemTreeBuilder;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.UUID;
+
 /**
  * Container for a Couchbase cluster connection.
- * 
+ *
  * @author Dannes Wessels
  */
 public class CouchbaseClusterConnection {
@@ -44,10 +45,8 @@ public class CouchbaseClusterConnection {
     private final Calendar creation;
 
     private final CouchbaseCluster cluster;
-
-    private long invokes = 0L;
-
     private final UUID connectionId;
+    private long invokes = 0L;
 
     public CouchbaseClusterConnection(CouchbaseCluster cluster, String username, String bucketPassword, String connectionString, UUID connectionId) {
         this.cluster = cluster;

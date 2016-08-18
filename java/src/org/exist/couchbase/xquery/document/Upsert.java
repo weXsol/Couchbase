@@ -23,60 +23,49 @@ import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.document.json.JsonObject;
 import org.exist.couchbase.shared.Constants;
-import org.exist.couchbase.shared.CouchbaseClusterManager;
-import org.exist.couchbase.shared.GenericExceptionHandler;
-import org.exist.couchbase.shared.JsonToMap;
-import org.exist.couchbase.shared.MapToJson;
+import org.exist.couchbase.shared.*;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
 
 /**
- *  Upsert document into bucket
+ * Upsert document into bucket
  *
  * @author Dannes Wessels
  */
 public class Upsert extends BasicFunction {
-    
+
     private static final String UPSERT = "upsert";
     private static final String INSERT = "insert";
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName(UPSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Upsert document into database",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
-                
-            },
-            new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
-        ),
-        
-        new FunctionSignature(
-            new QName(INSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Insert document into database",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
-                new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
-                new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
-                new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
-                
-            },
-            new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
-        ),
+            new FunctionSignature(
+                    new QName(UPSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Upsert document into database",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
+                            new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
+
+                    },
+                    new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
+            ),
+
+            new FunctionSignature(
+                    new QName(INSERT, CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Insert document into database",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId"),
+                            new FunctionParameterSequenceType("bucket", Type.STRING, Cardinality.ZERO_OR_ONE, "Name of bucket, empty sequence for default bucket"),
+                            new FunctionParameterSequenceType("documentName", Type.STRING, Cardinality.ONE, "Name of document"),
+                            new FunctionParameterSequenceType("payload", Type.ITEM, Cardinality.ONE, "Json document content"),
+
+                    },
+                    new FunctionReturnSequenceType(Type.MAP, Cardinality.EXACTLY_ONE, "The new document.")
+            ),
     };
 
     public Upsert(XQueryContext context, FunctionSignature signature) {
@@ -97,27 +86,27 @@ public class Upsert extends BasicFunction {
         // Retrieve other parameters             
         final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
         final String bucketPassword = cmm.getBucketPassword(clusterId);
-        
+
         final String docName = args[2].itemAt(0).getStringValue();
-        
-           
+
+
         try {
             // Prepare input
             final JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
             final JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
-            
+
             // Perform action
             final JsonDocument result = isCalledAs(UPSERT)
-                    ? cluster.openBucket(bucketName, bucketPassword).upsert(jsonDocument) 
+                    ? cluster.openBucket(bucketName, bucketPassword).upsert(jsonDocument)
                     : cluster.openBucket(bucketName, bucketPassword).insert(jsonDocument);
-            
+
             // Return results
             return JsonToMap.convert(result.content(), context);
-            
-        } catch (Throwable ex){
-            return GenericExceptionHandler.handleException(this, ex);           
+
+        } catch (Throwable ex) {
+            return GenericExceptionHandler.handleException(this, ex);
         }
-        
+
     }
-    
+
 }
