@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://exist-db.org/ns/expath-pkg">
     <jar>exist-couchbase-@VERSION@.jar</jar>
-    <jar>java-client-2.2.1.jar</jar>
-    <jar>core-io-1.2.1.jar</jar>
-    <jar>rxjava-1.0.14.jar</jar>        
+    <jar>java-client-2.3.1.jar</jar>
+    <jar>core-io-1.3.1.jar</jar>
+    <jar>rxjava-1.1.5.jar</jar>
     <java>
         <namespace>http://exist-db.org/couchbase/db</namespace>
         <class>org.exist.couchbase.xquery.CouchbaseModule</class>
