@@ -109,12 +109,12 @@ public class MapToJson {
                     break;
                 case Type.MAP:
                     final JsonObject newObject = JsonValue.jo();
-                    final JsonValue newMap = convertItem((MapType) subSeq, newObject);
+                    final JsonValue newMap = convertItem(subSeq, newObject);
                     jsonArray.add(newMap);
                     break;
                 case Type.ARRAY:
                     final JsonArray newObject1 = JsonValue.ja();
-                    final JsonValue newMap1 = convertItem((ArrayType) subSeq, newObject1);
+                    final JsonValue newMap1 = convertItem(subSeq, newObject1);
                     jsonArray.add(newMap1);
                     break;
                 case Type.EMPTY:
@@ -157,12 +157,12 @@ public class MapToJson {
                     break;
                 case Type.MAP:
                     final JsonObject newObject = JsonValue.jo();
-                    final JsonValue newMap = convertItem((MapType) sequence, newObject);
+                    final JsonValue newMap = convertItem(sequence, newObject);
                     jo.put(keyValue, newMap);
                     break;
                 case Type.ARRAY:
                     final JsonArray newObject1 = JsonValue.ja();
-                    final JsonValue newMap1 = convertItem((ArrayType) sequence, newObject1);
+                    final JsonValue newMap1 = convertItem(sequence, newObject1);
                     jo.put(keyValue, newMap1);
                     break;
                 case Type.EMPTY:
@@ -186,13 +186,13 @@ public class MapToJson {
                 retVal = ((StringValue) sequence).getStringValue();
                 break;
             case Type.INTEGER:
-                retVal = ((IntegerValue) sequence).toJavaObject(Integer.class);
+                retVal = sequence.toJavaObject(Integer.class);
                 break;
             case Type.DOUBLE:
-                retVal = ((DoubleValue) sequence).toJavaObject(Double.class);
+                retVal = sequence.toJavaObject(Double.class);
                 break;
             case Type.BOOLEAN:
-                retVal = ((BooleanValue) sequence).toJavaObject(Boolean.class);
+                retVal = sequence.toJavaObject(Boolean.class);
                 break;
             default:
                 final String msg = String.format("Unable to convert '%s'", sequence.getStringValue());

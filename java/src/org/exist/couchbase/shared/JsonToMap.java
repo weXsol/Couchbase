@@ -44,7 +44,7 @@ public class JsonToMap {
     public static MapType convert(JsonObject json, XQueryContext context) throws Exception {
 
 //        if (json instanceof JsonObject) {
-        return convertJsonObject((JsonObject) json, context);
+        return convertJsonObject(json, context);
 
 //        } else {
 //            throw new IllegalArgumentException(String.format("Unable to convert " + json));
