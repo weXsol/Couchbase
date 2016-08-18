@@ -63,27 +63,23 @@ public class ConnectionReport extends BasicFunction {
 
         // User must either be DBA or in the correct group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
 
-        CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
+        final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         final MemTreeBuilder builder = context.getDocumentBuilder();
 
         // start root element
         final int nodeNr = builder.startElement("", "couchbase", "couchbase", null);
 
-        cmm.getClusterConnections().stream().forEach((connection) -> {
-            connection.getReport(builder);
-        });
+        cmm.getClusterConnections().forEach((connection) -> connection.getReport(builder));
 
         builder.endElement();
 
-        NodeImpl doc = builder.getDocument().getNode(nodeNr);
-
-        return doc;
+        return builder.getDocument().getNode(nodeNr);
     }
 }

@@ -85,42 +85,42 @@ public class ConversionTools {
     public static Map<String, Object> convert(AbstractMapType map) throws XPathException {
 
         // Results are stored here
-        Map<String, Object> retVal = new HashMap<>();
+        final Map<String, Object> retVal = new HashMap<>();
 
         // Get all keys
-        Sequence keys = map.keys();
+        final Sequence keys = map.keys();
 
         // Iterate over all keys
         for (final SequenceIterator i = keys.unorderedIterator(); i.hasNext();) {
 
             // Get next item
-            Item key = i.nextItem();
+            final Item key = i.nextItem();
 
             // Only use Strings as key, as required by JMS
-            String keyValue = key.getStringValue();
+            final String keyValue = key.getStringValue();
 
             // Get values
-            Sequence values = map.get((AtomicValue) key);
+            final Sequence values = map.get((AtomicValue) key);
 
             // Parse data only if the key is a String
             if (values instanceof StringValue) {
-                StringValue singlevalue = (StringValue) values;
+                final StringValue singlevalue = (StringValue) values;
                 retVal.put(keyValue, singlevalue.getStringValue());
 
             } else if (values instanceof IntegerValue) {
-                IntegerValue singleValue = (IntegerValue) values;
+                final IntegerValue singleValue = (IntegerValue) values;
                 retVal.put(keyValue, singleValue.toJavaObject(Integer.class));
 
             } else if (values instanceof DoubleValue) {
-                DoubleValue singleValue = (DoubleValue) values;
+                final DoubleValue singleValue = (DoubleValue) values;
                 retVal.put(keyValue, singleValue.toJavaObject(Double.class));
 
             } else if (values instanceof BooleanValue) {
-                BooleanValue singleValue = (BooleanValue) values;
+                final BooleanValue singleValue = (BooleanValue) values;
                 retVal.put(keyValue, singleValue.toJavaObject(Boolean.class));
 
             } else if (values instanceof FloatValue) {
-                FloatValue singleValue = (FloatValue) values;
+                final FloatValue singleValue = (FloatValue) values;
                 retVal.put(keyValue, singleValue.toJavaObject(Float.class));
 
             } else if (values instanceof ValueSequence) {

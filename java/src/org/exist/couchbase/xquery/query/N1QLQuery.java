@@ -70,32 +70,32 @@ public class N1QLQuery extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters        
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
 
-        String query = args[2].itemAt(0).getStringValue();
+        final String query = args[2].itemAt(0).getStringValue();
 
         try {
             // Prepare query
-            N1qlQuery viewQuery = N1qlQuery.simple(query);
+            final N1qlQuery viewQuery = N1qlQuery.simple(query);
 
             // Perform action
-            N1qlQueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
+            final N1qlQueryResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
 
             if(LOG.isDebugEnabled()){
                 LOG.debug(result.info().asJsonObject().toString());
             }
 
             // Return results
-            ValueSequence retVal = new ValueSequence();
+            final ValueSequence retVal = new ValueSequence();
 
-            for (N1qlQueryRow row : result.allRows()) {
+            for (final N1qlQueryRow row : result.allRows()) {
                 retVal.add(JsonToMap.convert(row.value(), context));
             }
 

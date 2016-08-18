@@ -79,19 +79,19 @@ public class ViewQuery extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters        
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
         
-        String design = args[2].itemAt(0).getStringValue();
-        String view = args[3].itemAt(0).getStringValue();
+        final String design = args[2].itemAt(0).getStringValue();
+        final String view = args[3].itemAt(0).getStringValue();
         
-        Map<String, Object> parameters = (args[4].isEmpty())
+        final Map<String, Object> parameters = (args[4].isEmpty())
                 ? new HashMap<>()
                 : ConversionTools.convert((AbstractMapType) args[4].itemAt(0));
         
@@ -103,12 +103,12 @@ public class ViewQuery extends BasicFunction {
             viewQuery = parseParameters(viewQuery, parameters);
 
             // Perform action
-            ViewResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
+            final ViewResult result = cluster.openBucket(bucketName, bucketPassword).query(viewQuery);
             
             // Return results
-            ValueSequence retVal = new ValueSequence();
+            final ValueSequence retVal = new ValueSequence();
             
-            for (ViewRow row : result) {
+            for (final ViewRow row : result) {
                 retVal.add(JsonToMap.convert(row.document().content(), context));                
             }
             
@@ -122,10 +122,10 @@ public class ViewQuery extends BasicFunction {
     
     private com.couchbase.client.java.view.ViewQuery parseParameters(com.couchbase.client.java.view.ViewQuery viewQuery, Map<String, Object> parameters) throws XPathException {
         
-        for (Entry<String, Object> entry : parameters.entrySet()) {
+        for (final Entry<String, Object> entry : parameters.entrySet()) {
             
-            String key = entry.getKey().toLowerCase(Locale.US);
-            Object value = entry.getValue();
+            final String key = entry.getKey().toLowerCase(Locale.US);
+            final Object value = entry.getValue();
             
             switch (key) {
                 case "descending":

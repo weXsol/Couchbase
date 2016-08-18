@@ -157,7 +157,7 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new QName("exception-message", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
 
 
-    public CouchbaseModule(Map<String, List<? extends Object>> parameters) throws XPathException {
+    public CouchbaseModule(Map<String, List<?>> parameters) throws XPathException {
         super(functions, parameters);
     }
 

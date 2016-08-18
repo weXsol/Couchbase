@@ -66,7 +66,7 @@ public class Shutdown extends BasicFunction {
 
         // User must either be DBA or in the c group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
@@ -75,11 +75,11 @@ public class Shutdown extends BasicFunction {
         
         try {
             // Perform action
-            List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
+            final List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
 
             // Bundle results
-            Sequence retVal = new ValueSequence();
-            for (String id : ids) {
+            final Sequence retVal = new ValueSequence();
+            for (final String id : ids) {
 
                 retVal.add(new StringValue(id));
             }

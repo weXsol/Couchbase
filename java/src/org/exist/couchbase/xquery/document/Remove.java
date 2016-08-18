@@ -71,21 +71,21 @@ public class Remove extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
         
-        String docName = args[2].itemAt(0).getStringValue();
+        final String docName = args[2].itemAt(0).getStringValue();
             
            
         try {           
             // Perform action
-            JsonDocument result = cluster.openBucket(bucketName, bucketPassword).remove(docName);
+            final JsonDocument result = cluster.openBucket(bucketName, bucketPassword).remove(docName);
                      
             if(result == null){
                 return EmptySequence.EMPTY_SEQUENCE;

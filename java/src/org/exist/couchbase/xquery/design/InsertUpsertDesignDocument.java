@@ -81,29 +81,29 @@ public class InsertUpsertDesignDocument extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String designName = args[2].itemAt(0).getStringValue();
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String designName = args[2].itemAt(0).getStringValue();
 
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
 
         try {
             // Get access to bucketmanager
-            BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
+            final BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
 
             // Convert to JSonObject
-            JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
+            final JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
 
             // Convert JSON to design document
-            DesignDocument input = DesignDocument.from(designName, jsonObject);
+            final DesignDocument input = DesignDocument.from(designName, jsonObject);
 
             // Retrieve all design documents
-            DesignDocument designDocument = (isCalledAs("upsert-design-document"))
+            final DesignDocument designDocument = (isCalledAs("upsert-design-document"))
                     ? bucketManager.upsertDesignDocument(input)
                     : bucketManager.insertDesignDocument(input);
 

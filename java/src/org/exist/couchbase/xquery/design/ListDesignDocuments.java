@@ -68,22 +68,22 @@ public class ListDesignDocuments extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
 
        
         try {
             // Get access to bucketmanager
-            BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
+            final BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
             
             // Retrieve all design documents
-            java.util.List<DesignDocument> designDocuments = bucketManager.getDesignDocuments();
+            final java.util.List<DesignDocument> designDocuments = bucketManager.getDesignDocuments();
             
             if (designDocuments.isEmpty()) {
                 // No values ....
@@ -92,8 +92,8 @@ public class ListDesignDocuments extends BasicFunction {
             } else {
                 
                 // Report all documents names
-                Sequence retVal = new ValueSequence();
-                for (DesignDocument doc : designDocuments) {
+                final Sequence retVal = new ValueSequence();
+                for (final DesignDocument doc : designDocuments) {
                     retVal.add(new StringValue(doc.name()));
                 }
                 return retVal;

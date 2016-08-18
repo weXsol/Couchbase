@@ -79,26 +79,26 @@ public class InsertBucket extends BasicFunction {
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
         
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Get additional parameters
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String username = args[2].itemAt(0).getStringValue();
-        String password = args[3].itemAt(0).getStringValue();
-        Map<String, Object> parameters = (args[4].isEmpty())
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String username = args[2].itemAt(0).getStringValue();
+        final String password = args[3].itemAt(0).getStringValue();
+        final Map<String, Object> parameters = (args[4].isEmpty())
                 ? new HashMap<>()
                 : ConversionTools.convert((AbstractMapType) args[4].itemAt(0));
            
         try {
             // Get reference to cluster manager
-            ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
+            final ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
             
             // Get configuaration
-            BucketSettings bucketSettings = parseParameters(bucketName, parameters);
+            final BucketSettings bucketSettings = parseParameters(bucketName, parameters);
             
             // Execute
-            BucketSettings insertBucket = clusterManager.insertBucket(bucketSettings);
+            final BucketSettings insertBucket = clusterManager.insertBucket(bucketSettings);
             
             // Return results
             return new StringValue(insertBucket.toString());
@@ -111,12 +111,12 @@ public class InsertBucket extends BasicFunction {
         
     private BucketSettings parseParameters(String bucketName, Map<String, Object> parameters) throws XPathException {
         
-        Builder builder = DefaultBucketSettings.builder().name(bucketName);
+        final Builder builder = DefaultBucketSettings.builder().name(bucketName);
         
-        for (Entry<String, Object> entry : parameters.entrySet()) {
+        for (final Entry<String, Object> entry : parameters.entrySet()) {
             
-            String key = entry.getKey();
-            Object value = entry.getValue(); // check for empty sequence?
+            final String key = entry.getKey();
+            final Object value = entry.getValue(); // check for empty sequence?
             
             switch (key) {
                 case "enableFlush":

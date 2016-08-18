@@ -83,24 +83,24 @@ public class Get extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
 
-        String docName = args[2].itemAt(0).getStringValue();
+        final String docName = args[2].itemAt(0).getStringValue();
 
-        Map<String, Object> parameters = (getArgumentCount() > 3)
+        final Map<String, Object> parameters = (getArgumentCount() > 3)
                 ? ConversionTools.convert((AbstractMapType) args[3].itemAt(0))
                 : null;
 
         try {
             // Perform action
-            JsonDocument result = (parameters == null)
+            final JsonDocument result = (parameters == null)
                     ? get(cluster, bucketName, bucketPassword, docName)
                     : get(cluster, bucketName, bucketPassword, docName, parameters);
 
@@ -124,8 +124,8 @@ public class Get extends BasicFunction {
 
     /** Retrieve documents with additional parameters */
     private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, String bucketPassword, Map<String, Object> parameters) {
-        long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
-        TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase(Locale.US));
+        final long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
+        final TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase(Locale.US));
 
         return cluster.openBucket(bucketName, bucketPassword).get(docName, timeout, timeUnit);
     }

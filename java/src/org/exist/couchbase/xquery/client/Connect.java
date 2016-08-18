@@ -73,7 +73,7 @@ public class Connect extends BasicFunction {
 
         // User must either be DBA or in the correct group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
@@ -81,16 +81,16 @@ public class Connect extends BasicFunction {
 
         try {
             // Get connection string URL
-            String connectionString = args[0].itemAt(0).getStringValue();
+            final String connectionString = args[0].itemAt(0).getStringValue();
 
             // Get password for bucket, when available
-            String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
+            final String password = (getArgumentCount() > 1) ? args[1].itemAt(0).getStringValue() : null;
 
             // Username is only used for reporting.
-            String username = context.getEffectiveUser().getUsername();
+            final String username = context.getEffectiveUser().getUsername();
 
             // Register connection
-            String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, username, password);
+            final String clusterId = CouchbaseClusterManager.getInstance().create(connectionString, username, password);
 
             // Return id
             return new StringValue(clusterId);

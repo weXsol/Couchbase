@@ -65,20 +65,18 @@ public class ListClusterIds extends BasicFunction {
 
         // User must either be DBA or in the correct group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
 
         try {
-            Set<String> clientIds = CouchbaseClusterManager.getInstance().list();
+            final Set<String> clientIds = CouchbaseClusterManager.getInstance().list();
 
             ValueSequence valueSequence = new ValueSequence();
 
-            clientIds.stream().forEach((clusterId) -> {
-                valueSequence.add(new StringValue(clusterId));
-            });
+            clientIds.forEach((clusterId) -> valueSequence.add(new StringValue(clusterId)));
 
             return valueSequence;
             

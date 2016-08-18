@@ -69,23 +69,23 @@ public class ListBuckets extends BasicFunction {
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
         
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Get additional parameters
-        String username = args[1].itemAt(0).getStringValue();
-        String password = args[2].itemAt(0).getStringValue();
+        final String username = args[1].itemAt(0).getStringValue();
+        final String password = args[2].itemAt(0).getStringValue();
            
         try {
             // Get reference to cluster manager
-            ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
+            final ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
             
             // Execute
-            List<BucketSettings> buckets = clusterManager.getBuckets();
+            final List<BucketSettings> buckets = clusterManager.getBuckets();
             
-            Sequence retVal = new ValueSequence();
+            final Sequence retVal = new ValueSequence();
             
-            for(BucketSettings settings : buckets){
+            for(final BucketSettings settings : buckets){
                 retVal.add(new StringValue(settings.name()));
             }
             

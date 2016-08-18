@@ -45,7 +45,7 @@ public class CouchbaseClusterConnection {
 
     private final CouchbaseCluster cluster;
 
-    private long invokes = 0l;
+    private long invokes = 0L;
 
     private final UUID connectionId;
 

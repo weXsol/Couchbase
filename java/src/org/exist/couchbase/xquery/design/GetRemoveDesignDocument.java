@@ -77,24 +77,24 @@ public class GetRemoveDesignDocument extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String designName = args[2].itemAt(0).getStringValue();
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String designName = args[2].itemAt(0).getStringValue();
 
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
 
         try {
             // Get access to bucketmanager
-            BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
+            final BucketManager bucketManager = cluster.openBucket(bucketName, bucketPassword).bucketManager();
 
             if (isCalledAs("get-design-document")) {
                 // Retrieve all design documents
-                DesignDocument designDocument = bucketManager.getDesignDocument(designName);
+                final DesignDocument designDocument = bucketManager.getDesignDocument(designName);
 
                 if (designDocument == null) {
                     return Sequence.EMPTY_SEQUENCE;
@@ -104,7 +104,7 @@ public class GetRemoveDesignDocument extends BasicFunction {
                 }
                 
             } else {
-                Boolean result = bucketManager.removeDesignDocument(designName);
+                final Boolean result = bucketManager.removeDesignDocument(designName);
                 return new BooleanValue(result);
             }
             

@@ -89,25 +89,25 @@ public class Upsert extends BasicFunction {
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
 
         // Get reference to cluster
-        CouchbaseCluster cluster = cmm.validate(clusterId);
+        final CouchbaseCluster cluster = cmm.validate(clusterId);
 
         // Retrieve other parameters             
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String bucketPassword = cmm.getBucketPassword(clusterId);
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String bucketPassword = cmm.getBucketPassword(clusterId);
         
-        String docName = args[2].itemAt(0).getStringValue();
+        final String docName = args[2].itemAt(0).getStringValue();
         
            
         try {
             // Prepare input
-            JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
-            JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
+            final JsonObject jsonObject = (JsonObject) MapToJson.convert(args[3]);
+            final JsonDocument jsonDocument = JsonDocument.create(docName, jsonObject);
             
             // Perform action
-            JsonDocument result = isCalledAs(UPSERT) 
+            final JsonDocument result = isCalledAs(UPSERT)
                     ? cluster.openBucket(bucketName, bucketPassword).upsert(jsonDocument) 
                     : cluster.openBucket(bucketName, bucketPassword).insert(jsonDocument);
             

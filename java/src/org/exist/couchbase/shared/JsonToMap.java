@@ -53,25 +53,25 @@ public class JsonToMap {
 
     static MapType convertJsonObject(JsonObject jsonObject, XQueryContext context) throws XPathException {
 
-        MapType result = new MapType(context);
+        final MapType result = new MapType(context);
 
-        for (String name : jsonObject.getNames()) {
-            Object obj = jsonObject.get(name);
+        for (final String name : jsonObject.getNames()) {
+            final Object obj = jsonObject.get(name);
 
             if (obj == null) {
                 result.add(new StringValue(name), Sequence.EMPTY_SEQUENCE);
             } else if (obj instanceof JsonObject) {
-                JsonObject jo = (JsonObject) obj;
+                final JsonObject jo = (JsonObject) obj;
                 result.add(new StringValue(name), convertJsonObject(jo, context));
 
             } else if (obj instanceof JsonArray) {
-                JsonArray ja = (JsonArray) obj;
-                ArrayType array = convertJsonArray(ja, context);
+                final JsonArray ja = (JsonArray) obj;
+                final ArrayType array = convertJsonArray(ja, context);
                 result.add(new StringValue(name), array);
 
             } else if (obj instanceof HashMap) {
-                HashMap map = (HashMap) obj;
-                JsonObject jo = JsonObject.from(map);
+                final HashMap map = (HashMap) obj;
+                final JsonObject jo = JsonObject.from(map);
                 result.add(new StringValue(name), convertJsonObject(jo, context));
 
             } else {
@@ -85,21 +85,21 @@ public class JsonToMap {
 
     private static ArrayType convertJsonArray(JsonArray ja, XQueryContext context) throws XPathException {
 
-        Sequence sequence = new ValueSequence();
+        final Sequence sequence = new ValueSequence();
 
-        for (Object obj : ja.toList()) {
+        for (final Object obj : ja.toList()) {
 
             if (obj instanceof JsonObject) {
-                JsonObject jo = (JsonObject) obj;
+                final JsonObject jo = (JsonObject) obj;
                 sequence.add(convertJsonObject(jo, context));
 
             } else if (obj instanceof JsonArray) {
-                JsonArray newarray = (JsonArray) obj;
+                final JsonArray newarray = (JsonArray) obj;
                 sequence.add(convertJsonArray(newarray, context));
 
             } else if (obj instanceof HashMap) {
-                HashMap map = (HashMap) obj;
-                JsonObject jo = JsonObject.from(map);
+                final HashMap map = (HashMap) obj;
+                final JsonObject jo = JsonObject.from(map);
                 sequence.add(convertJsonObject(jo, context));
 
             } else {

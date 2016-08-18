@@ -68,20 +68,20 @@ public class RemoveBucket extends BasicFunction {
     public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
         
         // Get connection details
-        String clusterId = args[0].itemAt(0).getStringValue();
+        final String clusterId = args[0].itemAt(0).getStringValue();
         CouchbaseClusterManager.getInstance().validate(clusterId);
         
         // Get additional parameters
-        String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
-        String username = args[2].itemAt(0).getStringValue();
-        String password = args[3].itemAt(0).getStringValue();
+        final String bucketName = (args[1].isEmpty()) ? Constants.DEFAULT_BUCKET : args[1].itemAt(0).getStringValue();
+        final String username = args[2].itemAt(0).getStringValue();
+        final String password = args[3].itemAt(0).getStringValue();
            
         try {
             // Get reference to cluster manager
-            ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
+            final ClusterManager clusterManager = CouchbaseClusterManager.getInstance().get(clusterId).clusterManager(username, password);
             
             // Execute
-            Boolean retVal = clusterManager.removeBucket(bucketName);
+            final Boolean retVal = clusterManager.removeBucket(bucketName);
             
             // Return results
             return new BooleanValue(retVal);
