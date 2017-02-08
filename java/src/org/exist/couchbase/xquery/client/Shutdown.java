@@ -20,41 +20,33 @@
 package org.exist.couchbase.xquery.client;
 
 
-import java.util.List;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
-import org.exist.xquery.value.ValueSequence;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
+
+import java.util.List;
 
 /**
- *  Shutdown all connections
+ * Shutdown all connections
  *
  * @author Dannes Wessels
  */
 public class Shutdown extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("shutdown", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Close and shutdown all Couchbase connections.",
-            new SequenceType[]{
-               
-            },
-            new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "IDs of closed down connections")
-        ),
+            new FunctionSignature(
+                    new QName("shutdown", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Close and shutdown all Couchbase connections.",
+                    new SequenceType[]{
+
+                    },
+                    new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_MORE, "IDs of closed down connections")
+            ),
     };
 
     public Shutdown(XQueryContext context, FunctionSignature signature) {
@@ -66,27 +58,27 @@ public class Shutdown extends BasicFunction {
 
         // User must either be DBA or in the c group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
-        
-        
+
+
         try {
             // Perform action
-            List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
+            final List<String> ids = CouchbaseClusterManager.getInstance().shutdownAll();
 
             // Bundle results
-            Sequence retVal = new ValueSequence();
-            for (String id : ids) {
+            final Sequence retVal = new ValueSequence();
+            for (final String id : ids) {
 
                 retVal.add(new StringValue(id));
             }
 
             // Return IDs
             return retVal;
-            
+
         } catch (Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }

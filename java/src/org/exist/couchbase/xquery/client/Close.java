@@ -25,35 +25,26 @@ import org.exist.couchbase.shared.CouchbaseClusterManager;
 import org.exist.couchbase.shared.GenericExceptionHandler;
 import org.exist.couchbase.xquery.CouchbaseModule;
 import org.exist.dom.QName;
-import org.exist.xquery.BasicFunction;
-import org.exist.xquery.Cardinality;
-import org.exist.xquery.FunctionSignature;
-import org.exist.xquery.XPathException;
-import org.exist.xquery.XQueryContext;
-import org.exist.xquery.value.EmptySequence;
-import org.exist.xquery.value.FunctionParameterSequenceType;
-import org.exist.xquery.value.FunctionReturnSequenceType;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceType;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.*;
+import org.exist.xquery.value.*;
 
 /**
- *  Close and unregister cluster connection to couchbase server
+ * Close and unregister cluster connection to couchbase server
  *
  * @author Dannes Wessels
  */
 public class Close extends BasicFunction {
-    
+
 
     public final static FunctionSignature signatures[] = {
-        new FunctionSignature(
-            new QName("close", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
-            "Close and shutdown the Couchbase connection.",
-            new SequenceType[]{
-                new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId")
-            },
-            new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
-        ),
+            new FunctionSignature(
+                    new QName("close", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX),
+                    "Close and shutdown the Couchbase connection.",
+                    new SequenceType[]{
+                            new FunctionParameterSequenceType("clusterId", Type.STRING, Cardinality.ONE, "Couchbase clusterId")
+                    },
+                    new FunctionReturnSequenceType(Type.EMPTY, Cardinality.ZERO, "Empty sequence")
+            ),
     };
 
     public Close(XQueryContext context, FunctionSignature signature) {
@@ -65,15 +56,15 @@ public class Close extends BasicFunction {
 
         // User must either be DBA or in the c group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
-            String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
+            final String txt = String.format("Permission denied, user '%s' must be a DBA or be in group '%s'",
                     context.getSubject().getName(), Constants.COUCHBASE_GROUP);
             LOG.error(txt);
             throw new XPathException(this, CouchbaseModule.COBA0003, txt);
         }
-        
+
         try {
             // Get connection details
-            String clusterId = args[0].itemAt(0).getStringValue();
+            final String clusterId = args[0].itemAt(0).getStringValue();
 
             // Remove connection
             CouchbaseClusterManager.getInstance().remove(clusterId);

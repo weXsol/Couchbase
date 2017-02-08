@@ -28,18 +28,9 @@ import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
-import org.exist.xquery.value.AtomicValue;
-import org.exist.xquery.value.BooleanValue;
-import org.exist.xquery.value.DoubleValue;
-import org.exist.xquery.value.IntegerValue;
-import org.exist.xquery.value.Item;
-import org.exist.xquery.value.Sequence;
-import org.exist.xquery.value.SequenceIterator;
-import org.exist.xquery.value.StringValue;
-import org.exist.xquery.value.Type;
+import org.exist.xquery.value.*;
 
 /**
- *
  * @author wessels
  */
 public class MapToJson {
@@ -57,14 +48,14 @@ public class MapToJson {
      */
     public static JsonValue convert(Sequence document) throws Exception {
 
-        JsonValue result;
+        final JsonValue result;
 
         switch (document.getItemType()) {
             case Type.STRING:
                 result = transcoder.stringToJsonObject(document.getStringValue());
                 break;
             case Type.MAP:
-                JsonObject jo = JsonValue.jo();
+                final JsonObject jo = JsonValue.jo();
                 result = convertItem(document, jo);
                 break;
             default:
@@ -95,10 +86,10 @@ public class MapToJson {
 
     private static JsonArray convertArray(Sequence sequence) throws XPathException {
 
-        ArrayType xqueryArray = (ArrayType) sequence;
-        JsonArray jsonArray = JsonValue.ja();
+        final ArrayType xqueryArray = (ArrayType) sequence;
+        final JsonArray jsonArray = JsonValue.ja();
 
-        for (Sequence subSeq : xqueryArray.toArray()) {
+        for (final Sequence subSeq : xqueryArray.toArray()) {
 
             switch (subSeq.getItemType()) {
                 case Type.STRING:
@@ -108,13 +99,13 @@ public class MapToJson {
                     jsonArray.add(convertSequenceToJavaObject(sequence));
                     break;
                 case Type.MAP:
-                    JsonObject newObject = JsonValue.jo();
-                    JsonValue newMap = convertItem((MapType) subSeq, newObject);
+                    final JsonObject newObject = JsonValue.jo();
+                    final JsonValue newMap = convertItem(subSeq, newObject);
                     jsonArray.add(newMap);
                     break;
                 case Type.ARRAY:
-                    JsonArray newObject1 = JsonValue.ja();
-                    JsonValue newMap1 = convertItem((ArrayType) subSeq, newObject1);
+                    final JsonArray newObject1 = JsonValue.ja();
+                    final JsonValue newMap1 = convertItem(subSeq, newObject1);
                     jsonArray.add(newMap1);
                     break;
                 case Type.EMPTY:
@@ -130,23 +121,23 @@ public class MapToJson {
 
     private static JsonObject convertMap(JsonValue in, Sequence seq) throws XPathException {
 
-        JsonObject jo = (JsonObject) in;
-        MapType map = (MapType) seq;
+        final JsonObject jo = (JsonObject) in;
+        final MapType map = (MapType) seq;
 
         // Get all keys
-        Sequence keys = map.keys();
+        final Sequence keys = map.keys();
 
         // Iterate over all keys
-        for (final SequenceIterator i = keys.iterate(); i.hasNext();) {
+        for (final SequenceIterator i = keys.iterate(); i.hasNext(); ) {
 
             // Get next item
-            Item key = i.nextItem();
+            final Item key = i.nextItem();
 
             // Only use Strings as key, as required by JMS
-            String keyValue = key.getStringValue();
+            final String keyValue = key.getStringValue();
 
             // Get values
-            Sequence sequence = map.get((AtomicValue) key);
+            final Sequence sequence = map.get((AtomicValue) key);
 
             switch (sequence.getItemType()) {
                 case Type.STRING:
@@ -156,20 +147,20 @@ public class MapToJson {
                     jo.put(keyValue, convertSequenceToJavaObject(sequence));
                     break;
                 case Type.MAP:
-                    JsonObject newObject = JsonValue.jo();
-                    JsonValue newMap = convertItem((MapType) sequence, newObject);
+                    final JsonObject newObject = JsonValue.jo();
+                    final JsonValue newMap = convertItem(sequence, newObject);
                     jo.put(keyValue, newMap);
                     break;
                 case Type.ARRAY:
-                    JsonArray newObject1 = JsonValue.ja();
-                    JsonValue newMap1 = convertItem((ArrayType) sequence, newObject1);
+                    final JsonArray newObject1 = JsonValue.ja();
+                    final JsonValue newMap1 = convertItem(sequence, newObject1);
                     jo.put(keyValue, newMap1);
                     break;
                 case Type.EMPTY:
                     jo.putNull(keyValue);
                     break;
                 default:
-                    String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
+                    final String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
                     LOG.error(msg);
                     throw new XPathException(msg);
             }
@@ -186,16 +177,16 @@ public class MapToJson {
                 retVal = ((StringValue) sequence).getStringValue();
                 break;
             case Type.INTEGER:
-                retVal = ((IntegerValue) sequence).toJavaObject(Integer.class);
+                retVal = sequence.toJavaObject(Integer.class);
                 break;
             case Type.DOUBLE:
-                retVal = ((DoubleValue) sequence).toJavaObject(Double.class);
+                retVal = sequence.toJavaObject(Double.class);
                 break;
             case Type.BOOLEAN:
-                retVal = ((BooleanValue) sequence).toJavaObject(Boolean.class);
+                retVal = sequence.toJavaObject(Boolean.class);
                 break;
             default:
-                String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
+                final String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
                 LOG.error(msg);
                 throw new XPathException(msg);
         }

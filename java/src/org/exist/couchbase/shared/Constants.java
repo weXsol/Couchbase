@@ -23,13 +23,13 @@ import com.couchbase.client.java.CouchbaseAsyncCluster;
 
 /**
  * Misc constants
- * 
- * Dannes Wessels 
+ * <p>
+ * Dannes Wessels
  */
 
 
 public class Constants {
-    public final static String COUCHBASE_GROUP="couchbase";
+    public final static String COUCHBASE_GROUP = "couchbase";
     public static final String DEFAULT_BUCKET = CouchbaseAsyncCluster.DEFAULT_BUCKET;
     public static final String DEFAULT_HOST = CouchbaseAsyncCluster.DEFAULT_HOST;
 }
