@@ -10,6 +10,6 @@
     <target>couchbase</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
-    <note>When upgrading: please uninstall all previous versions first and restart eXist-db.</note>
-    <permissions user="couchbase" group="couchbase" mode="0775"/>
+    <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
+
 </meta>
