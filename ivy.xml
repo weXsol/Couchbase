@@ -6,7 +6,7 @@
 
     <info organisation="org.exist" module="couchbase"/>
     <dependencies>
-        <dependency org="com.couchbase.client" name="java-client" rev="2.3.1">
+        <dependency org="com.couchbase.client" name="java-client" rev="2.4.1">
             <exclude module="slf4j-api"/>
             <exclude module="log4j"/>
             <exclude module="commons-logging"/>
