@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>@TITLE@ - Core</description>
+    <description>@TITLE@</description>
     <author>Dannes Wessels</author>
-    <website>https://github.com/dizzzz/Couchbase</website>
+    <website>https://github.com/weXsol/Couchbase</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
-    <type>library</type>
+    <type>application</type>
+    <target>couchbase</target>
+    <prepare>pre-install.xql</prepare>
+    <finish/>
+    <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
+
 </meta>
