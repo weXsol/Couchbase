@@ -178,10 +178,15 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new CouchbaseErrorCode("COBA0030", "DesignDocumentAlreadyExistsException: the design document already exists.");
 
     /**
-     * InvalidPasswordException: the password for the bucket does not match
+     * DesignDocumentException: a problem with the design document
      */
     public final static ErrorCode COBA0031
             = new CouchbaseErrorCode("COBA0031", "DesignDocumentException: generic design document error.");
+
+
+    public final static ErrorCode COBA0051
+            = new CouchbaseErrorCode("COBA0051", "Conversion error");
+
 
 
     public final static QName EXCEPTION_QNAME

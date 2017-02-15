@@ -29,6 +29,8 @@ import org.exist.xquery.value.*;
 
 import java.util.HashMap;
 
+import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
+
 /**
  * Convert Couchbase's JSON object to eXist-db's Map
  *
@@ -119,7 +121,7 @@ public class JsonToMap {
             return new BooleanValue((Boolean) obj);
         }
 
-        throw new XPathException(String.format("Cannot convert %s. %s", obj, obj.toString()));
+        throw new XPathException(COBA0051, String.format("Cannot convert %s. %s", obj, obj.toString()));
 
     }
 

@@ -30,6 +30,8 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
+
 /**
  * @author wessels
  */
@@ -162,7 +164,7 @@ public class MapToJson {
                 default:
                     final String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
                     LOG.error(msg);
-                    throw new XPathException(msg);
+                    throw new XPathException(COBA0051, msg);
             }
         }
         return jo;
@@ -170,7 +172,7 @@ public class MapToJson {
 
     static Object convertSequenceToJavaObject(Sequence sequence) throws XPathException {
 
-        Object retVal = null;
+        Object retVal;
 
         switch (sequence.getItemType()) {
             case Type.STRING:
@@ -188,7 +190,7 @@ public class MapToJson {
             default:
                 final String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
                 LOG.error(msg);
-                throw new XPathException(msg);
+                throw new XPathException(COBA0051, msg);
         }
         return retVal;
     }

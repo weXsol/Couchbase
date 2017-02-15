@@ -117,7 +117,7 @@ public class CouchbaseClusterConnection {
         builder.endElement();
 
         builder.startElement("", "created", "created", null);
-        builder.characters(DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format(creation));
+        builder.characters(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_TIME_ZONE_FORMAT.format(creation));
         builder.endElement();
 
         builder.endElement();
