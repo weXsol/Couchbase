@@ -6,10 +6,9 @@
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
-    <type>application</type>
+    <type>library</type>
     <target>couchbase</target>
     <prepare>pre-install.xql</prepare>
     <finish/>
     <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
-
 </meta>
