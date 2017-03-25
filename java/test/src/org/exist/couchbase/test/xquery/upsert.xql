@@ -2,11 +2,15 @@ xquery version "3.0";
 
 module namespace upsert="http://exist-db.org/couchbase/test/upsert";
 
+declare namespace output="http://www.w3.org/2010/xslt-xquery-serialization";
+
 import module namespace test="http://exist-db.org/xquery/xqsuite" 
                 at "resource:org/exist/xquery/lib/xqsuite/xqsuite.xql";
 
 import module namespace couchbase = "http://exist-db.org/couchbase/db" 
                 at "java:org.exist.couchbase.xquery.CouchbaseModule";
+
+
 
 declare variable $upsert:testBucket := "testBucket";
 
@@ -32,7 +36,10 @@ function upsert:upsert_get() {
 
     let $close := couchbase:close($clusterId)
 
-    return $get
+    return serialize($get,
+            <output:serialization-parameters>
+                <output:method>json</output:method>
+            </output:serialization-parameters>)
     
 };
 
@@ -54,7 +61,10 @@ function upsert:insert_get() {
 
     let $close := couchbase:close($clusterId)
 
-    return $get
+    return serialize($get,
+            <output:serialization-parameters>
+                <output:method>json</output:method>
+            </output:serialization-parameters>)
     
 };
 
@@ -111,6 +121,4 @@ declare %test:tearDown function upsert:teardown()
 
     return couchbase:close($clusterId)
 
-    
-    
 };

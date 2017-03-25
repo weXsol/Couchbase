@@ -18,7 +18,7 @@ declare variable $bucket:testBucket := "testBucket";
  : Add and remove buckets
  :)
 declare 
-    %test:assertEquals(3,4,3)
+    %test:assertEquals(4,5,4)
 function bucket:count() {
     
     let $username := "Administrator"
