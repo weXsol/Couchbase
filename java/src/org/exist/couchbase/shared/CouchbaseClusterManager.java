@@ -62,7 +62,7 @@ public class CouchbaseClusterManager {
     public static synchronized CouchbaseClusterManager getInstance() {
         if (instance == null) {
             instance = new CouchbaseClusterManager();
-            cbEnvironment = DefaultCouchbaseEnvironment.builder().build(); // .queryEnabled(true)
+            cbEnvironment = DefaultCouchbaseEnvironment.builder().connectTimeout(100*1000L).kvTimeout(100*1000L) .build(); // .queryEnabled(true)
         }
         return instance;
     }
