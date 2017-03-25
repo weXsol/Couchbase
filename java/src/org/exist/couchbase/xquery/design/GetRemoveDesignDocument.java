@@ -21,6 +21,7 @@ package org.exist.couchbase.xquery.design;
 
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.bucket.BucketManager;
+import com.couchbase.client.java.error.DesignDocumentDoesNotExistException;
 import com.couchbase.client.java.view.DesignDocument;
 import org.exist.couchbase.shared.Constants;
 import org.exist.couchbase.shared.CouchbaseClusterManager;
@@ -95,8 +96,13 @@ public class GetRemoveDesignDocument extends BasicFunction {
                 }
 
             } else {
-                final Boolean result = bucketManager.removeDesignDocument(designName);
-                return new BooleanValue(result);
+
+                try {
+                    final Boolean result = bucketManager.removeDesignDocument(designName);
+                    return new BooleanValue(result);
+                } catch (DesignDocumentDoesNotExistException ex) {
+                    return new BooleanValue(false);
+                }
             }
 
 

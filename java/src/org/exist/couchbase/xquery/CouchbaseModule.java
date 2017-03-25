@@ -172,10 +172,17 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match.");
 
     /**
-     * InvalidPasswordException: the password for the bucket does not match
+     * DesignDocumentAlreadyExistsException: the design document already exists
      */
     public final static ErrorCode COBA0030
             = new CouchbaseErrorCode("COBA0030", "DesignDocumentAlreadyExistsException: the design document already exists.");
+
+    /**
+     * DesignDocumentDoesNotExistException: the design document does not exist
+     */
+    public final static ErrorCode COBA0032
+            = new CouchbaseErrorCode("COBA0030", "DesignDocumentDoesNotExistException: the design document does not exist.");
+
 
     /**
      * DesignDocumentException: a problem with the design document

@@ -113,6 +113,11 @@ public class GenericExceptionHandler {
 
             throw new XPathException(expr, CouchbaseModule.COBA0030, throwable.getMessage());
 
+        } else if (throwable instanceof DesignDocumentDoesNotExistException) {
+
+            throw new XPathException(expr, CouchbaseModule.COBA0032, throwable.getMessage());
+
+
         } else if (throwable instanceof DesignDocumentException) {
 
             throw new XPathException(expr, CouchbaseModule.COBA0031, throwable);
