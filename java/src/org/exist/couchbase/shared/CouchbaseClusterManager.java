@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
 
@@ -62,7 +63,10 @@ public class CouchbaseClusterManager {
     public static synchronized CouchbaseClusterManager getInstance() {
         if (instance == null) {
             instance = new CouchbaseClusterManager();
-            cbEnvironment = DefaultCouchbaseEnvironment.builder().connectTimeout(100*1000L).kvTimeout(100*1000L) .build(); // .queryEnabled(true)
+            cbEnvironment = DefaultCouchbaseEnvironment.builder()
+                    .connectTimeout(DefaultCouchbaseEnvironment.MAX_REQUEST_LIFETIME)
+                    .kvTimeout(DefaultCouchbaseEnvironment.MAX_REQUEST_LIFETIME)
+                    .build(); // Hardcode timeout
         }
         return instance;
     }
