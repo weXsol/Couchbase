@@ -48,7 +48,7 @@ public class CouchbaseClusterConnection {
     private final UUID connectionId;
     private long invokes = 0L;
 
-    public CouchbaseClusterConnection(CouchbaseCluster cluster, String username, String bucketPassword, String connectionString, UUID connectionId) {
+    public CouchbaseClusterConnection(final CouchbaseCluster cluster, final String username, final String bucketPassword, final String connectionString, final UUID connectionId) {
         this.cluster = cluster;
         this.username = username;
         this.bucketPassword = bucketPassword;
@@ -96,7 +96,7 @@ public class CouchbaseClusterConnection {
         }
     }
 
-    public void getReport(MemTreeBuilder builder) {
+    public void getReport(final MemTreeBuilder builder) {
 
         builder.startElement("", "connection", "connection", null);
 

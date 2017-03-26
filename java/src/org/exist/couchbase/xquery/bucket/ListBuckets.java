@@ -52,12 +52,12 @@ public class ListBuckets extends BasicFunction {
             ),
     };
 
-    public ListBuckets(XQueryContext context, FunctionSignature signature) {
+    public ListBuckets(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         // Get connection details
         final String clusterId = args[0].itemAt(0).getStringValue();
@@ -83,7 +83,7 @@ public class ListBuckets extends BasicFunction {
             // Return results
             return retVal;
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

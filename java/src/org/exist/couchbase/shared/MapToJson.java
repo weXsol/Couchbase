@@ -48,7 +48,7 @@ public class MapToJson {
      * @return JSON Object representation
      * @throws Exception When something bad happens during the JSON conversion.
      */
-    public static JsonValue convert(Sequence document) throws Exception {
+    public static JsonValue convert(final Sequence document) throws Exception {
 
         final JsonValue result;
 
@@ -70,7 +70,7 @@ public class MapToJson {
 
     }
 
-    private static JsonValue convertItem(Sequence sequence, JsonValue jsonValue) throws XPathException {
+    private static JsonValue convertItem(final Sequence sequence, final JsonValue jsonValue) throws XPathException {
 
         JsonValue retVal = null;
 
@@ -86,7 +86,7 @@ public class MapToJson {
 
     }
 
-    private static JsonArray convertArray(Sequence sequence) throws XPathException {
+    private static JsonArray convertArray(final Sequence sequence) throws XPathException {
 
         final ArrayType xqueryArray = (ArrayType) sequence;
         final JsonArray jsonArray = JsonValue.ja();
@@ -121,7 +121,7 @@ public class MapToJson {
         return jsonArray;
     }
 
-    private static JsonObject convertMap(JsonValue in, Sequence seq) throws XPathException {
+    private static JsonObject convertMap(final JsonValue in, final Sequence seq) throws XPathException {
 
         final JsonObject jo = (JsonObject) in;
         final MapType map = (MapType) seq;
@@ -170,9 +170,9 @@ public class MapToJson {
         return jo;
     }
 
-    static Object convertSequenceToJavaObject(Sequence sequence) throws XPathException {
+    static Object convertSequenceToJavaObject(final Sequence sequence) throws XPathException {
 
-        Object retVal;
+        final Object retVal;
 
         switch (sequence.getItemType()) {
             case Type.STRING:

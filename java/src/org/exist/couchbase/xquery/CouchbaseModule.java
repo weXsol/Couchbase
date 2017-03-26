@@ -202,7 +202,7 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new QName("exception-message", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
 
 
-    public CouchbaseModule(Map<String, List<?>> parameters) throws XPathException {
+    public CouchbaseModule(final Map<String, List<?>> parameters) throws XPathException {
         super(functions, parameters);
     }
 
@@ -228,7 +228,7 @@ public class CouchbaseModule extends AbstractInternalModule {
 
     protected final static class CouchbaseErrorCode extends ErrorCode {
 
-        public CouchbaseErrorCode(String code, String description) {
+        public CouchbaseErrorCode(final String code, final String description) {
             super(new QName(code, NAMESPACE_URI, PREFIX), description);
         }
 

@@ -59,12 +59,12 @@ public class ViewQuery extends BasicFunction {
                     new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
             ),};
 
-    public ViewQuery(XQueryContext context, FunctionSignature signature) {
+    public ViewQuery(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -104,13 +104,13 @@ public class ViewQuery extends BasicFunction {
 
             return retVal;
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 
     }
 
-    private com.couchbase.client.java.view.ViewQuery parseParameters(com.couchbase.client.java.view.ViewQuery viewQuery, Map<String, Object> parameters) throws XPathException {
+    private com.couchbase.client.java.view.ViewQuery parseParameters(final com.couchbase.client.java.view.ViewQuery viewQuery, final Map<String, Object> parameters) throws XPathException {
 
         for (final Entry<String, Object> entry : parameters.entrySet()) {
 

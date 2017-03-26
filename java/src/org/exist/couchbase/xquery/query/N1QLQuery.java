@@ -51,12 +51,12 @@ public class N1QLQuery extends BasicFunction {
                     new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_MORE, "Results of query, JSON formatted.")
             ),};
 
-    public N1QLQuery(XQueryContext context, FunctionSignature signature) {
+    public N1QLQuery(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -92,7 +92,7 @@ public class N1QLQuery extends BasicFunction {
 
             return retVal;
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

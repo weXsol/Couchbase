@@ -48,7 +48,7 @@ public class ConversionTools {
      * @return JSON Object representation
      * @throws Exception When something bad happens during the JSON conversion.
      */
-    public static JsonObject convert(String document) throws Exception {
+    public static JsonObject convert(final String document) throws Exception {
         return transcoder.stringToJsonObject(document);
     }
 
@@ -60,7 +60,7 @@ public class ConversionTools {
      * @return JSON formatted text document
      * @throws Exception When something bad happens during the JSON conversion.
      */
-    public static String convert(JsonObject document) throws Exception {
+    public static String convert(final JsonObject document) throws Exception {
         return transcoder.jsonObjectToString(document);
     }
 
@@ -71,7 +71,7 @@ public class ConversionTools {
      * @return Java hashmap containing the map values
      * @throws XPathException Something happened during the value conversion
      */
-    public static Map<String, Object> convert(AbstractMapType map) throws XPathException {
+    public static Map<String, Object> convert(final AbstractMapType map) throws XPathException {
 
         // Results are stored here
         final Map<String, Object> retVal = new HashMap<>();
@@ -124,7 +124,7 @@ public class ConversionTools {
         return retVal;
     }
 
-    public static int getIntegerValue(String key, Object obj, int defaultValue) throws IllegalArgumentException {
+    public static int getIntegerValue(final String key, final Object obj, final int defaultValue) throws IllegalArgumentException {
         if (obj == null) {
             return defaultValue;
         }
@@ -134,7 +134,7 @@ public class ConversionTools {
         return (Integer) obj;
     }
 
-    public static boolean getBooleanValue(String key, Object obj, boolean defaultValue) throws IllegalArgumentException {
+    public static boolean getBooleanValue(final String key, final Object obj, final boolean defaultValue) throws IllegalArgumentException {
         if (obj == null) {
             return defaultValue;
         }
@@ -144,7 +144,7 @@ public class ConversionTools {
         return (Boolean) obj;
     }
 
-    public static long getLongValue(String key, Object obj) throws IllegalArgumentException {
+    public static long getLongValue(final String key, final Object obj) throws IllegalArgumentException {
         if (obj == null) {
             throw new IllegalArgumentException(String.format("Map item '%s' is value null.", key));
         }

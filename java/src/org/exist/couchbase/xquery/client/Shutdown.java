@@ -49,12 +49,12 @@ public class Shutdown extends BasicFunction {
             ),
     };
 
-    public Shutdown(XQueryContext context, FunctionSignature signature) {
+    public Shutdown(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         // User must either be DBA or in the c group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
@@ -79,7 +79,7 @@ public class Shutdown extends BasicFunction {
             // Return IDs
             return retVal;
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

@@ -48,12 +48,12 @@ public class ListDesignDocuments extends BasicFunction {
                     new FunctionReturnSequenceType(Type.STRING, Cardinality.ZERO_OR_ONE, "The names of design documents, or Empty sequence when not found.")
             )};
 
-    public ListDesignDocuments(XQueryContext context, FunctionSignature signature) {
+    public ListDesignDocuments(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -90,7 +90,7 @@ public class ListDesignDocuments extends BasicFunction {
             }
 
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

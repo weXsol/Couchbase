@@ -60,12 +60,12 @@ public class InsertUpsertDesignDocument extends BasicFunction {
             )
     };
 
-    public InsertUpsertDesignDocument(XQueryContext context, FunctionSignature signature) {
+    public InsertUpsertDesignDocument(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -102,7 +102,7 @@ public class InsertUpsertDesignDocument extends BasicFunction {
                 return JsonToMap.convert(designDocument.toJsonObject(), context);
             }
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

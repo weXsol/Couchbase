@@ -39,7 +39,7 @@ import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
  */
 public class JsonToMap {
 
-    public static MapType convert(JsonObject json, XQueryContext context) throws Exception {
+    public static MapType convert(final JsonObject json, final XQueryContext context) throws Exception {
 
 //        if (json instanceof JsonObject) {
         return convertJsonObject(json, context);
@@ -49,7 +49,7 @@ public class JsonToMap {
 //        }
     }
 
-    static MapType convertJsonObject(JsonObject jsonObject, XQueryContext context) throws XPathException {
+    static MapType convertJsonObject(final JsonObject jsonObject, final XQueryContext context) throws XPathException {
 
         final MapType result = new MapType(context);
 
@@ -81,7 +81,7 @@ public class JsonToMap {
 
     }
 
-    private static ArrayType convertJsonArray(JsonArray ja, XQueryContext context) throws XPathException {
+    private static ArrayType convertJsonArray(final JsonArray ja, final XQueryContext context) throws XPathException {
 
         final Sequence sequence = new ValueSequence();
 
@@ -102,9 +102,9 @@ public class JsonToMap {
 
             } else if (obj instanceof ArrayList) {
                 final Sequence tmpSequence = new ValueSequence();
-                ArrayList<Object> al = (ArrayList) obj;
+                final ArrayList<Object> al = (ArrayList) obj;
 
-                for (Object o : al.toArray()) {
+                for (final Object o : al.toArray()) {
                     tmpSequence.addAll(convertToSequence(o, context));
                 }
 
@@ -120,7 +120,7 @@ public class JsonToMap {
 
     }
 
-    static Sequence convertToSequence(Object obj, XQueryContext context) throws XPathException {
+    static Sequence convertToSequence(final Object obj, final XQueryContext context) throws XPathException {
 
         if (obj instanceof String) {
             return new StringValue((String) obj);
@@ -137,9 +137,9 @@ public class JsonToMap {
         } else if (obj instanceof ArrayList) {
             final Sequence sequence = new ValueSequence();
 
-            ArrayList<Object> al = (ArrayList) obj;
+            final ArrayList<Object> al = (ArrayList) obj;
 
-            for (Object o : al.toArray()) {
+            for (final Object o : al.toArray()) {
                 sequence.addAll(convertToSequence(o, context));
             }
 

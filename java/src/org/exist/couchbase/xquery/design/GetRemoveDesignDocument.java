@@ -59,12 +59,12 @@ public class GetRemoveDesignDocument extends BasicFunction {
     )
     };
 
-    public GetRemoveDesignDocument(XQueryContext context, FunctionSignature signature) {
+    public GetRemoveDesignDocument(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -100,13 +100,13 @@ public class GetRemoveDesignDocument extends BasicFunction {
                 try {
                     final Boolean result = bucketManager.removeDesignDocument(designName);
                     return new BooleanValue(result);
-                } catch (DesignDocumentDoesNotExistException ex) {
+                } catch (final DesignDocumentDoesNotExistException ex) {
                     return new BooleanValue(false);
                 }
             }
 
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 
