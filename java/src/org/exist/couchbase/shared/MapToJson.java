@@ -191,7 +191,7 @@ public class MapToJson {
 //                retVal = convertArray(sequence);
 //                break;
             default:
-                    final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
+                final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
                 LOG.error(msg);
                 throw new XPathException(COBA0051, msg);
         }

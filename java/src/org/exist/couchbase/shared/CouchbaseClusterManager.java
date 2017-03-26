@@ -27,7 +27,6 @@ import org.apache.logging.log4j.Logger;
 import org.exist.xquery.XPathException;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0001;
 

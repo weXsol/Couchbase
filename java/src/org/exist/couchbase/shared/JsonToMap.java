@@ -104,7 +104,7 @@ public class JsonToMap {
                 final Sequence tmpSequence = new ValueSequence();
                 ArrayList<Object> al = (ArrayList) obj;
 
-                for(Object o: al.toArray()){
+                for (Object o : al.toArray()) {
                     tmpSequence.addAll(convertToSequence(o, context));
                 }
 
@@ -139,7 +139,7 @@ public class JsonToMap {
 
             ArrayList<Object> al = (ArrayList) obj;
 
-            for(Object o: al.toArray()){
+            for (Object o : al.toArray()) {
                 sequence.addAll(convertToSequence(o, context));
             }
 

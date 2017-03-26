@@ -195,7 +195,6 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new CouchbaseErrorCode("COBA0051", "Conversion error");
 
 
-
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
 
