@@ -62,7 +62,7 @@ public class MapToJson {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        String.format("Can only convert String, Map or Array. Got type `%s` with value `%s`.",
+                        String.format("Can only convert String or a Map to a Couchbase JSON object. Got type `%s` with value `%s`.",
                                 document.getItemType(), document.getStringValue()));
         }
 
@@ -98,7 +98,7 @@ public class MapToJson {
                 case Type.INTEGER:
                 case Type.DOUBLE:
                 case Type.BOOLEAN:
-                    jsonArray.add(convertSequenceToJavaObject(sequence));
+                    jsonArray.add(convertSequenceToJavaObject(subSeq));
                     break;
                 case Type.MAP:
                     final JsonObject newObject = JsonValue.jo();
@@ -107,7 +107,7 @@ public class MapToJson {
                     break;
                 case Type.ARRAY:
                     final JsonArray newObject1 = JsonValue.ja();
-                    final JsonValue newMap1 = convertItem(subSeq, newObject1);
+                    final JsonValue newMap1 = convertArray(subSeq);
                     jsonArray.add(newMap1);
                     break;
                 case Type.EMPTY:
@@ -191,7 +191,7 @@ public class MapToJson {
 //                retVal = convertArray(sequence);
 //                break;
             default:
-                final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
+                    final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
                 LOG.error(msg);
                 throw new XPathException(COBA0051, msg);
         }
