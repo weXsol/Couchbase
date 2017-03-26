@@ -24,4 +24,4 @@ The extension can be downloaded from the [Releases](../../releases) page and can
 
 # Thanks
 
-[![KwantuIT](http://static1.squarespace.com/static/5555daace4b0bd68287c4b64/t/5555de47e4b009369bb56958/1436367788205/?format=150w)](http://kwantu.net)  ![Couchbase](https://upload.wikimedia.org/wikipedia/en/thumb/5/52/CouchbaseLogo.svg/320px-CouchbaseLogo.svg.png)
+[![KwantuIT](http://static1.squarespace.com/static/5555daace4b0bd68287c4b64/t/5555de47e4b009369bb56958/1436367788205/?format=150w)](http://kwantu.net)  [![Couchbase](https://upload.wikimedia.org/wikipedia/en/thumb/5/52/CouchbaseLogo.svg/320px-CouchbaseLogo.svg.png)](https://www.couchbase.com)
