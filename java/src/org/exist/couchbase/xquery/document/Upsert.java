@@ -68,12 +68,12 @@ public class Upsert extends BasicFunction {
             ),
     };
 
-    public Upsert(XQueryContext context, FunctionSignature signature) {
+    public Upsert(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -103,7 +103,7 @@ public class Upsert extends BasicFunction {
             // Return results
             return JsonToMap.convert(result.content(), context);
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

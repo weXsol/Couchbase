@@ -27,6 +27,7 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
@@ -38,7 +39,7 @@ import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
  */
 public class JsonToMap {
 
-    public static MapType convert(JsonObject json, XQueryContext context) throws Exception {
+    public static MapType convert(final JsonObject json, final XQueryContext context) throws Exception {
 
 //        if (json instanceof JsonObject) {
         return convertJsonObject(json, context);
@@ -48,7 +49,7 @@ public class JsonToMap {
 //        }
     }
 
-    static MapType convertJsonObject(JsonObject jsonObject, XQueryContext context) throws XPathException {
+    static MapType convertJsonObject(final JsonObject jsonObject, final XQueryContext context) throws XPathException {
 
         final MapType result = new MapType(context);
 
@@ -72,7 +73,7 @@ public class JsonToMap {
                 result.add(new StringValue(name), convertJsonObject(jo, context));
 
             } else {
-                result.add(new StringValue(name), convertToSequence(obj));
+                result.add(new StringValue(name), convertToSequence(obj, context));
             }
         }
 
@@ -80,7 +81,7 @@ public class JsonToMap {
 
     }
 
-    private static ArrayType convertJsonArray(JsonArray ja, XQueryContext context) throws XPathException {
+    private static ArrayType convertJsonArray(final JsonArray ja, final XQueryContext context) throws XPathException {
 
         final Sequence sequence = new ValueSequence();
 
@@ -99,8 +100,18 @@ public class JsonToMap {
                 final JsonObject jo = JsonObject.from(map);
                 sequence.add(convertJsonObject(jo, context));
 
+            } else if (obj instanceof ArrayList) {
+                final Sequence tmpSequence = new ValueSequence();
+                final ArrayList<Object> al = (ArrayList) obj;
+
+                for (final Object o : al.toArray()) {
+                    tmpSequence.addAll(convertToSequence(o, context));
+                }
+
+                sequence.add(new ArrayType(context, tmpSequence));
+
             } else {
-                sequence.add(convertToSequence(obj));
+                sequence.addAll(convertToSequence(obj, context));
             }
 
         }
@@ -109,19 +120,33 @@ public class JsonToMap {
 
     }
 
-    static AtomicValue convertToSequence(Object obj) throws XPathException {
+    static Sequence convertToSequence(final Object obj, final XQueryContext context) throws XPathException {
 
         if (obj instanceof String) {
             return new StringValue((String) obj);
+
         } else if (obj instanceof Integer) {
             return new IntegerValue((Integer) obj);
+
         } else if (obj instanceof Double) {
             return new DoubleValue((Double) obj);
+
         } else if (obj instanceof Boolean) {
             return new BooleanValue((Boolean) obj);
+
+        } else if (obj instanceof ArrayList) {
+            final Sequence sequence = new ValueSequence();
+
+            final ArrayList<Object> al = (ArrayList) obj;
+
+            for (final Object o : al.toArray()) {
+                sequence.addAll(convertToSequence(o, context));
+            }
+
+            return new ArrayType(context, sequence);
         }
 
-        throw new XPathException(COBA0051, String.format("Cannot convert %s. %s", obj, obj.toString()));
+        throw new XPathException(COBA0051, String.format("Cannot convert  %s. %s", obj, obj.getClass().getCanonicalName()));
 
     }
 

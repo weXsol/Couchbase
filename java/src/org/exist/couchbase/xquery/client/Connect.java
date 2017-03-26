@@ -55,12 +55,12 @@ public class Connect extends BasicFunction {
             ),
     };
 
-    public Connect(XQueryContext context, FunctionSignature signature) {
+    public Connect(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         // User must either be DBA or in the correct group
         if (!context.getSubject().hasDbaRole() && !context.getSubject().hasGroup(Constants.COUCHBASE_GROUP)) {
@@ -86,7 +86,7 @@ public class Connect extends BasicFunction {
             // Return id
             return new StringValue(clusterId);
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
     }

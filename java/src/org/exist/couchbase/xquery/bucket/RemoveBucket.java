@@ -51,12 +51,12 @@ public class RemoveBucket extends BasicFunction {
             ),
     };
 
-    public RemoveBucket(XQueryContext context, FunctionSignature signature) {
+    public RemoveBucket(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         // Get connection details
         final String clusterId = args[0].itemAt(0).getStringValue();
@@ -77,7 +77,7 @@ public class RemoveBucket extends BasicFunction {
             // Return results
             return new BooleanValue(retVal);
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>@TITLE@</description>
+    <description>The Couchbase Server driver extension provides access to functions and features of the Couchbase Server
+        using the original Couchbase Java Driver. This extension has NOT been developed by CouchBase and is therefore NOT an offical
+        driver nor is it supported by CouchBase.</description>
     <author>Dannes Wessels</author>
     <website>https://github.com/weXsol/Couchbase</website>
     <status>beta</status>
@@ -11,4 +13,12 @@
     <prepare>pre-install.xql</prepare>
     <finish/>
     <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
+    <changelog>
+        <change version="0.5.4">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Improved conversion of XQuery-JSON objects to Couchbase-JSON objects and vice versa.</li>
+                <li>Upgrade to Java driver version v2.4.3.</li>
+            </ul>
+        </change>
+    </changelog>
 </meta>

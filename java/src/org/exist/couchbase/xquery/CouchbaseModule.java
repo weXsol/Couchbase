@@ -172,10 +172,17 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new CouchbaseErrorCode("COBA0021", "InvalidPasswordException: the password for the bucket does not match.");
 
     /**
-     * InvalidPasswordException: the password for the bucket does not match
+     * DesignDocumentAlreadyExistsException: the design document already exists
      */
     public final static ErrorCode COBA0030
             = new CouchbaseErrorCode("COBA0030", "DesignDocumentAlreadyExistsException: the design document already exists.");
+
+    /**
+     * DesignDocumentDoesNotExistException: the design document does not exist
+     */
+    public final static ErrorCode COBA0032
+            = new CouchbaseErrorCode("COBA0030", "DesignDocumentDoesNotExistException: the design document does not exist.");
+
 
     /**
      * DesignDocumentException: a problem with the design document
@@ -188,7 +195,6 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new CouchbaseErrorCode("COBA0051", "Conversion error");
 
 
-
     public final static QName EXCEPTION_QNAME
             = new QName("exception", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
 
@@ -196,7 +202,7 @@ public class CouchbaseModule extends AbstractInternalModule {
             = new QName("exception-message", CouchbaseModule.NAMESPACE_URI, CouchbaseModule.PREFIX);
 
 
-    public CouchbaseModule(Map<String, List<?>> parameters) throws XPathException {
+    public CouchbaseModule(final Map<String, List<?>> parameters) throws XPathException {
         super(functions, parameters);
     }
 
@@ -222,7 +228,7 @@ public class CouchbaseModule extends AbstractInternalModule {
 
     protected final static class CouchbaseErrorCode extends ErrorCode {
 
-        public CouchbaseErrorCode(String code, String description) {
+        public CouchbaseErrorCode(final String code, final String description) {
             super(new QName(code, NAMESPACE_URI, PREFIX), description);
         }
 

@@ -48,7 +48,7 @@ public class MapToJson {
      * @return JSON Object representation
      * @throws Exception When something bad happens during the JSON conversion.
      */
-    public static JsonValue convert(Sequence document) throws Exception {
+    public static JsonValue convert(final Sequence document) throws Exception {
 
         final JsonValue result;
 
@@ -62,7 +62,7 @@ public class MapToJson {
                 break;
             default:
                 throw new IllegalArgumentException(
-                        String.format("Can only convert String, Map or Array. Got type `%s` with value `%s`.",
+                        String.format("Can only convert String or a Map to a Couchbase JSON object. Got type `%s` with value `%s`.",
                                 document.getItemType(), document.getStringValue()));
         }
 
@@ -70,7 +70,7 @@ public class MapToJson {
 
     }
 
-    private static JsonValue convertItem(Sequence sequence, JsonValue jsonValue) throws XPathException {
+    private static JsonValue convertItem(final Sequence sequence, final JsonValue jsonValue) throws XPathException {
 
         JsonValue retVal = null;
 
@@ -86,7 +86,7 @@ public class MapToJson {
 
     }
 
-    private static JsonArray convertArray(Sequence sequence) throws XPathException {
+    private static JsonArray convertArray(final Sequence sequence) throws XPathException {
 
         final ArrayType xqueryArray = (ArrayType) sequence;
         final JsonArray jsonArray = JsonValue.ja();
@@ -98,7 +98,7 @@ public class MapToJson {
                 case Type.INTEGER:
                 case Type.DOUBLE:
                 case Type.BOOLEAN:
-                    jsonArray.add(convertSequenceToJavaObject(sequence));
+                    jsonArray.add(convertSequenceToJavaObject(subSeq));
                     break;
                 case Type.MAP:
                     final JsonObject newObject = JsonValue.jo();
@@ -107,21 +107,21 @@ public class MapToJson {
                     break;
                 case Type.ARRAY:
                     final JsonArray newObject1 = JsonValue.ja();
-                    final JsonValue newMap1 = convertItem(subSeq, newObject1);
+                    final JsonValue newMap1 = convertArray(subSeq);
                     jsonArray.add(newMap1);
                     break;
                 case Type.EMPTY:
                     jsonArray.addNull();
                     break;
                 default:
-                    LOG.error(String.format("Unable to convert '%s'", subSeq.getStringValue()));
+                    LOG.error(String.format("Unable to convert '%s' of type `%d`", subSeq.getStringValue(), sequence.getItemType()));
             }
 
         }
         return jsonArray;
     }
 
-    private static JsonObject convertMap(JsonValue in, Sequence seq) throws XPathException {
+    private static JsonObject convertMap(final JsonValue in, final Sequence seq) throws XPathException {
 
         final JsonObject jo = (JsonObject) in;
         final MapType map = (MapType) seq;
@@ -162,7 +162,7 @@ public class MapToJson {
                     jo.putNull(keyValue);
                     break;
                 default:
-                    final String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
+                    final String msg = String.format("Unable to convert '%s' with value '%s' to an JSON object.", keyValue, sequence.getStringValue());
                     LOG.error(msg);
                     throw new XPathException(COBA0051, msg);
             }
@@ -170,9 +170,9 @@ public class MapToJson {
         return jo;
     }
 
-    static Object convertSequenceToJavaObject(Sequence sequence) throws XPathException {
+    static Object convertSequenceToJavaObject(final Sequence sequence) throws XPathException {
 
-        Object retVal;
+        final Object retVal;
 
         switch (sequence.getItemType()) {
             case Type.STRING:
@@ -187,8 +187,11 @@ public class MapToJson {
             case Type.BOOLEAN:
                 retVal = sequence.toJavaObject(Boolean.class);
                 break;
+//            case Type.ARRAY:
+//                retVal = convertArray(sequence);
+//                break;
             default:
-                final String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
+                final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
                 LOG.error(msg);
                 throw new XPathException(COBA0051, msg);
         }

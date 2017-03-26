@@ -62,12 +62,12 @@ public class Get extends BasicFunction {
                     new FunctionReturnSequenceType(Type.MAP, Cardinality.ZERO_OR_ONE, "The Json document, or Empty sequence when not found.")
             ),};
 
-    public Get(XQueryContext context, FunctionSignature signature) {
+    public Get(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         final CouchbaseClusterManager cmm = CouchbaseClusterManager.getInstance();
 
@@ -100,21 +100,21 @@ public class Get extends BasicFunction {
             // Return results
             return JsonToMap.convert(result.content(), context);
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
 
     }
 
     /* Retrieve document */
-    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String bucketPassword, String docName) {
+    private JsonDocument get(final CouchbaseCluster cluster, final String bucketName, final String bucketPassword, final String docName) {
         return cluster.openBucket(bucketName, bucketPassword).get(docName);
     }
 
     /**
      * Retrieve documents with additional parameters
      */
-    private JsonDocument get(CouchbaseCluster cluster, String bucketName, String docName, String bucketPassword, Map<String, Object> parameters) {
+    private JsonDocument get(final CouchbaseCluster cluster, final String bucketName, final String docName, final String bucketPassword, final Map<String, Object> parameters) {
         final long timeout = ConversionTools.getLongValue("timeout", parameters.get("timeout"));
         final TimeUnit timeUnit = TimeUnit.valueOf(parameters.get("timeUnit").toString().toUpperCase(Locale.US));
 

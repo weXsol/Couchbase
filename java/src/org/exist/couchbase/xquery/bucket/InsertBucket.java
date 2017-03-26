@@ -63,12 +63,12 @@ public class InsertBucket extends BasicFunction {
             ),
     };
 
-    public InsertBucket(XQueryContext context, FunctionSignature signature) {
+    public InsertBucket(final XQueryContext context, final FunctionSignature signature) {
         super(context, signature);
     }
 
     @Override
-    public Sequence eval(Sequence[] args, Sequence contextSequence) throws XPathException {
+    public Sequence eval(final Sequence[] args, final Sequence contextSequence) throws XPathException {
 
         // Get connection details
         final String clusterId = args[0].itemAt(0).getStringValue();
@@ -96,12 +96,12 @@ public class InsertBucket extends BasicFunction {
             return new StringValue(insertBucket.toString());
 
 
-        } catch (Throwable ex) {
+        } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);
         }
     }
 
-    private BucketSettings parseParameters(String bucketName, Map<String, Object> parameters) throws XPathException {
+    private BucketSettings parseParameters(final String bucketName, final Map<String, Object> parameters) throws XPathException {
 
         final Builder builder = DefaultBucketSettings.builder().name(bucketName);
 
