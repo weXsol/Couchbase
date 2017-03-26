@@ -28,4 +28,4 @@ The extension can be downloaded from the [Releases](../../releases) page and can
 
 # See also
 
-The [Mongrel](https://github.com/weXsol/Mongrel) extension, whioch is the MongoDB driver for eXist-db.
+The [Mongrel](https://github.com/weXsol/Mongrel) extension, which is the MongoDB driver for eXist-db.
