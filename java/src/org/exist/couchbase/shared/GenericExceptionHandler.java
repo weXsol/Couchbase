@@ -54,8 +54,8 @@ public class GenericExceptionHandler {
      */
     public static Sequence handleException(Expression expr, Throwable throwable) throws XPathException {
 
-        if(LOG.isDebugEnabled()) {
-            LOG.error("Expression:'{}' Source:{}#{}", ExpressionDumper.dump(expr), expr.getSource(), expr.getLine(), throwable);
+        if (LOG.isDebugEnabled()) {
+            LOG.error("Expression='{}' Source={}#{}", ExpressionDumper.dump(expr), expr.getSource(), expr.getLine(), throwable);
         } else {
             LOG.error("{} Origin={}  Expression='{}'  Source={}#{}", throwable.toString(), throwable.getStackTrace()[0].toString(), ExpressionDumper.dump(expr), expr.getSource(), expr.getLine());
         }
@@ -128,6 +128,10 @@ public class GenericExceptionHandler {
             throw new XPathException(expr, CouchbaseModule.COBA0010, throwable);
 
         } else {
+
+            if (!LOG.isDebugEnabled()) {
+                LOG.error("Generic issue", throwable);
+            }
 
             throw new XPathException(expr, CouchbaseModule.COBA0000, throwable);
         }

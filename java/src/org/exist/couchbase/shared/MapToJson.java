@@ -114,7 +114,7 @@ public class MapToJson {
                     jsonArray.addNull();
                     break;
                 default:
-                    LOG.error(String.format("Unable to convert '%s'", subSeq.getStringValue()));
+                    LOG.error(String.format("Unable to convert '%s' of type `%d`", subSeq.getStringValue(), sequence.getItemType()));
             }
 
         }
@@ -162,7 +162,7 @@ public class MapToJson {
                     jo.putNull(keyValue);
                     break;
                 default:
-                    final String msg = String.format("Unable to convert '%s' with value '%s'", keyValue, sequence.getStringValue());
+                    final String msg = String.format("Unable to convert '%s' with value '%s' to an JSON object.", keyValue, sequence.getStringValue());
                     LOG.error(msg);
                     throw new XPathException(COBA0051, msg);
             }
@@ -187,8 +187,11 @@ public class MapToJson {
             case Type.BOOLEAN:
                 retVal = sequence.toJavaObject(Boolean.class);
                 break;
+//            case Type.ARRAY:
+//                retVal = convertArray(sequence);
+//                break;
             default:
-                final String msg = String.format("Unable to convert '%s'", sequence.getStringValue());
+                final String msg = String.format("Unable to convert '%s' of type '%d' to a Java object.", sequence.getStringValue(), sequence.getItemType());
                 LOG.error(msg);
                 throw new XPathException(COBA0051, msg);
         }
