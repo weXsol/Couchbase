@@ -3,7 +3,9 @@
 ![Couchbase](https://upload.wikimedia.org/wikipedia/en/archive/6/67/20130321214116!Couchbase,_Inc._official_logo.png)
 ![eXist-db](http://exist-db.org/exist/apps/homepage/resources/img/existdb.gif)
 
-This is the Couchbase extension for the [eXist Native XML database](http://www.exist-db.org). This driver provides access to functions and features of [Couchbase](http://www.couchbase.com) using the offical [Couchbase Java Driver](https://github.com/couchbase/couchbase-java-client).
+This is the Couchbase extension for the [eXist Native XML database](http://www.exist-db.org). This driver provides access to functions and features of [Couchbase](http://www.couchbase.com) using the original [Couchbase Java Driver](https://github.com/couchbase/couchbase-java-client).
+
+> This is not a driver developed by [CouchBase](https://www.couchbase.com) and is therefore NOT an offical driver nor is it supported by [CouchBase](https://www.couchbase.com)
 
 # Documentation 
 
