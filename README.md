@@ -6,13 +6,20 @@ This is the Couchbase extension for the [eXist Native XML database](http://www.e
 
 > This driver is *NOT* developed by [CouchBase](https://www.couchbase.com) and is therefore NOT an offical driver nor is it supported by [CouchBase](https://www.couchbase.com).
 
+
 # Documentation 
 
-Documentation of the driver is found on the [Wiki](../../wiki)
+Documentation of the driver is found on the [Wiki](../../wiki). The unit tests provide additional hints how to use the software.
 
 # Releases
 
-The extension can be downloaded from the [Releases](../../releases) page. Please download the correct version (eXist-db v2.2 or v3.x)
+The extension can be downloaded from the [Releases](../../releases) page and can be installed using the [eXist-db Package Manager](http://www.exist-db.org/exist/apps/doc/dashboard.xml) from the [eXist-db Public Application Repository](http://exist-db.org/exist/apps/public-repo/index.html).
+
+# Prerequisites
+
+- [eXist-db 3.0](http://www.exist-db.org) or newer (the 2.2 version is not actively maintained)
+- Java8
+- [CouchBase server](https://www.couchbase.com/downloads) (tested with version 4.6.1, enterprise edition) (link)
 
 
 # Thanks
