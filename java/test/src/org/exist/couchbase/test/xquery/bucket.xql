@@ -18,7 +18,7 @@ declare variable $bucket:testBucket := "testBucket";
  : Add and remove buckets
  :)
 declare 
-    %test:assertEquals(4,5,4)
+    %test:assertEquals(true(), true())
 function bucket:count() {
     
     let $username := "Administrator"
@@ -43,7 +43,7 @@ function bucket:count() {
     
     let $close := couchbase:close($clusterId)
                        
-    return ($start, $added, $stop)
+    return ( ($start<$added), ($stop<$added) )
     
 };
 

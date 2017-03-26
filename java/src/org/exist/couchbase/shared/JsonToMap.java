@@ -27,6 +27,7 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
@@ -72,7 +73,7 @@ public class JsonToMap {
                 result.add(new StringValue(name), convertJsonObject(jo, context));
 
             } else {
-                result.add(new StringValue(name), convertToSequence(obj));
+                result.add(new StringValue(name), convertToSequence(obj, context));
             }
         }
 
@@ -99,8 +100,18 @@ public class JsonToMap {
                 final JsonObject jo = JsonObject.from(map);
                 sequence.add(convertJsonObject(jo, context));
 
+            } else if (obj instanceof ArrayList) {
+                final Sequence tmpSequence = new ValueSequence();
+                ArrayList<Object> al = (ArrayList) obj;
+
+                for(Object o: al.toArray()){
+                    tmpSequence.addAll(convertToSequence(o, context));
+                }
+
+                sequence.add(new ArrayType(context, tmpSequence));
+
             } else {
-                sequence.add(convertToSequence(obj));
+                sequence.addAll(convertToSequence(obj, context));
             }
 
         }
@@ -109,19 +120,33 @@ public class JsonToMap {
 
     }
 
-    static AtomicValue convertToSequence(Object obj) throws XPathException {
+    static Sequence convertToSequence(Object obj, XQueryContext context) throws XPathException {
 
         if (obj instanceof String) {
             return new StringValue((String) obj);
+
         } else if (obj instanceof Integer) {
             return new IntegerValue((Integer) obj);
+
         } else if (obj instanceof Double) {
             return new DoubleValue((Double) obj);
+
         } else if (obj instanceof Boolean) {
             return new BooleanValue((Boolean) obj);
+
+        } else if (obj instanceof ArrayList) {
+            final Sequence sequence = new ValueSequence();
+
+            ArrayList<Object> al = (ArrayList) obj;
+
+            for(Object o: al.toArray()){
+                sequence.addAll(convertToSequence(o, context));
+            }
+
+            return new ArrayType(context, sequence);
         }
 
-        throw new XPathException(COBA0051, String.format("Cannot convert %s. %s", obj, obj.toString()));
+        throw new XPathException(COBA0051, String.format("Cannot convert  %s. %s", obj, obj.getClass().getCanonicalName()));
 
     }
 
