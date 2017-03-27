@@ -30,6 +30,8 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import java.math.BigDecimal;
+
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
 
 /**
@@ -98,6 +100,8 @@ public class MapToJson {
                 case Type.INTEGER:
                 case Type.DOUBLE:
                 case Type.BOOLEAN:
+                case Type.LONG:
+                case Type.DECIMAL:
                     jsonArray.add(convertSequenceToJavaObject(subSeq));
                     break;
                 case Type.MAP:
@@ -192,6 +196,9 @@ public class MapToJson {
                 break;
             case Type.LONG:
                 retVal = sequence.toJavaObject(Long.class);
+                break;
+            case Type.DECIMAL:
+                retVal = sequence.toJavaObject(BigDecimal.class);
                 break;
 //            case Type.ARRAY:
 //                retVal = convertArray(sequence);
