@@ -13,7 +13,13 @@
     <prepare>pre-install.xql</prepare>
     <finish/>
     <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
+    <note>When upgrading: please first uninstall all previous versions and restart eXist-db.</note>
     <changelog>
+        <change version="0.5.5">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Another improvement on JSON conversion: Support of more datatypes.</li>
+            </ul>
+        </change>
         <change version="0.5.4">
             <ul xmlns="http://www.w3.org/1999/xhtml">
                 <li>Improved conversion of XQuery-JSON objects to Couchbase-JSON objects and vice versa.</li>

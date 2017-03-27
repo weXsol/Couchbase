@@ -27,6 +27,8 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -39,17 +41,28 @@ import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
  */
 public class JsonToMap {
 
-    public static MapType convert(final JsonObject json, final XQueryContext context) throws Exception {
+    /**
+     * Convert the CouchBase JSON object into an eXistdb MapType
+     *
+     * @param json    The couchbase JSON object
+     * @param context XQuery context
+     * @return eXist-db map representing the JSON object
+     * @throws XPathException The conversion failed.
+     */
+    public static MapType convert(final JsonObject json, final XQueryContext context) throws XPathException {
 
-//        if (json instanceof JsonObject) {
         return convertJsonObject(json, context);
-
-//        } else {
-//            throw new IllegalArgumentException(String.format("Unable to convert " + json));
-//        }
     }
 
-    static MapType convertJsonObject(final JsonObject jsonObject, final XQueryContext context) throws XPathException {
+    /**
+     * Convert the Couchbase JSON array into an eXist-db Array type,
+     *
+     * @param jsonObject The Json Object
+     * @param context    Xquery context
+     * @return The eXist-db representation of the jsonObject
+     * @throws XPathException The conversion can not be performed.
+     */
+    private static MapType convertJsonObject(final JsonObject jsonObject, final XQueryContext context) throws XPathException {
 
         final MapType result = new MapType(context);
 
@@ -81,6 +94,14 @@ public class JsonToMap {
 
     }
 
+    /**
+     * Convert the Couchbase JSON array into an eXist-db Array type,
+     *
+     * @param ja      The Json Array
+     * @param context Xquery context
+     * @return The eXist-db representation of the array
+     * @throws XPathException The conversion can not be performed.
+     */
     private static ArrayType convertJsonArray(final JsonArray ja, final XQueryContext context) throws XPathException {
 
         final Sequence sequence = new ValueSequence();
@@ -120,7 +141,15 @@ public class JsonToMap {
 
     }
 
-    static Sequence convertToSequence(final Object obj, final XQueryContext context) throws XPathException {
+    /**
+     * Convert an object to the eXist-db equivalent, when possible.
+     *
+     * @param obj     The to be converted java object
+     * @param context Xquery context
+     * @return The eXist-db representation of the object
+     * @throws XPathException The conversion can not be performed.
+     */
+    private static Sequence convertToSequence(final Object obj, final XQueryContext context) throws XPathException {
 
         if (obj instanceof String) {
             return new StringValue((String) obj);
@@ -128,19 +157,29 @@ public class JsonToMap {
         } else if (obj instanceof Integer) {
             return new IntegerValue((Integer) obj);
 
-        } else if (obj instanceof Double) {
-            return new DoubleValue((Double) obj);
-
         } else if (obj instanceof Long) {
             return new IntegerValue((Long) obj);
 
-        } else if (obj instanceof Float) {
-            return new FloatValue((Float) obj);
+        } else if (obj instanceof Double) {
+            return new DoubleValue((Double) obj);
 
         } else if (obj instanceof Boolean) {
             return new BooleanValue((Boolean) obj);
 
+        } else if (obj instanceof BigInteger) {
+            return new IntegerValue((BigInteger) obj);
+
+        } else if (obj instanceof BigDecimal) {
+            return new DecimalValue((BigDecimal) obj);
+
+        } else if (obj instanceof Float) {
+            return new FloatValue((Float) obj);
+
+//        } else if (obj instanceof Map) {
+
+
         } else if (obj instanceof ArrayList) {
+            // Special case
             final Sequence sequence = new ValueSequence();
 
             final ArrayList<Object> al = (ArrayList) obj;
