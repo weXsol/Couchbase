@@ -131,6 +131,12 @@ public class JsonToMap {
         } else if (obj instanceof Double) {
             return new DoubleValue((Double) obj);
 
+        } else if (obj instanceof Long) {
+            return new IntegerValue((Long) obj);
+
+        } else if (obj instanceof Float) {
+            return new FloatValue((Float) obj);
+
         } else if (obj instanceof Boolean) {
             return new BooleanValue((Boolean) obj);
 
@@ -146,7 +152,7 @@ public class JsonToMap {
             return new ArrayType(context, sequence);
         }
 
-        throw new XPathException(COBA0051, String.format("Cannot convert  %s. %s", obj, obj.getClass().getCanonicalName()));
+        throw new XPathException(COBA0051, String.format("Cannot convert '%s' to an eXistdb type. %s", obj, obj.getClass().getCanonicalName()));
 
     }
 

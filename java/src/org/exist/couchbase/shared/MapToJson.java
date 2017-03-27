@@ -187,6 +187,12 @@ public class MapToJson {
             case Type.BOOLEAN:
                 retVal = sequence.toJavaObject(Boolean.class);
                 break;
+            case Type.FLOAT:
+                retVal = sequence.toJavaObject(Float.class);
+                break;
+            case Type.LONG:
+                retVal = sequence.toJavaObject(Long.class);
+                break;
 //            case Type.ARRAY:
 //                retVal = convertArray(sequence);
 //                break;
