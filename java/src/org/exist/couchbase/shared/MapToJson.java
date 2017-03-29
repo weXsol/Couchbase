@@ -30,6 +30,8 @@ import org.exist.xquery.functions.array.ArrayType;
 import org.exist.xquery.functions.map.MapType;
 import org.exist.xquery.value.*;
 
+import java.math.BigDecimal;
+
 import static org.exist.couchbase.xquery.CouchbaseModule.COBA0051;
 
 /**
@@ -98,6 +100,8 @@ public class MapToJson {
                 case Type.INTEGER:
                 case Type.DOUBLE:
                 case Type.BOOLEAN:
+                case Type.LONG:
+                case Type.DECIMAL:
                     jsonArray.add(convertSequenceToJavaObject(subSeq));
                     break;
                 case Type.MAP:
@@ -144,8 +148,12 @@ public class MapToJson {
             switch (sequence.getItemType()) {
                 case Type.STRING:
                 case Type.INTEGER:
+                case Type.INT:
                 case Type.DOUBLE:
                 case Type.BOOLEAN:
+                //case Type.FLOAT:
+                case Type.LONG:
+                case Type.DECIMAL:
                     jo.put(keyValue, convertSequenceToJavaObject(sequence));
                     break;
                 case Type.MAP:
@@ -162,7 +170,8 @@ public class MapToJson {
                     jo.putNull(keyValue);
                     break;
                 default:
-                    final String msg = String.format("Unable to convert '%s' with value '%s' to an JSON object.", keyValue, sequence.getStringValue());
+                    final String msg = String.format("Unable to convert '%s' with value '%s' to an JSON object. Type=%s",
+                            keyValue, sequence.getStringValue(),sequence.getItemType());
                     LOG.error(msg);
                     throw new XPathException(COBA0051, msg);
             }
@@ -179,6 +188,7 @@ public class MapToJson {
                 retVal = ((StringValue) sequence).getStringValue();
                 break;
             case Type.INTEGER:
+            case Type.INT:
                 retVal = sequence.toJavaObject(Integer.class);
                 break;
             case Type.DOUBLE:
@@ -186,6 +196,15 @@ public class MapToJson {
                 break;
             case Type.BOOLEAN:
                 retVal = sequence.toJavaObject(Boolean.class);
+                break;
+            case Type.FLOAT:
+                retVal = sequence.toJavaObject(Float.class);
+                break;
+            case Type.LONG:
+                retVal = sequence.toJavaObject(Long.class);
+                break;
+            case Type.DECIMAL:
+                retVal = sequence.toJavaObject(BigDecimal.class);
                 break;
 //            case Type.ARRAY:
 //                retVal = convertArray(sequence);

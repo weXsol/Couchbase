@@ -617,6 +617,34 @@ function upsert:insert_get_conflict() {
 
 };
 
+declare
+    %test:assertEquals('{"a":1,"b":2,"c":3,"d":4.1,"e":5}')
+function upsert:valued_map() {
+
+    let $clusterId := couchbase:connect("couchbase://localhost")
+    let $documentName := "testUpsertDocument"
+    let $json := map {
+                         "a" : 1,
+                         "b" : xs:int("2"),
+                         "c" : xs:integer("3"),
+                         "d" : xs:double("4.1"),
+                         "e" : xs:long("5")
+
+                     }
+
+    let $upsert := couchbase:upsert($clusterId, $upsert:testBucket, $documentName, $json)
+
+    let $get := couchbase:get($clusterId, $upsert:testBucket, $documentName)
+
+    let $close := couchbase:close($clusterId)
+
+    return serialize($get,
+            <output:serialization-parameters>
+                <output:method>json</output:method>
+            </output:serialization-parameters>)
+
+};
+
 
 declare %test:setUp function upsert:setup()
 {
