@@ -71,6 +71,7 @@ public class JsonToMap {
 
             if (obj == null) {
                 result.add(new StringValue(name), Sequence.EMPTY_SEQUENCE);
+
             } else if (obj instanceof JsonObject) {
                 final JsonObject jo = (JsonObject) obj;
                 result.add(new StringValue(name), convertJsonObject(jo, context));
