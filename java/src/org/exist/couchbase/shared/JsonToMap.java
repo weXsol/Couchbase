@@ -193,7 +193,7 @@ public class JsonToMap {
             }
 
             return new ArrayType(context, sequence);
-            
+
         } else if (obj == null) {
             return Sequence.EMPTY_SEQUENCE;
         }
