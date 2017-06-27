@@ -132,6 +132,9 @@ public class JsonToMap {
 
                 sequence.add(new ArrayType(context, tmpSequence));
 
+            } else if (obj == null) {
+                sequence.add(AtomicValue.EMPTY_VALUE);
+
             } else {
                 sequence.addAll(convertToSequence(obj, context));
             }
@@ -190,6 +193,9 @@ public class JsonToMap {
             }
 
             return new ArrayType(context, sequence);
+            
+        } else if (obj == null) {
+            return Sequence.EMPTY_SEQUENCE;
         }
 
         throw new XPathException(COBA0051, String.format("Cannot convert '%s' to an eXistdb type. %s", obj, obj.getClass().getCanonicalName()));
