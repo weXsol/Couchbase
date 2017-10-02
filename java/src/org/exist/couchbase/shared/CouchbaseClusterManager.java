@@ -52,7 +52,7 @@ public class CouchbaseClusterManager {
     /**
      * Storage of connections
      */
-    private final Map<String, CouchbaseClusterConnection> clusters = new HashMap<>();
+    private final Map<String, CouchbaseClusterConnection> clusterConnections = new HashMap<>();
 
     /**
      * Get instance of object, initialize when needed.
@@ -70,39 +70,58 @@ public class CouchbaseClusterManager {
         return instance;
     }
 
-    private void add(final String id, final CouchbaseClusterConnection connection) {
-        clusters.put(id, connection);
+    private void add(final String clusterConnectionId, final CouchbaseClusterConnection connection) {
+        clusterConnections.put(clusterConnectionId, connection);
     }
 
-    public void remove(final String clusterId) {
+    public void remove(final String clusterConnectionId) {
 
         // Close connection
-        final CouchbaseCluster c = get(clusterId);
+        final CouchbaseCluster c = get(clusterConnectionId);
+
+        // If no connectionID is available, silently ignore
+        if (c == null) {
+            LOG.debug("clusterConnectionId does not exist, ignoring.", clusterConnectionId);
+            return;
+        }
+
         c.disconnect();
 
         // Remove
-        clusters.remove(clusterId);
+        clusterConnections.remove(clusterConnectionId);
     }
 
     public Set<String> list() {
-        return clusters.keySet();
+        return clusterConnections.keySet();
     }
 
-    public CouchbaseCluster get(final String clusterId) {
-        return clusters.get(clusterId).getCluster();
+    /**
+     * Get reference to cluster when present, or NULL.
+     *
+     * @param clusterConnectionId ID of connection
+     * @return Cluster reference.
+     */
+    public CouchbaseCluster get(final String clusterConnectionId) {
+        CouchbaseClusterConnection couchbaseClusterConnection = clusterConnections.get(clusterConnectionId);
+
+        if (couchbaseClusterConnection == null) {
+            return null;
+        }
+
+        return couchbaseClusterConnection.getCluster();
     }
 
-    public String getBucketPassword(final String clusterId) {
-        final CouchbaseClusterConnection ccc = clusters.get(clusterId);
+    public String getBucketPassword(final String clusterConnectionId) {
+        final CouchbaseClusterConnection ccc = clusterConnections.get(clusterConnectionId);
         if (ccc == null) {
-            LOG.debug(String.format("No bucket password for '%s'", clusterId));
+            LOG.debug(String.format("No bucket password for '%s'", clusterConnectionId));
             return null;
         }
         return ccc.getBucketPassword();
     }
 
     public Collection<CouchbaseClusterConnection> getClusterConnections() {
-        return clusters.values();
+        return clusterConnections.values();
     }
 
     public boolean isValid(final String clusterId) {
@@ -119,19 +138,19 @@ public class CouchbaseClusterManager {
         final CouchbaseCluster cluster = CouchbaseCluster.fromConnectionString(cbEnvironment, connectionString);
 
         // Create random identifier
-        final UUID clusterId = UUID.randomUUID();
+        final UUID clusterConnectionId = UUID.randomUUID();
 
         // Register the cluster
-        final CouchbaseClusterConnection ccc = new CouchbaseClusterConnection(cluster, username, defaultBucketPassword, connectionString, clusterId);
-        add(clusterId.toString(), ccc);
+        final CouchbaseClusterConnection ccc = new CouchbaseClusterConnection(cluster, username, defaultBucketPassword, connectionString, clusterConnectionId);
+        add(clusterConnectionId.toString(), ccc);
 
-        LOG.info(String.format("%s - %s", clusterId, cluster.toString()));
+        LOG.info(String.format("%s - %s", clusterConnectionId, cluster.toString()));
 
-        return clusterId.toString();
+        return clusterConnectionId.toString();
     }
 
-    public CouchbaseCluster validate(final String clusterId) throws XPathException {
-        if (clusterId == null || !isValid(clusterId)) {
+    public CouchbaseCluster validate(final String clusterConnectionId) throws XPathException {
+        if (clusterConnectionId == null || !isValid(clusterConnectionId)) {
             try {
                 // introduce a delay
                 Thread.sleep(1000L);
@@ -139,10 +158,10 @@ public class CouchbaseClusterManager {
             } catch (final InterruptedException ex) {
                 LOG.error(ex);
             }
-            throw new XPathException(COBA0001, "The provided Couchbase clusterId is not valid.");
+            throw new XPathException(COBA0001, "The provided Couchbase clusterConnectionId is not valid.");
         }
 
-        return clusters.get(clusterId).getCluster();
+        return clusterConnections.get(clusterConnectionId).getCluster();
 
     }
 
@@ -155,8 +174,8 @@ public class CouchbaseClusterManager {
 
         final List<String> ids = new ArrayList<>();
 
-        // Stopping clusters
-        clusters.values().forEach((connection) -> {
+        // Stopping clusterConnections
+        clusterConnections.values().forEach((connection) -> {
             try {
                 final String id = connection.getConnectionId().toString();
                 remove(id);
