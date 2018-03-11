@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://cxan.org/ns/package"
+         xmlns:xs="http://www.w3.org/2001/XMLSchema"
+         id="couchbase"
+         name="http://exist-db.org/couchbase"
+         version="0.7.1-SNAPSHOT">
+   <author id="dizzzz">Dannes Wessels</author>
+   <category>Applications</category>
+   <tag>couchbase</tag>
+   <tag>library</tag>
+   <tag>couchbase</tag>
+</package>

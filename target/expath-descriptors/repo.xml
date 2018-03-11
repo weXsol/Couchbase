@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta xmlns="http://exist-db.org/xquery/repo"
+      xmlns:repo="http://exist-db.org/xquery/repo"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <description>Couchbase driver</description>
+   <author id="dizzzz">Dannes Wessels</author>
+   <website>https://github.com/weXsol/Couchbase</website>
+   <status>stable</status>
+   <license>GNU Lesser General Public License, version 2.1</license>
+   <copyright>true</copyright>
+   <type>library</type>
+   <prepare>pre-install.xq</prepare>
+   <finish>post-install.xq</finish>
+   <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
+   <note>When upgrading: please first uninstall all previous versions and restart eXist-db.</note>
+   <changelog>
+        <change xmlns="http://expath.org/ns/pkg" version="0.5.5">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Another improvement on JSON conversion: Support of more datatypes.</li>
+            </ul>
+        </change>
+        <change xmlns="http://expath.org/ns/pkg" version="0.5.4">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Improved conversion of XQuery-JSON objects to Couchbase-JSON objects and vice versa.</li>
+                <li>Upgrade to Java driver version v2.4.3.</li>
+            </ul>
+        </change>
+    </changelog>
+</meta>
