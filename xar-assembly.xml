@@ -7,11 +7,15 @@
     <license>GNU Lesser General Public License, version 2.1</license>
     <copyright>true</copyright>
 
+    <description>The Couchbase Server driver extension for eXist-db provides access to functions and features of the Couchbase Server
+        using the original Couchbase java client. This extension has NOT been developed by CouchBase and is therefore NOT an offical
+        driver nor is it supported by CouchBase.</description>
+
     <!-- should be either "application" or "library" -->
     <type>library</type>
     <!-- type>library</type -->
 
-    <status>stable</status>
+    <status>beta</status>
 
     <tag>${project.artifactId}</tag>
     <tag>library</tag>
@@ -29,6 +33,12 @@
     <permissions user="couchbase" group="couchbase" mode="rw-rw-r--"/>
     <note>When upgrading: please first uninstall all previous versions and restart eXist-db.</note>
     <changelog>
+        <change version="0.7.1">
+            <ul xmlns="http://www.w3.org/1999/xhtml">
+                <li>Mavenized build</li>
+                <li>Upgrade to Java driver version v2.5.6</li>
+            </ul>
+        </change>
         <change version="0.5.5">
             <ul xmlns="http://www.w3.org/1999/xhtml">
                 <li>Another improvement on JSON conversion: Support of more datatypes.</li>
@@ -97,7 +107,7 @@
     <components>
         <resource>
             <public-uri>http://exist-db.org/couchbase/db</public-uri>
-            <file>org.exist.couchbase.xquery.CouchbaseModule</file>
+            <file>urn:java:class:org.exist.couchbase.xquery.CouchbaseModule</file>
         </resource>
     </components>
 
