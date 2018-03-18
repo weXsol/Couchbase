@@ -3,18 +3,19 @@ package org.exist.couchbase.test.java;
 import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
-import org.junit.After;
-import org.junit.AfterClass;
+import org.junit.*;
+
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
- *
  * @author wessels
  */
 public class GeneralTests {
+
+    Cluster cluster = null;
+
+    public GeneralTests() {
+    }
 
     @BeforeClass
     public static void setUpClass() {
@@ -23,11 +24,6 @@ public class GeneralTests {
 
     @AfterClass
     public static void tearDownClass() {
-    }
-
-    Cluster cluster = null;
-
-    public GeneralTests() {
     }
 
     @Before
