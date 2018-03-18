@@ -13,3 +13,7 @@ hs_err_pid*
 dist
 build
 target
+.idea/libraries
+.idea/workspace.xml
+.idea/tasks.xml
+couchbase.iml
