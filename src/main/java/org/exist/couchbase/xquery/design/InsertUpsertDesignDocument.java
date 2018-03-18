@@ -96,11 +96,7 @@ public class InsertUpsertDesignDocument extends BasicFunction {
                     ? bucketManager.upsertDesignDocument(input)
                     : bucketManager.insertDesignDocument(input);
 
-            if (designDocument == null) {
-                return Sequence.EMPTY_SEQUENCE;
-            } else {
-                return JsonToMap.convert(designDocument.toJsonObject(), context);
-            }
+            return designDocument == null ? Sequence.EMPTY_SEQUENCE : JsonToMap.convert(designDocument.toJsonObject(), context);
 
         } catch (final Throwable ex) {
             return GenericExceptionHandler.handleException(this, ex);

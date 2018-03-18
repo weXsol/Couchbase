@@ -25,6 +25,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
 
@@ -56,7 +57,7 @@ public class JSonTests {
     @Test
     public void basicJSONtest() {
 
-        JsonObject user = JsonObject.empty()
+        final JsonObject user = JsonObject.empty()
                 .put("firstname", "Walter")
                 .put("lastname", "White")
                 .put("job", "chemistry teacher")
@@ -64,7 +65,7 @@ public class JSonTests {
 
         assertEquals("{\"firstname\":\"Walter\",\"job\":\"chemistry teacher\",\"age\":50,\"lastname\":\"White\"}", user.toString());
 
-        JsonDocument doc = JsonDocument.create("walter", user);
+        final JsonDocument doc = JsonDocument.create("walter", user);
 
         assertEquals("JsonDocument{id='walter', cas=0, expiry=0, content={\"firstname\":\"Walter\",\"job\":\"chemistry teacher\",\"age\":50,\"lastname\":\"White\"}, mutationToken=null}\n" +
                 "", doc.toString());
@@ -73,8 +74,8 @@ public class JSonTests {
 
     @Test
     public void jsonDocument() throws IOException {
-        String doc = IOUtils.toString(this.getClass().getResourceAsStream("address.json"));
-        JsonObject jo = JsonObject.fromJson(doc);
+        final String doc = IOUtils.toString(this.getClass().getResourceAsStream("address.json"), Charset.defaultCharset());
+        final JsonObject jo = JsonObject.fromJson(doc);
         System.out.println(jo.toString());
     }
 

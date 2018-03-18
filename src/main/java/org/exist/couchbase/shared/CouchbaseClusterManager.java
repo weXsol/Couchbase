@@ -102,7 +102,7 @@ public class CouchbaseClusterManager {
      * @return Cluster reference.
      */
     public CouchbaseCluster get(final String clusterConnectionId) {
-        CouchbaseClusterConnection couchbaseClusterConnection = clusterConnections.get(clusterConnectionId);
+        final CouchbaseClusterConnection couchbaseClusterConnection = clusterConnections.get(clusterConnectionId);
 
         if (couchbaseClusterConnection == null) {
             return null;

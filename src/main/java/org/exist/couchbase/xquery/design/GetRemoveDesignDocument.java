@@ -88,12 +88,7 @@ public class GetRemoveDesignDocument extends BasicFunction {
                 // Retrieve all design documents
                 final DesignDocument designDocument = bucketManager.getDesignDocument(designName);
 
-                if (designDocument == null) {
-                    return Sequence.EMPTY_SEQUENCE;
-                } else {
-                    return JsonToMap.convert(designDocument.toJsonObject(), context);
-
-                }
+                return designDocument == null ? Sequence.EMPTY_SEQUENCE : JsonToMap.convert(designDocument.toJsonObject(), context);
 
             } else {
 

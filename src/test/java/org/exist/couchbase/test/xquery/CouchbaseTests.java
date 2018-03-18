@@ -8,12 +8,11 @@ public class CouchbaseTests extends TestRunner {
     @Override
     protected String getDirectory() {
 
-        ClassLoader loader = this.getClass().getClassLoader();
-        String className = this.getClass().getCanonicalName().replaceAll("\\.", "\\/");
+        final ClassLoader loader = this.getClass().getClassLoader();
+        final String className = this.getClass().getCanonicalName().replaceAll("\\.", "\\/");
 
-        String fullPath = loader.getResource(className + ".class").getFile();
-        String directory = StringUtils.substringBeforeLast(fullPath, "/");
+        final String fullPath = loader.getResource(className + ".class").getFile();
 
-        return directory;
+        return StringUtils.substringBeforeLast(fullPath, "/");
     }
 }

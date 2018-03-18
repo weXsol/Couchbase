@@ -42,10 +42,10 @@ public class GeneralTests {
     public void basicConnect() {
 
         // Open the default bucket and the "beer-sample" one
-        Bucket defaultBucket = cluster.openBucket();
+        final Bucket defaultBucket = cluster.openBucket();
         assertEquals("default", defaultBucket.name());
 
-        Bucket beerSampleBucket = cluster.openBucket("beer-sample");
+        final Bucket beerSampleBucket = cluster.openBucket("beer-sample");
         assertEquals("beer-sample", beerSampleBucket.name());
 
     }
