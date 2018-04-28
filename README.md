@@ -6,6 +6,7 @@ This is the Couchbase Server extension for the [eXist Native XML database](http:
 
 > This driver has *NOT* developed by [CouchBase](https://www.couchbase.com) and is therefore NOT an offical driver nor is it supported by [CouchBase](https://www.couchbase.com).
 
+[![Build Status](https://travis-ci.org/weXsol/Couchbase.svg?branch=master)](https://travis-ci.org/weXsol/Couchbase)
         
 # Documentation 
 
