@@ -1,18 +1,13 @@
 package org.exist.couchbase.test.xquery;
 
-import org.apache.commons.lang3.StringUtils;
-import xquery.TestRunner;
+import org.exist.test.runner.XSuite;
+import org.junit.runner.RunWith;
 
-public class CouchbaseTests extends TestRunner {
+@RunWith(XSuite.class)
+@XSuite.XSuiteFiles({
+        "src/test/xquery"
+})
 
-    @Override
-    protected String getDirectory() {
+public class CouchbaseTests  {
 
-        final ClassLoader loader = this.getClass().getClassLoader();
-        final String className = this.getClass().getCanonicalName().replaceAll("\\.", "\\/");
-
-        final String fullPath = loader.getResource(className + ".class").getFile();
-
-        return StringUtils.substringBeforeLast(fullPath, "/");
-    }
 }
