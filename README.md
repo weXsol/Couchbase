@@ -18,7 +18,7 @@ The extension can be downloaded from the [Releases](../../releases) page and can
 
 # Prerequisites
 
-- [eXist-db 3.0](http://www.exist-db.org) or newer (the 2.2 version is not actively maintained)
+- [eXist-db 4.7](http://www.exist-db.org) or newer 
 - Java8
 - [CouchBase server](https://www.couchbase.com/downloads) (tested with version 4.6.1, enterprise edition) (link)
 
