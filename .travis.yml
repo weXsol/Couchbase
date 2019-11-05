@@ -1,6 +1,10 @@
 language: java
-jdk:
-  - oraclejdk8
-  - oraclejdk11
 sudo: false
-script: mvn clean verify
+matrix:
+  include:
+    - jdk: openjdk8
+    - jdk: openjdk11
+
+cache:
+  directories:
+  - $HOME/.m2
